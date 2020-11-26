@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Exercise 2 IV</title>
+    </head>
+    <style>
+        #container{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 500px;
+            height: 960px;
+        }
+        #mySlider{
+            position: absolute;
+            left: 80px;
+            top: 710px;
+            width: 500px;
+        }
+        #dataWrapper{
+            position: absolute;
+            left: 800px;
+            top: 50px;
+            width: 500px;
+        }
+
+    </style>
+    <body>
+        <div id="dataWrapper">
+            <div id="visualisationContainer"></div>
+            <p></p>
+        </div>
+
+        <div id="mapText" style="left: 575px; width: 200px; height: 80px; position: absolute; top: 0px; border-style: solid; border-color: black; background-color: lightgray"></div>
+
+        <svg id="my_dataviz" width="700" height="900"></svg>
+
+        <input type="range" name="slider" id="mySlider">
+
+        <button type="button" style="left: 600px; width: 150px; height: 80px; position: absolute; top: 100px;">neue Infektionen pro Tag</button>
+        <button type="button" style="left: 600px; width: 150px;height: 80px;  position: absolute; top: 200px;">Sterbefälle pro tag</button>
+        <button type="button" style="left: 600px; width: 150px; height: 80px; position: absolute; top: 300px;">Gesamtzahl aller Infektionen</button>
+        <button type="button" style="left: 600px; width: 150px; height: 80px; position: absolute; top:  400px;">Gesamtzahl Sterbefälle</button>
+        <button type="button" style="left: 600px; width: 150px;height: 80px;  position: absolute; top: 500px;">Intensivbett-auslastung</button>
+        <button type="button" style="left: 600px; width: 150px;height: 80px;  position: absolute; top: 600px;">7-Tage-Inzidenz pro Tag</button>
+
+
+        <button type="button" id="berechnen" style="left: 20px; width: 60px;height: 40px;  position: absolute; top: 700px;">&#9658</button>
+        
+
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <script src="./scriptMap.js"></script>
+        <script src="./scriptLineDiagram.js"></script>
+        <script src="./values.js"></script>
+
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
+        <script>
+            setGeoData();
+        </script>
+    </body>
+</html>
