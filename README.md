@@ -1,2 +1,2 @@
-# infoVis_4
+# infoVis_9
 Student project within the lecture "Informationsvisualisierung"
