@@ -44,7 +44,7 @@ function setGeoData(){
             })
             .on("click", function(d){
                 console.log("Click")
-                d3.select("#mapText").text(d.properties.GEN); 
+                d3.select("#infoText").text(d.properties.GEN); 
             });
 
         console.log("ArrLength: "+mapNames.length)
