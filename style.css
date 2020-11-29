@@ -29,6 +29,14 @@
     width: 500px;
 }
 
+#timeline button {
+    position: absolute;
+    top: 700px;
+    left: 20px;
+    width: 60px;
+    height: 40px;
+}
+
 #mySlider {
     position: absolute;
     left: 80px;
