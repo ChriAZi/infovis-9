@@ -1,3 +1,9 @@
+.content {
+    position: relative;
+    margin: auto;
+    max-width: 1440px;
+}
+
 #container {
     position: absolute;
     top: 0px;
