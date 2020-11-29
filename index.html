@@ -14,12 +14,12 @@
         <div class="content">
 
             <div id="metricSelection">
-                <button type="button" id="newCases" style="top: 100px;">Neuinfektionen</button>
-                <button type="button" id="newDeaths" style="top: 200px;">Todesfälle</button>
-                <button type="button" id="totalCases" style="top: 300px;">Gesamtzahl Infektionen</button>
-                <button type="button" id="totalDeaths" style="top: 400px;">Gesamtzahl Todesfälle</button>
-                <button type="button" id="bedCapacity" style="top: 500px;">Intensivkapazitäten</button>
-                <button type="button" id="caseIncidence" style="top: 600px;">7-Tage-Inzidenz</button>
+                <button type="button" id="newCases" onclick="setMetric(Metric.NEW_CASES)" style="top: 100px;">Neuinfektionen</button>
+                <button type="button" id="newDeaths" onclick="setMetric(Metric.NEW_DEATHS)" style="top: 200px;">Todesfälle</button>
+                <button type="button" id="totalCases" onclick="setMetric(Metric.TOTAL_CASES)" style="top: 300px;">Gesamtzahl Infektionen</button>
+                <button type="button" id="totalDeaths" onclick="setMetric(Metric.TOTAL_DEATHS)" style="top: 400px;">Gesamtzahl Todesfälle</button>
+                <button type="button" id="bedCapacity" onclick="setMetric(Metric.BED_CAPACITY)" style="top: 500px;">Intensivkapazitäten</button>
+                <button type="button" id="caseIncidence" onclick="setMetric(Metric.CASE_INCIDENCE)" style="top: 600px;">7-Tage-Inzidenz</button>
             </div>
 
             <svg id="map" width="700" height="900"></svg>
