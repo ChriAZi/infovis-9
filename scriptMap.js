@@ -2,7 +2,7 @@ function setGeoData(){
     var mapNames = [];
 
     // The svg
-    var svg = d3.select("#my_dataviz");
+    var svg = d3.select("#map");
 
     width = +svg.attr("width"),
     height = +svg.attr("height");
