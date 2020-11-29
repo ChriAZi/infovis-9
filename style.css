@@ -11,6 +11,17 @@
     height: 80px; 
 }
 
+#infoText {
+    position: absolute;
+    top: 0px;
+    left: 575px;
+    width: 200px;
+    height: 80px;
+    border-style: solid;
+    border-color: black;
+    background-color: lightgray;
+}
+
 #container {
     position: absolute;
     top: 0px;
