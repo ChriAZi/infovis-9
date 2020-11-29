@@ -14,7 +14,7 @@ function setGeoData(){
         .translate([ width/2, height/2 ])
     
           // Load external data and boot
-    d3.json("landkreise.geojson", function(data){
+    d3.json("data/landkreise.geojson", function(data){
         // Draw the map
         svg.append("g")
             .selectAll("path")
