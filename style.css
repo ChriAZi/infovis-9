@@ -4,6 +4,13 @@
     max-width: 1440px;
 }
 
+#metricSelection button {
+    position: absolute;
+    left: 600px;
+    width: 150px;
+    height: 80px; 
+}
+
 #container {
     position: absolute;
     top: 0px;
@@ -25,3 +32,4 @@
     top: 50px;
     width: 500px;
 }
+
