@@ -29,6 +29,13 @@
     width: 500px;
 }
 
+#scatterPlot {
+    position: absolute;
+    left: 800px;
+    top: 400px;
+    width: 500px;
+}
+
 #timeline button {
     width: 60px;
     height: 40px;
