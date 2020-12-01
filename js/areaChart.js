@@ -8,7 +8,7 @@ function filterData(data){
 const color = [ "lightblue","lightgreen","CC99FF"];
 
 const svg = d3
-    .select("#visualisationContainer")
+    .select("#areaChart")
     .append("svg")
     .attr("height", 500)
     .attr("width", 690);
@@ -26,7 +26,7 @@ const grp = chart
     .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
 
 
-d3.csv("/infoVis9/data/data_Auslastung.csv")
+d3.csv("/infoVis9/data_Auslastung.csv")
     .then(function(data) {
         data.forEach(d => {
             d.date = new Date(d.date)
