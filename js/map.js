@@ -14,8 +14,8 @@ function setGeoData(){
         .translate([ width/2, height/2 ])
     
           // Load external data and boot
-    d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
-    //d3.json("data/landkreise.geojson").then(function(data){
+    d3.json("data/landkreise.geojson").then(function(data) {
+    // d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
         // Draw the map
         svg.append("g")
             .selectAll("path")
