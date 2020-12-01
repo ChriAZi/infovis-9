@@ -4,7 +4,7 @@ function setGeoData(){
     // The svg
     var svg = d3.select("#map");
 
-    width = +svg.attr("width"),
+    var width = +svg.attr("width"),
     height = +svg.attr("height");
     
     // Map and projection
