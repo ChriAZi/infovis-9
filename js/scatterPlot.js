@@ -12,8 +12,9 @@ function setScatterPlot(){
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
+  d3.json("data/RKI_Corona_Landkreise.geojson").then(function(data) {
   //d3.json("data/data.json", function(data){
-  d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
+  //d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
 
     // Add X axis
     var x = d3.scaleLinear()
