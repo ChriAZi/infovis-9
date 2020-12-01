@@ -3,91 +3,130 @@ function filterData(data){
         item => item.countriesAndTerritories === 'Germany' && item.year == 2020 && item.month == 11
     );
 
-    visualiseChart(maxTempYear);
+    //visualiseChart(maxTempYear);
 }
+const color = [ "lightblue","lightgreen","CC99FF"];
 
-function visualiseChart(data){
-    d3.select("#mySlider")
-    .attr("min", 1)
-    .attr("max", 12)
-    .attr("value", 1);
-    var margin = {top: 10, right: 80, bottom: 80, left:80},
-    width = 460 - margin.left -margin.right,
-    height = 400 - margin.top - margin.bottom;
+const svg = d3
+    .select("#visualisationContainer")
+    .append("svg")
+    .attr("height", 500)
+    .attr("width", 690);
 
-    var svg = d3.select("#areaChart")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+const strokeWidth = 1.5;
+var margin = { top: 0, bottom: 20, left: 80, right: 20 };
+const chart = svg.append("g").attr("transform", `translate(${margin.left},0)`);
 
-    //x-Axis
-    var xAxis = d3.scaleLinear()
-        //.domain(d3.extent(data, item=> Number(item.day)))
-        .domain([1,12])
-        .range([0, width]);
+var width = +svg.attr("width")-200 - margin.left - margin.right - strokeWidth * 2;
+var height = +svg.attr("height")-200 - margin.top - margin.bottom;
 
-    svg.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(xAxis));
-        
-        
-    // text label for the x axis
-    svg.append("text")             
-        .attr("transform",
-            "translate(" + (width/2) + " ," + 
-                            (height + margin.top + 20) + ")")
-        .style("text-anchor", "middle")
-        .text("November")
 
-    //y-Axis
-    var yAxis = d3.scaleLinear()
-        //.domain([d3.min(data, item=>Number(item.cases)) - 1, d3.max(data, item=>Number(item.cases))])
-        //.domain([0, d3.max(data, item=>Number(item.wert))])
-        .domain([0, 23000])
-        .range([height, 0]);
+const grp = chart
+    .append("g")
+    .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
 
-    svg.append("g")
-        .call(d3.axisLeft(yAxis));
 
-    // text label for the y axis
-    svg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left)
-    .attr("x",0 - (height / 2))
-    .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .text("Cases");  
+d3.csv("/infoVis9/data/data_Auslastung.csv")
+    .then(function(data) {
+        data.forEach(d => {
+            d.date = new Date(d.date)
+            d.Belegte = +d.Belegte
+            d.Freie = +d.Freie
+            d.Notfallreserve= +d.Notfallreserve
+        })
 
-    //curve
-    var curve = svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "turquoise")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-            .x(item => xAxis(Number(item.day)))
-            .y(item => yAxis(Number(item.cases)))
-            );
 
-   /* d3.select("#mySlider")
-        .on("change", function(d){
-            selectedValue = this.value
-            xAxis.domain([selectedValue, d3.max(data, item=>Number(item.day))])
-                .range([0, width]);
+// Create stack
+        const stack = d3.stack().keys(["Belegte", "Freie","Notfallreserve"]);
+        const stackedData = stack(data);// Create scales
+        const xValue = d => d.date;
 
-            svg.select("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(xAxis));
-            
-            curve.datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "red")
-                .attr("stroke-width", 1.5)
-                .attr("d", d3.line()
-                    .x(item => xAxis(Number(item.day)))
-                    .y(item => yAxis(Number(item.cases)))
-                );
-        })*/
-}
+        //x-Axis
+        var xAxis = d3.scaleTime()
+            .domain(d3.extent(data, xValue))
+            //.domain([1,12])
+            .range([0, width]);
+
+
+        //y-Axis
+        var yAxis = d3.scaleLinear()
+            .domain([0, d3.max(stackedData[stackedData.length-1], function (d){return d[1]})])
+            .range([height, 0]);
+
+        var area= d3.area().x(function (d) {return xAxis(d.data.date);})
+            .y0(function (d){return yAxis(d[0]);})
+            .y1(function (d){return yAxis(d[1]);})
+
+        const series = grp
+            .selectAll(".series")
+            .data(stackedData)
+            .enter()
+            .append("g")
+            .attr("class", "series");
+
+        series
+            .append("path")
+            .attr("transform", `translate(${margin.left},0)`)
+            .style("fill", (d, i) => color[i])
+            .attr("stroke", "steelblue")
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round")
+            .attr("stroke-width", strokeWidth)
+            .attr("d", d => area(d));
+
+// Add the X Axis
+
+        chart
+            .append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xAxis));
+
+// Add the Y Axis
+
+        chart
+            .append("g")
+            .attr("transform", `translate(0, 0)`)
+            .call(d3.axisLeft(yAxis));
+
+
+        // Highlight function TO DO
+        var highlight = function(d){
+            console.log(d)
+
+        }
+
+        // And when it is not hovered anymore
+        var noHighlight = function(d){
+        }
+
+
+
+
+        // Legend
+        var size = 20
+        svg.selectAll("rect")
+            .data(["Belegte", "Freie","Notfallreserve"])
+            .enter()
+            .append("rect")
+            .attr("x", 500)
+            .attr("y", function(d,i){ return 10 + i*(size+80)})
+            .attr("width", size)
+            .attr("height", size)
+            .style("fill",  (d, i) => color[i])
+            .on("mouseover", highlight)
+            .on("mouseleave", noHighlight);
+
+        svg.selectAll("labels")
+            .data(["Belegte", "Freie","Notfallreserve"])
+            .enter()
+            .append("text")
+            .attr("x", 490)
+            .attr("y", function(d,i){ return 50 + i*(size+80) + (size/2)}) 
+            .style("fill",  (d, i) => color[i])
+            .text(function(d){ return d+' Betten'})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+            .on("mouseover", highlight)
+            .on("mouseleave", noHighlight);
+    } )
+
