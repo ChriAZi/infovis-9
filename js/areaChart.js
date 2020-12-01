@@ -24,7 +24,7 @@ const grp = chart
     .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
 
 
-d3.csv("./Auslastung.csv")
+d3.csv("data/data_Auslastung.csv")
     .then(function(data) {
         data.forEach(d => {
             d.date = new Date(d.date)
