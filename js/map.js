@@ -9,11 +9,14 @@ function setGeoData(){
     
     // Map and projection
     var projection = d3.geoMercator()
-        .center([12, 50])                // GPS of location to zoom on
-        .scale(3000)                       // This is like the zoom
-        .translate([ width/2, height/2 ])
+        // GPS of location to zoom on
+        .center([12, 50])
+        // This is like the zoom
+        .scale(3000)
+        // +40 needed for layout fit
+        .translate([ (width/2 + 40), height/2])
     
-          // Load external data and boot
+    // Load external data and boot
     d3.json("data/landkreise.geojson").then(function(data) {
     // d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
         // Draw the map

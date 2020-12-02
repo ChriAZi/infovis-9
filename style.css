@@ -1,46 +1,66 @@
-.content {
-    position: relative;
-    margin: auto;
+/********************
+   CUSTOMS STYLES
+********************/
+
+/*
+body {
+    overflow-y: hidden;
+}
+*/
+
+nav {
+    margin-bottom: 0 !important;
+}
+
+nav .uk-logo {
+    margin-left: 40px;
+    padding: 0;
+}
+
+.content-container {
+    margin: 20px 40px 0;
     max-width: 1440px;
 }
 
-#metricSelection button {
-    position: absolute;
-    left: 600px;
-    width: 150px;
-    height: 80px; 
+#parameter-container > ul > li > a {
+    padding: 10px 10px !important;
+    font-size: 1rem !important;
 }
 
-#infoText {
-    position: absolute;
-    top: 0px;
-    left: 575px;
-    width: 200px;
-    height: 80px;
-    border-style: solid;
-    border-color: black;
-    background-color: lightgray;
+#timeline {
+    width: 100%;
+    margin-top: -35px;
 }
 
-#areaChart {
-    position: absolute;
-    left: 800px;
-    top: 50px;
-    width: 500px;
+#timeline .control-buttons {
+    margin-top: -5px;
 }
 
-#scatterPlot {
-    position: absolute;
-    left: 800px;
-    top: 400px;
-    width: 500px;
+#timeline .range-lider-container::before {
+    content: "März";
+    bottom: 25px;
+    position: relative;
+    left: 55px;
 }
 
-#timeline button {
-    width: 60px;
-    height: 40px;
+#timeline .range-lider-container::after {
+    content: "Heute";
+    bottom: 25px;
+    position: relative;
+    right: 55px;
 }
 
-#dateSlider {
-    width: 500px;
+#timeline .uk-range {
+    width: calc(100% - 100px);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+footer {
+    background: lightgray;
+}
+
+footer .uk-grid {
+    padding: 5px 40px;
+    font-size: 0.45rem;
 }

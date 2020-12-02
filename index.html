@@ -7,45 +7,127 @@
         <script src="https://d3js.org/d3.v6.min.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+        <!-- UIkit CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/css/uikit.min.css"/>
+        
+        <!-- UIkit JS -->
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/js/uikit-icons.min.js"></script>
     </head>
-
+    
     <body>
-        <div class="content">
-
-            <div id="metricSelection">
-                <button type="button" id="newCases" onclick="setMetric(Metric.NEW_CASES)" style="top: 100px;">Neuinfektionen</button>
-                <button type="button" id="newDeaths" onclick="setMetric(Metric.NEW_DEATHS)" style="top: 200px;">Todesfälle</button>
-                <button type="button" id="totalCases" onclick="setMetric(Metric.TOTAL_CASES)" style="top: 300px;">Gesamtzahl Infektionen</button>
-                <button type="button" id="totalDeaths" onclick="setMetric(Metric.TOTAL_DEATHS)" style="top: 400px;">Gesamtzahl Todesfälle</button>
-                <button type="button" id="bedCapacity" onclick="setMetric(Metric.BED_CAPACITY)" style="top: 500px;">Intensivkapazitäten</button>
-                <button type="button" id="caseIncidence" onclick="setMetric(Metric.CASE_INCIDENCE)" style="top: 600px;">7-Tage-Inzidenz</button>
+        <nav class="uk-navbar-container uk-margin" uk-navbar>
+            <div class="uk-navbar-left">
+                <a class="uk-navbar-item uk-logo" href="#">🦠 Corona in Deutschland – ein Überblick</a>
             </div>
-
-            <svg id="map" width="700" height="900"></svg>
-
-            <div id="infoText"></div>
-
-            <div id="scatterPlot"></div>
-
-            <div id="areaChart"></div>
-
-            <div id="timeline">
-                <button type="button" id="stepBeginning">&#9198</button>
-                <button type="button" id="stepBack">&#9664</button>
-                <button type="button" id="play">&#9199</button>
-                <button type="button" id="stepForward">&#9654</button>
-                <button type="button" id="stepEnd">&#9197</button>
-                <input type="range" id="dateSlider">
+        </nav>
+        <div class="content-container">
+            <div uk-grid>
+                <div class="uk-width-1-5">
+                    <div>
+                        <h3>Parameterauswahl</h3>
+                        <p>Wähle eine Kennzahl, um sie in den Diagrammen anzuzeigen.</p>
+                        <p class="uk-heading-divider"></p>
+                        <div id="parameter-container">
+                            <ul class="uk-tab-right"
+                                uk-tab="connect: #component-tab-right; animation: uk-animation-fade">
+                                <li class="uk-active"><a onclick="setMetric(Metric.NEW_CASES)">Neuinfektionen</a></li>
+                                <li><a onclick="setMetric(Metric.NEW_DEATHS)">Todesfälle</a></li>
+                                <li><a onclick="setMetric(Metric.TOTAL_CASES)">Gesamtzahl Infektionen</a></li>
+                                <li><a onclick="setMetric(Metric.TOTAL_DEATHS)">Gesamtzahl Todesfälle</a></li>
+                                <li><a onclick="setMetric(Metric.BED_CAPACITY)">Intensivkapazitäten</a></li>
+                                <li><a onclick="setMetric(Metric.CASE_INCIDENCE)">7-Tage-Inzidenz</a></li>
+                            </ul>
+                            <ul id="component-tab-right" class="uk-switcher">
+                                <li class="uk-active">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua.
+                                </li>
+                                <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                                    ex ea commodo consequat.
+                                </li>
+                                <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                                    fugiat nulla pariatur, sed do eiusmod.
+                                </li>
+                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua.
+                                </li>
+                                <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                                    ex ea commodo consequat.
+                                </li>
+                                <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                                    fugiat nulla pariatur, sed do eiusmod.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-width-4-5">
+                    <div uk-grid>
+                        <div class="uk-width-1-2">
+                            <div>
+                                <svg id="map" width="600" height="900"></svg>
+                            </div>
+                        </div>
+                        <div class="uk-width-1-2">
+                            <div>
+                                <div id="scatterPlot"></div>
+                            </div>
+                            <div>
+                                <div id="areaChart"></div>
+                            </div>
+                        </div>
+                        <form id="timeline">
+                            <fieldset class="uk-fieldset">
+                                <div class="uk-grid-match uk-child-width-expand" uk-grid>
+                                    <div class="uk-width-1-6 control-buttons">
+                                        <div uk-grid>
+                                            <div class="uk-width-1-4">
+                                                <div>
+                                                    <button class="uk-button uk-button-default uk-button-small">▶️</button>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-1-4">
+                                                <div>
+                                                    <button class="uk-button uk-button-default uk-button-small">⏸</button>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-1-4">
+                                                <div>
+                                                    <button class="uk-button uk-button-default uk-button-small">⏭</button>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-1-4">
+                                                <div>
+                                                    <button class="uk-button uk-button-default uk-button-small">⏮</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-5-6 range-lider-container">
+                                        <input class="uk-range" type="range" value="2" min="0" max="10" step="0.1">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
             </div>
         
         </div>
+        <footer>
+            <div class="uk-grid-divider" uk-grid>
+                <div>WS2020/21 – Informationsvisualisierung</div>
+                <div>Amina Dacikj – Maike Friedrich – David Sporman – Christopher Voit – Elena Wallwitz</div>
+            </div>
+        </footer>
         
         <script src="js/control.js"></script>
         <script src="js/map.js"></script>
         <script src="js/areaChart.js"></script>
         <script src="js/scatterPlot.js"></script>
         <script src="data/values.js"></script>
-
+        
         <script>
             setGeoData();
             setScatterPlot();
