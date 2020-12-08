@@ -14,7 +14,7 @@ Object.freeze(Metric);
 
 var selectedMetric = Metric.NEW_CASES;
 var selectedCountyId = null;
-var selectedDate = null;   // TODO: get latest date from data set
+var selectedDate = null;
 
 function setMetric(metric) {
     selectedMetric = metric;
