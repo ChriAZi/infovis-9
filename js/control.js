@@ -13,7 +13,7 @@ const Metric = {
 Object.freeze(Metric);
 
 var selectedMetric = Metric.NEW_CASES;
-var selectedCounty = null;
+var selectedCountyId = null;
 var selectedDate = null;   // TODO: get latest date from data set
 
 function setMetric(metric) {
@@ -24,8 +24,8 @@ function setMetric(metric) {
     // TODO: update scatter plot
 };
 
-function setCounty(county) {
-    selectedCounty = county;
+function setCounty(id) {
+    selectedCountyId = id;
     // TODO: update map
     // TODO: update area chart
     // TODO: update scatter plot
