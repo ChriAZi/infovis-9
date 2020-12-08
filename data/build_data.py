@@ -71,9 +71,9 @@ def write_to_file(content, filename, format=False):
 
     with open(filename, 'w') as file:
         if format:
-            json.dump(content, file, indent=4)
+            json.dump(content, file, indent=4, sort_keys=True)
         else:
-            json.dump(content, file, separators=(',', ':'))
+            json.dump(content, file, separators=(',', ':'), sort_keys=True)
 
 
 if __name__ == "__main__":
