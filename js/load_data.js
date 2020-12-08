@@ -1,11 +1,13 @@
 var data;
 var counties;
 
-fetch('data/data.json')
-    .then(res => res.json())
-    .then(res => data = res)
-    .then(res => selectedDate = Object.keys(data)[Object.keys(data).length - 1]);   // selected latest date (last element in sorted data)
+async function loadData() {
+    let response1 = await fetch('data/counties.json');
+    counties = await response1.json();
 
-fetch('data/counties.json')
-    .then(res => res.json())
-    .then(res => counties = res);
+    let response2 = await fetch('data/data.json');
+    data = await response2.json();
+    selectedDate = Object.keys(data)[Object.keys(data).length - 1];
+}
+
+loadData();
