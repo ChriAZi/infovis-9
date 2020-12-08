@@ -35,6 +35,10 @@ function setDate(date) {
     // TODO: updateScatterPlot()
 };
 
+function onDataLoaded() {
+    
+}
+
 function updateAll() {
     // TODO: updateMetricSelection()
     // TODO: updateMap()
