@@ -18,22 +18,26 @@ var selectedDate = null;
 
 function setMetric(metric) {
     selectedMetric = metric;
-    // TODO: update metric selection buttons
-    // TODO: update map
-    // TODO: update area chart
-    // TODO: update scatter plot
+    updateAll();
 };
 
 function setCounty(id) {
     selectedCountyId = id;
-    // TODO: update map
-    // TODO: update area chart
-    // TODO: update scatter plot
+    // TODO: updateMap()
+    // TODO: updateAreaChart()
+    // TODO: updateScatterPlot()
 };
 
 function setDate(date) {
     selectedDate = date;
-    // TODO: update map
-    // TODO: update area chart
-    // TODO: update scatter plot
+    // TODO: updateMap()
+    // TODO: updateAreaChart()
+    // TODO: updateScatterPlot()
 };
+
+function updateAll() {
+    // TODO: updateMetricSelection()
+    // TODO: updateMap()
+    // TODO: updateAreaChart()
+    // TODO: updateScatterPlot()
+}
