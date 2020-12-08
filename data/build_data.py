@@ -29,7 +29,7 @@ def parse_case_data():
                 index_new_deaths = row.index("AnzahlTodesfall")
 
             else:
-                date = row[index_date]
+                date = row[index_date].split()[0]
                 county_id = row[index_county_id]
 
                 if date not in data:
