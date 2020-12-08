@@ -4,7 +4,7 @@ function setScatterPlot() {
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    var svg = d3.select("#scatterPlot")
+    var svg = d3.select("#scatter-plot")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)

@@ -7,7 +7,7 @@ function filterData(data) {
 const color = ["lightblue", "lightgreen", "#CC99FF"];
 
 const svg = d3
-    .select("#areaChart")
+    .select("#area-chart")
     .append("svg")
     .attr("height", 500)
     .attr("width", 690);
