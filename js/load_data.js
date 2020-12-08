@@ -2,11 +2,12 @@ var data;
 var counties;
 
 async function loadData() {
-    let response1 = await fetch('data/counties.json');
-    counties = await response1.json();
+    const dataPromise = fetch('data/data.json').then(res => res.json());
+    const countiesPromise = fetch('data/counties.json').then(res => res.json());
 
-    let response2 = await fetch('data/data.json');
-    data = await response2.json();
+    const results = await Promise.all([dataPromise, countiesPromise]);
+    data = results[0]
+    counties = results[1]
 
     onDataLoaded();
 }
