@@ -3,8 +3,9 @@ import json
 
 
 def main():
-    d = parse_case_data()
+    d, c = parse_case_data()
     write_to_file(d, "data.json")
+    write_to_file(c, "counties.json", True)
     print("DONE")
 
 
@@ -12,16 +13,18 @@ def parse_case_data():
     print("Parsing case data file")
 
     data = {}
+    counties = {}
 
     with open("RKI_COVID19.csv", newline='') as csv_file:
         reader = csv.reader(csv_file)
         first_row = True
-        
+
         for row in reader:
             if first_row:
                 first_row = False
                 index_date = row.index("Meldedatum")
                 index_county_id = row.index("IdLandkreis")
+                index_county_name = row.index("Landkreis")
                 index_new_cases = row.index("AnzahlFall")
                 index_new_deaths = row.index("AnzahlTodesfall")
 
@@ -35,11 +38,14 @@ def parse_case_data():
                 if county_id not in data[date]:
                     data[date][county_id] = create_empty_element()
 
+                if county_id not in counties:
+                    counties[county_id] = {"name": row[index_county_name]}
+
                 elem = data[date][county_id]
                 elem["newCases"] += int(row[index_new_cases])
                 elem["newDeaths"] += int(row[index_new_deaths])
 
-        return data
+        return data, counties
 
 
 def create_empty_element():
