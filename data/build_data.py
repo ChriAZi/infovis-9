@@ -5,7 +5,7 @@ import json
 def main():
     d, c = parse_case_data()
     write_to_file(d, "data.json")
-    write_to_file(c, "counties.json", True)
+    write_to_file(c, "counties.json")
     print("DONE")
 
 
@@ -39,7 +39,11 @@ def parse_case_data():
                     data[date][county_id] = create_empty_element()
 
                 if county_id not in counties:
-                    counties[county_id] = {"name": row[index_county_name]}
+                    counties[county_id] = {
+                        "name": row[index_county_name],
+                        "population": None,
+                        "density": None
+                    }
 
                 elem = data[date][county_id]
                 elem["newCases"] += int(row[index_new_cases])
