@@ -36,7 +36,12 @@ function setDate(date) {
 };
 
 function onDataLoaded() {
-    
+    // select latest date (last element in sorted data)
+    selectedDate = Object.keys(data)[Object.keys(data).length - 1];
+
+    // TODO: initMap() if required
+    // TODO: initAreaChart() if required
+    // TODO: initScatterPlot() if required
 }
 
 function updateAll() {
