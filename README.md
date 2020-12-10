@@ -1,6 +1,8 @@
 # infoVis_9
 Das Projekt der Gruppe 9 in der Vorlesung "Informationsvisualisierung" and der Ludwig Maximilians Universtität München.
 
+Die Koordination des Projektes findet sich unter: https://www.notion.so/WS2020-IV-Gruppe-9-573af56127fe49eea1a96e360f50bf54
+
 Das Projekt hat zum Ziel das zeitliche Entwicklungsgeschehen des Corona-Viruses in Deutschland und seinen Landkreisen an mehreren Kennzahlen zu veranschlauchen. Dies umfasst die neuen Infektionen und Todesfälle sowie die gesammten Infektionen und Todesfälle und die 7-Tage-Inzidenz.
 Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herstellen und den Einfluss der Bevölkerungsdichte auf das Infektionsgeschehen veranschaulichen. 
 
