@@ -21,7 +21,7 @@ function updateMap(){
     //color path fill based on data
     d3.select("#map").selectAll("path").nodes().forEach(function(d){
         var str = (d.id).substring(1);
-        if(Object.keys(data[selectedDate]).includes(str)){
+        if(Object.keys(data[selectedDate]).includes(str) && data[selectedDate][str][selectedMetric]!=0){
             var val = data[selectedDate][str][selectedMetric];
             d3.select(d).style("fill", getColor(min, max, val));
         }else{
@@ -53,7 +53,7 @@ function initMap(){
         .enter()
         .append("path")
         .attr("fill", function(d){
-            if(Object.keys(data[selectedDate]).includes(d.properties.AGS)){
+            if(Object.keys(data[selectedDate]).includes(d.properties.AGS) && data[selectedDate][d.properties.AGS][selectedMetric]!=0){
                 return getColor(min, max, data[selectedDate][d.properties.AGS][selectedMetric])
             }
             return "white"
