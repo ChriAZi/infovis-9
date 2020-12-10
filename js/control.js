@@ -83,7 +83,8 @@ function onDataLoaded() {
     // select latest date (last element in sorted data)
     selectedDate = Object.keys(data)[Object.keys(data).length - 1];
 
-    initMap()
+    initMap();    
+    initSlider();
     // TODO: initAreaChart() or updateAreaChart()
     // TODO: initScatterPlot() or updateScatterPlot()
 }
