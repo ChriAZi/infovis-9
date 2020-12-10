@@ -74,7 +74,7 @@ function setCounty(id) {
 
 function setDate(date) {
     selectedDate = date;
-    // TODO: updateMap()
+    updateMap()
     // TODO: updateAreaChart()
     // TODO: updateScatterPlot()
 }
@@ -83,14 +83,14 @@ function onDataLoaded() {
     // select latest date (last element in sorted data)
     selectedDate = Object.keys(data)[Object.keys(data).length - 1];
 
-    // TODO: initMap() or updateMap()
+    initMap()
     // TODO: initAreaChart() or updateAreaChart()
     // TODO: initScatterPlot() or updateScatterPlot()
 }
 
 function updateAll() {
     // TODO: updateMetricSelection()
-    // TODO: updateMap()
+    updateMap()
     // TODO: updateAreaChart()
     // TODO: updateScatterPlot()
 }

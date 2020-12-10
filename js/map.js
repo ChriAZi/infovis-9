@@ -1,7 +1,38 @@
-function setGeoData(){
-    var mapNames = [];
+var min = 0;
+var max = 0;
 
-    // The svg
+//TODO may be moved to control.js? for finding date based min max values of selected metrics
+function findMinMax(){
+    var keys = Object.keys(data[selectedDate]);
+    keys.forEach(obj=>{
+        var val = data[selectedDate][obj][selectedMetric];
+        if(val<min){
+            min = val;
+        }
+        if(val>max){
+            max = val;
+        }
+    })
+}
+
+function updateMap(){
+    findMinMax();
+
+    //color path fill based on data
+    d3.select("#map").selectAll("path").nodes().forEach(function(d){
+        var str = (d.id).substring(1);
+        if(Object.keys(data[selectedDate]).includes(str)){
+            var val = data[selectedDate][str][selectedMetric];
+            d3.select(d).style("fill", getColor(min, max, val));
+        }else{
+            d3.select(d).style("fill", "white")
+        }
+    })
+}
+
+function initMap(){
+    findMinMax();
+
     var svg = d3.select("#map");
 
     var width = +svg.attr("width"),
@@ -16,58 +47,42 @@ function setGeoData(){
         // +40 needed for layout fit
         .translate([ (width/2 + 40), height/2])
     
-    // Load external data and boot
-    d3.json("data/landkreise.geojson").then(function(data) {
-    // d3.json("https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson").then(function(data){
-        // Draw the map
-        svg.append("g")
-            .selectAll("path")
-            .data(data.features)
-            .enter()
-            .append("path")
-            .attr("fill", function(d){
-                return getColor(d.properties.GEN);
-            })
-            .attr("id", function(d){
-                mapNames.push(d.properties.GEN)
-                return d.properties.GEN;
-            })
-            .attr("d", d3.geoPath()
-                .projection(projection)
-            )
-            .style("stroke", "black")
-            .on("mouseover", function(){
-                var col = d3.select(this).style('fill')
-                d3.select(this).style("stroke", col)
-                d3.select(this).style("fill", "white")
-            })                
-            .on("mouseout", function(){
-                var col = d3.select(this).style('stroke')
-                d3.select(this).style("stroke", "black")
-                d3.select(this).style("fill", col)
-            })
-            .on("click", function(d){
-                console.log(d)
-                d3.select("#infoText").text(this.id); 
-            });
-
-        console.log("ArrLength: "+mapNames.length)
-    })
-
-    function getColor(element){
-        //TODO get data for this specific element
-        //TODO replace, only for color visualisation
-        var numb = getRandomInt(3)
-        if(numb==0){
-            return "red";
-        }else if(numb==1){
-            return "orange";
+    svg.append("g")
+        .selectAll("path")
+        .data(geoData.features)
+        .enter()
+        .append("path")
+        .attr("fill", function(d){
+            if(Object.keys(data[selectedDate]).includes(d.properties.AGS)){
+                return getColor(min, max, data[selectedDate][d.properties.AGS][selectedMetric])
+            }
+            return "white"
+        })
+        .attr("id", function(d){
+            return "i"+d.properties.AGS;
+        })            
+        .attr("d", d3.geoPath()
+            .projection(projection)
+        )
+        .style("stroke", "black")
+        .on("mouseover", function(){
+            var col = d3.select(this).style('fill')
+            d3.select(this).style("stroke", col)
+            d3.select(this).style("fill", "white")
+        })                
+        .on("mouseout", function(){
+            var col = d3.select(this).style('stroke')
+            d3.select(this).style("stroke", "black")
+            d3.select(this).style("fill", col)
+        })
+        .on("click", function(d){
+            d3.select("#infoText").text(this.id); 
+            console.log(d);
         }
-        return "yellow"
-    }
+    );
+}
 
-    //TODO remove, after color function is implemented
-    function getRandomInt(max){
-        return Math.floor(Math.random() *Math.floor(max));
-    }
+function getColor(min, max, val){
+    var v = 255/(min-max);
+    return 'rgb(255,'+Math.round(v*(val-max))+',0)';
 }
