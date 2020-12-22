@@ -1,12 +1,17 @@
 import csv
 import json
+import sys
 
 
 def main():
+    format = False
+    if "--format" in sys.argv:
+        format = True
+
     d, c = parse_case_data()
     pad_data_set(d, c)
-    write_to_file(d, "data.json")
-    write_to_file(c, "counties.json")
+    write_to_file(d, "data.json", format)
+    write_to_file(c, "counties.json", format)
     print("DONE")
 
 
