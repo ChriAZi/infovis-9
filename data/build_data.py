@@ -10,6 +10,8 @@ def main():
 
     d, c = parse_case_data()
     pad_data_set(d, c)
+    aggregate_daily_data(d, c)
+
     write_to_file(d, "data.json", format)
     write_to_file(c, "counties.json", format)
     print("DONE")
@@ -73,11 +75,33 @@ def create_empty_element():
 
 
 def pad_data_set(data, counties):
+    print("Padding data set with empty data points")
+
     for date in data:
         for c in counties:
             if c not in data[date]:
                 data[date][c] = create_empty_element()
-                print(f"{date}: {c}")
+
+
+def aggregate_daily_data(data, counties):
+    print("Calculating total infection cases and deaths")
+
+    sorted_dates = sorted(list(data))
+
+    for c in counties:
+        total_cases = 0
+        total_deaths = 0
+
+        for date in sorted_dates:
+            elem = data[date][c]
+
+            if elem["newCases"]:
+                total_cases += elem["newCases"]
+            elem["totalCases"] = total_cases
+
+            if elem["newDeaths"]:
+                total_deaths += elem["newDeaths"]
+            elem["totalDeaths"] = total_deaths
 
 
 def write_to_file(content, filename, format=False):
