@@ -4,6 +4,7 @@ import json
 
 def main():
     d, c = parse_case_data()
+    pad_data_set(d, c)
     write_to_file(d, "data.json")
     write_to_file(c, "counties.json")
     print("DONE")
@@ -64,6 +65,14 @@ def create_empty_element():
         "caseIncidence": None,
         "deathIncidence": None
     }
+
+
+def pad_data_set(data, counties):
+    for date in data:
+        for c in counties:
+            if c not in data[date]:
+                data[date][c] = create_empty_element()
+                print(f"{date}: {c}")
 
 
 def write_to_file(content, filename, format=False):
