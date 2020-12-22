@@ -4,13 +4,12 @@ import sys
 
 
 def main():
-    format = False
-    if "--format" in sys.argv:
-        format = True
+    format = True if "--format" in sys.argv else False
 
     d, c = parse_case_data()
     pad_data_set(d, c)
     aggregate_daily_data(d, c)
+    assemble_nationwide_data(d, c)
 
     write_to_file(d, "data.json", format)
     write_to_file(c, "counties.json", format)
@@ -84,7 +83,7 @@ def pad_data_set(data, counties):
 
 
 def aggregate_daily_data(data, counties):
-    print("Calculating total infection cases and deaths")
+    print("Aggregating total infection cases and deaths")
 
     sorted_dates = sorted(list(data))
 
@@ -102,6 +101,21 @@ def aggregate_daily_data(data, counties):
             if elem["newDeaths"]:
                 total_deaths += elem["newDeaths"]
             elem["totalDeaths"] = total_deaths
+
+
+def assemble_nationwide_data(data, counties):
+    print("Assembling nationwide data")
+
+    for date in data:
+        data[date]["all"] = create_empty_element()
+        data[date]["all"]["totalCases"] = 0
+        data[date]["all"]["totalDeaths"] = 0
+
+        for c in counties:
+            data[date]["all"]["newCases"] += data[date][c]["newCases"]
+            data[date]["all"]["newDeaths"] += data[date][c]["newDeaths"]
+            data[date]["all"]["totalCases"] += data[date][c]["totalCases"]
+            data[date]["all"]["totalDeaths"] += data[date][c]["totalDeaths"]
 
 
 def write_to_file(content, filename, format=False):
