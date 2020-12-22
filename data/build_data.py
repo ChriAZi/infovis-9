@@ -1,12 +1,24 @@
 import csv
 import json
+import os
+import urllib.request
 import sys
+
+CASE_DATA = 'RKI_COVID19.csv'
 
 
 def main():
     format = True if "--format" in sys.argv else False
+    download = False if "--no-download" in sys.argv else True
+
+    if download:
+        download_case_data()
 
     d, c = parse_case_data()
+
+    if download:
+        os.remove(CASE_DATA)
+
     pad_data_set(d, c)
     aggregate_daily_data(d, c)
     assemble_nationwide_data(d, c)
@@ -16,13 +28,20 @@ def main():
     print("DONE")
 
 
+def download_case_data():
+    print("Downloading case data")
+
+    url = "https://www.arcgis.com/sharing/rest/content/items/f10774f1c63e40168479a1feb6c7ca74/data"
+    urllib.request.urlretrieve(url, CASE_DATA)
+
+
 def parse_case_data():
     print("Parsing case data file")
 
     data = {}
     counties = {}
 
-    with open("RKI_COVID19.csv", newline='') as csv_file:
+    with open(CASE_DATA, newline='') as csv_file:
         reader = csv.reader(csv_file)
         first_row = True
 
