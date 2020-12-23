@@ -27,35 +27,6 @@ nav .uk-logo {
     font-size: 1rem !important;
 }
 
-#timeline {
-    width: 100%;
-    margin-top: -35px;
-}
-
-#timeline .control-buttons {
-    margin-top: -5px;
-}
-
-#timeline .range-lider-container::before {
-    content: "März";
-    bottom: 25px;
-    position: relative;
-    left: 55px;
-}
-
-#timeline .range-lider-container::after {
-    content: "Heute";
-    bottom: 25px;
-    position: relative;
-    right: 55px;
-}
-
-#timeline .uk-range {
-    width: calc(100% - 100px);
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
 footer {
     background: lightgray;
 }
@@ -63,4 +34,10 @@ footer {
 footer .uk-grid {
     padding: 5px 40px;
     font-size: 0.45rem;
+}
+
+#test {
+    background-color: yellow;
+    height: 200px;
+    width: 200px;
 }
