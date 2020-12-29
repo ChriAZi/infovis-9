@@ -80,11 +80,11 @@
                         </div>
                         <div id="timeline" class="uk-width-1-1" class="wrapper-timeline">
                             <div id="buttons-timeline" class="uk-width-3-10">
-                                    <button id="back-button">|<</button>
+                                    <button id="back-button" onclick="backStepSlider()">|<</button>
                                     <button id="slow-button" ><<</button>
-                                    <button id="play-button">Play</button>
+                                    <button id="play-button" onclick="playOverTime()">Play</button>
                                     <button id="fast-button" >>></button>
-                                    <button id="forward-button">>|</button>
+                                    <button id="forward-button" onclick="stepSlider()">>|</button>
                             </div>
                             <div id="slider-wrapper" class="slider-with-axis" class="uk-width-7-10">
                                 <span id="slider-handler" class="slider-label">  </span>
@@ -95,6 +95,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
         <footer>
             <div class="uk-grid-divider" uk-grid>
