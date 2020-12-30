@@ -43,23 +43,17 @@ footer .uk-grid {
 }
 
 
-.wrapper-timeline{
-    position: relative;
-    width: 100%;
-    bottom: 20px;
-}
-
 #buttons-timeline {
     position: absolute;
     left: 2%;
     bottom: 10px;
-    width: 40%;
+
 }
 
 #slider{
     width: 80%;
 }
-.slider-with-axis {
+#slider-wrapper {
     position: absolute;
     bottom: 5px;
     width: 80%;

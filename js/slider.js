@@ -79,6 +79,9 @@ function playOverTime() {
     })
 }
 
+
+
+
 function stepSlider(){
     showSliderValue();
     d3.select('#slider')
