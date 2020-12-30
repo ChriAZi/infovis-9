@@ -1,14 +1,18 @@
-const rangeSlider = document.getElementById("slider");
-const sliderWidth = rangeSlider.offsetWidth;
+const sliderPlayingSpeeds = [500, 300, 100, 80, 50, 30, 10];
+let normalSpeed = 3;
+let sliderSpeed = normalSpeed;
+let isPlaying = false;
+let player = null;
+
+const longpress = 1000;
+
+const dateSlider = document.getElementById("slider");
+const sliderWidth = dateSlider.offsetWidth;
 const rangeHandler = document.getElementById("slider-handler");
 
-const sliderPlayingSpeed = 100;
-let isPlaying = false;
-let player;
-
 function showSliderValue() {
-    rangeHandler.innerHTML = Object.keys(data)[rangeSlider.value];
-    let bulletPosition = (rangeSlider.value /rangeSlider.max);
+    rangeHandler.innerHTML = Object.keys(data)[dateSlider.value];
+    let bulletPosition = (dateSlider.value /dateSlider.max);
     rangeHandler.style.left = (bulletPosition * sliderWidth -30) + "px";
 }
 
@@ -16,20 +20,20 @@ function initSlider(){
     d3.select("#slider")
         .property("min", 0)
         .property("max", Object.keys(data).length-1)
-        .property("value", Object.keys(data).length-1)
+        .property("value", Math.floor((Object.keys(data).length-1)/2))
         .property("step", 1)
         .attr("width",sliderWidth)
         .on("input", function() {
-                console.log("slider: "+this.value);
+                //console.log("slider: "+this.value);
                 setDate(Object.keys(data)[this.value]);
             });
-    drawAxis();
+    drawAxisSlider();
+    initButtons();
     showSliderValue();
-    rangeSlider.addEventListener("input", showSliderValue, false);
+    dateSlider.addEventListener("input", showSliderValue, false);
 }
 
-function drawAxis(id = "#axis-slider") {
-
+function drawAxisSlider(id = "#axis-slider") {
     var margin = {top: 0, right: 6, bottom: 20, left: 10},  // 20 is the width of the slider-thumb
         width = sliderWidth - margin.right -margin.left,
         height = 30;
@@ -60,35 +64,87 @@ function drawAxis(id = "#axis-slider") {
         .call(d3.axisBottom(x));
 }
 
-function playOverTime() {
-    console.log("playOverTime is started ...");
+function initButtons(){
+    document.getElementById("fast-button").disabled = true;
+    document.getElementById("slow-button").disabled = true;
+    let delay;
+    let longClickableButtons = document.getElementsByClassName('longClickable');
+    let longClickableButton;
+
+    for (let i = 0, j = longClickableButtons.length; i < j; i++) {
+        longClickableButton = longClickableButtons[i];
+        longClickableButton.addEventListener('mousedown', function () {
+            let _this = this;
+            delay = setTimeout(check, longpress);
+
+            function check() {
+                longClickedButton(_this);
+            }
+
+        }, true);
+
+        longClickableButton.addEventListener('mouseup', function () {
+            clearTimeout(delay);
+        });
+
+        longClickableButton.addEventListener('mouseout', function () {
+            clearTimeout(delay);
+        });
+
+        }
+}
+
+function playOrStopSlider() {
     if(!isPlaying) {
-        player = setInterval(stepSlider, sliderPlayingSpeed);
-        console.log("start playing ...");
-        document.getElementById("play-button").innerText = "Stop";
+        sliderSpeed = 2;
+        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed]);
+        document.getElementById("slow-button").disabled = false;
+        document.getElementById("fast-button").disabled = false;
         isPlaying = true;
     }
-    else{
-        console.log("stop playing ...");
-        isPlaying = false;
-        clearInterval(player);
-        document.getElementById("play-button").innerText = "Play";
+    else {
+        stopPlaying();
     }
     document.querySelector('#slider').addEventListener(("input"), function(){
-        clearInterval(player);
+        stopPlaying();
     })
 }
 
+function stopPlaying(){
+    if (player != null)
+    {
+        clearInterval(player);
+    }
+    document.getElementById("slow-button").disabled = true;
+    document.getElementById("fast-button").disabled = true;
+    isPlaying = false;
+}
 
+function playFaster() {
+    if (sliderSpeed < sliderPlayingSpeeds.length) {
+        sliderSpeed++;
+    }
+    if (player != null) {
+        clearInterval(player);
+        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed])
+    }
+}
 
+function playSlower(){
+    if (sliderSpeed > 0) {
+        sliderSpeed--;
+    }
+    if (player != null) {
+        clearInterval(player);
+        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed])
+    }
+}
 
-function stepSlider(){
-    showSliderValue();
+function stepForwardSlider(){
     d3.select('#slider')
         .property("value", function () {
             let nextValue = Number(this.value) + 1;
             let date = Object.keys(data)[nextValue];
-            //console.log("date: " + date);
             if(this.value < Object.keys(data).length - 1) {
                 if (date != undefined) {
                     setDate(date)
@@ -98,15 +154,14 @@ function stepSlider(){
                 return 0;
             }
         });
+    showSliderValue();
 }
 
 function backStepSlider(){
-    showSliderValue();
     d3.select('#slider')
         .property("value", function () {
             let nextValue = Number(this.value) - 1;
             let date = Object.keys(data)[nextValue];
-            //console.log("date: " + date);
             if(this.value > 0 ) {
                 if (date != undefined) {
                     setDate(date)
@@ -116,4 +171,30 @@ function backStepSlider(){
                 return Object.keys(data).length - 1;
             }
         });
+    showSliderValue();
+}
+
+function longClickedButton(button) {
+    if(isPlaying){stopPlaying();}
+    if(button.id == "forward-button"){
+        d3.select('#slider')
+            .property("value", function () {
+                let lastDate = Object.keys(data)[Object.keys(data).length - 1];
+                setDate(lastDate)
+                return Object.keys(data).length - 1;
+                });
+        showSliderValue();
+    }
+    else if(button.id == "backward-button"){
+        d3.select('#slider')
+            .property("value", function () {
+                let firstDate = Object.keys(data)[0];
+                setDate(firstDate)
+                return 0;
+            });
+        showSliderValue();
+    }
+    else{
+        console.log("No function for longClick implemented");
+    }
 }

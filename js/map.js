@@ -17,7 +17,7 @@ function findMinMax(){
 
 function updateMap(){
     findMinMax();
-
+    //console.log(selectedDate);
     //color path fill based on data
     d3.select("#map").selectAll("path").nodes().forEach(function(d){
         var str = (d.id).substring(1);

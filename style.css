@@ -42,21 +42,14 @@ footer .uk-grid {
     width: 200px;
 }
 
-
-#buttons-timeline {
-    position: absolute;
-    left: 2%;
-    bottom: 10px;
-
-}
-
 #slider{
-    width: 80%;
+    width: 100%;
 }
+
 #slider-wrapper {
-    position: absolute;
-    bottom: 5px;
-    width: 80%;
+    position: relative;
+    bottom: 20px;
+    /*width: 80%;*/
 }
 
 #axis-slider{
