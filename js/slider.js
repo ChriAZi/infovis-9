@@ -147,7 +147,7 @@ function stepForwardSlider(){
             let date = Object.keys(data)[nextValue];
             if(this.value < Object.keys(data).length - 1) {
                 if (date != undefined) {
-                    setDate(date)
+                    setDate(date);
                 }
                 return nextValue;
             } else {
@@ -180,7 +180,7 @@ function longClickedButton(button) {
         d3.select('#slider')
             .property("value", function () {
                 let lastDate = Object.keys(data)[Object.keys(data).length - 1];
-                setDate(lastDate)
+                setDate(lastDate);
                 return Object.keys(data).length - 1;
                 });
         showSliderValue();
@@ -189,7 +189,7 @@ function longClickedButton(button) {
         d3.select('#slider')
             .property("value", function () {
                 let firstDate = Object.keys(data)[0];
-                setDate(firstDate)
+                setDate(firstDate);
                 return 0;
             });
         showSliderValue();
