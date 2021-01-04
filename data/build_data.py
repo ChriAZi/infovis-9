@@ -23,6 +23,8 @@ def main():
     if download:
         os.remove(CASE_DATA)
 
+    calculate_population_density(c)
+
     pad_data_set(d, c)
     aggregate_daily_data(d, c)
     assemble_nationwide_data(d, c)
@@ -129,6 +131,12 @@ def create_empty_element():
         "caseIncidence": None,
         "deathIncidence": None
     }
+
+
+def calculate_population_density(counties):
+    for c in counties.values():
+        if c["population"] is not None and c["area"]:
+            c["density"] = c["population"] / c["area"]
 
 
 def pad_data_set(data, counties):
