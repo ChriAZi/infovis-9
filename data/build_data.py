@@ -6,6 +6,7 @@ import sys
 
 CASE_DATA = 'RKI_COVID19.csv'
 POP_DATA = 'einwohnerzahlen.csv'
+AREA_DATA = 'landkreisflaechen.csv'
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
 
     d, c = parse_case_data()
     parse_population_data(c)
+    parse_area_data(c)
 
     if download:
         os.remove(CASE_DATA)
@@ -70,6 +72,7 @@ def parse_case_data():
                     counties[county_id] = {
                         "name": row[index_county_name],
                         "population": None,
+                        "area": None,
                         "density": None
                     }
 
@@ -95,6 +98,23 @@ def parse_population_data(counties):
                         counties[row[0]]["population"] = int(row[2])
                     else:
                         print(f"WARNING: Multiple population entries for {row[0]}, '{row[1]}'!")
+
+
+def parse_area_data(counties):
+    print("Parsing area data file")
+
+    with open(AREA_DATA, newline='') as csv_file:
+        reader = csv.reader(csv_file,  delimiter=';')
+        row_count = 0
+
+        for row in reader:
+            row_count += 1
+            if 6 < row_count < 483:
+                if row[0] in counties:
+                    if counties[row[0]]["area"] is None:
+                        counties[row[0]]["area"] = float(row[2].replace(',', '.'))
+                    else:
+                        print(f"WARNING: Multiple area entries for {row[0]}, '{row[1]}'!")
 
 
 def create_empty_element():
