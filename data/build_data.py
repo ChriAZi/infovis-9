@@ -1,4 +1,5 @@
 import csv
+import datetime
 import json
 import os
 import urllib.request
@@ -23,11 +24,13 @@ def main():
     if download:
         os.remove(CASE_DATA)
 
+    sum_up_total_population_and_area(c)
     calculate_population_density(c)
 
     pad_data_set(d, c)
     aggregate_daily_data(d, c)
     assemble_nationwide_data(d, c)
+    compute_incidences(d, c)
 
     write_to_file(d, "data.json", format)
     write_to_file(c, "counties.json", format)
@@ -85,6 +88,20 @@ def parse_case_data():
         return data, counties
 
 
+def create_empty_element():
+    return {
+        "newCases": 0,
+        "newDeaths": 0,
+        "freeBeds": None,
+        "occupiedBeds": None,
+        "reserveBeds": None,
+        "totalCases": None,
+        "totalDeaths": None,
+        "caseIncidence": None,
+        "deathIncidence": None
+    }
+
+
 def parse_population_data(counties):
     print("Parsing population data file")
 
@@ -119,18 +136,24 @@ def parse_area_data(counties):
                         print(f"WARNING: Multiple area entries for {row[0]}, '{row[1]}'!")
 
 
-def create_empty_element():
-    return {
-        "newCases": 0,
-        "newDeaths": 0,
-        "freeBeds": None,
-        "occupiedBeds": None,
-        "reserveBeds": None,
-        "totalCases": None,
-        "totalDeaths": None,
-        "caseIncidence": None,
-        "deathIncidence": None
+def sum_up_total_population_and_area(counties):
+    print("Summing up total population and area values")
+
+    all = {
+        "name": "Deutschland",
+        "population": 0,
+        "area": 0,
+        "density": None
     }
+
+    for c in counties.values():
+        if c["population"]:
+            all["population"] += c["population"]
+
+        if c["area"]:
+            all["area"] += c["area"]
+
+    counties["all"] = all
 
 
 def calculate_population_density(counties):
@@ -182,6 +205,35 @@ def assemble_nationwide_data(data, counties):
             data[date]["all"]["newDeaths"] += data[date][c]["newDeaths"]
             data[date]["all"]["totalCases"] += data[date][c]["totalCases"]
             data[date]["all"]["totalDeaths"] += data[date][c]["totalDeaths"]
+
+
+def compute_incidences(data, counties):
+    print("Computing seven day incidences")
+
+    for d in data:
+        date = datetime.datetime.strptime(d, "%Y/%m/%d").date()
+
+        for c in counties:
+            data[d][c]["caseIncidence"] = data[d][c]["newCases"]
+            data[d][c]["deathIncidence"] = data[d][c]["newDeaths"]
+
+            for i in range(1, 7):
+                day = (date - datetime.timedelta(days=i)).strftime("%Y/%m/%d")
+                if day in data:
+                    data[d][c]["caseIncidence"] += data[day][c]["newCases"]
+                    data[d][c]["deathIncidence"] += data[day][c]["newDeaths"]
+
+            if counties[c]["population"]:
+                data[d][c]["caseIncidence"] *= 100000
+                data[d][c]["caseIncidence"] /= counties[c]["population"]
+            else:
+                data[d][c]["caseIncidence"] = None
+
+            if counties[c]["population"]:
+                data[d][c]["deathIncidence"] *= 100000
+                data[d][c]["deathIncidence"] /= counties[c]["population"]
+            else:
+                data[d][c]["deathIncidence"] = None
 
 
 def write_to_file(content, filename, format=False):
