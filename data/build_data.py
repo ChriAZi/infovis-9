@@ -5,6 +5,7 @@ import urllib.request
 import sys
 
 CASE_DATA = 'RKI_COVID19.csv'
+POP_DATA = 'einwohnerzahlen.csv'
 
 
 def main():
@@ -15,6 +16,7 @@ def main():
         download_case_data()
 
     d, c = parse_case_data()
+    parse_population_data(c)
 
     if download:
         os.remove(CASE_DATA)
@@ -76,6 +78,23 @@ def parse_case_data():
                 elem["newDeaths"] += int(row[index_new_deaths])
 
         return data, counties
+
+
+def parse_population_data(counties):
+    print("Parsing population data file")
+
+    with open(POP_DATA, newline='') as csv_file:
+        reader = csv.reader(csv_file,  delimiter=';')
+        row_count = 0
+
+        for row in reader:
+            row_count += 1
+            if 6 < row_count < 483:
+                if row[0] in counties:
+                    if counties[row[0]]["population"] is None:
+                        counties[row[0]]["population"] = int(row[2])
+                    else:
+                        print(f"WARNING: Multiple population entries for {row[0]}, '{row[1]}'!")
 
 
 def create_empty_element():
