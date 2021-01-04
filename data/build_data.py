@@ -195,16 +195,17 @@ def aggregate_daily_data(data, counties):
 def assemble_nationwide_data(data, counties):
     print("Assembling nationwide data")
 
-    for date in data:
-        data[date]["all"] = create_empty_element()
-        data[date]["all"]["totalCases"] = 0
-        data[date]["all"]["totalDeaths"] = 0
+    for date in data.values():
+        all = create_empty_element()
+        date["all"] = all
+        all["totalCases"] = 0
+        all["totalDeaths"] = 0
 
         for c in counties:
-            data[date]["all"]["newCases"] += data[date][c]["newCases"]
-            data[date]["all"]["newDeaths"] += data[date][c]["newDeaths"]
-            data[date]["all"]["totalCases"] += data[date][c]["totalCases"]
-            data[date]["all"]["totalDeaths"] += data[date][c]["totalDeaths"]
+            all["newCases"] += date[c]["newCases"]
+            all["newDeaths"] += date[c]["newDeaths"]
+            all["totalCases"] += date[c]["totalCases"]
+            all["totalDeaths"] += date[c]["totalDeaths"]
 
 
 def compute_incidences(data, counties):
