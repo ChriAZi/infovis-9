@@ -11,6 +11,7 @@ const sliderWidth = dateSlider.offsetWidth;
 const rangeHandler = document.getElementById("slider-handler");
 
 function showSliderValue() {
+
     rangeHandler.innerHTML = Object.keys(data)[dateSlider.value];
     let bulletPosition = (dateSlider.value /dateSlider.max);
     rangeHandler.style.left = (bulletPosition * sliderWidth -30) + "px";
@@ -65,8 +66,8 @@ function drawAxisSlider(id = "#axis-slider") {
 }
 
 function initButtons(){
-    document.getElementById("fast-button").disabled = true;
-    document.getElementById("slow-button").disabled = true;
+    //document.getElementById("fast-button").disabled = true;
+    //document.getElementById("slow-button").disabled = true;
     let delay;
     let longClickableButtons = document.getElementsByClassName('longClickable');
     let longClickableButton;
@@ -96,11 +97,7 @@ function initButtons(){
 
 function playOrStopSlider() {
     if(!isPlaying) {
-        sliderSpeed = 2;
-        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed]);
-        document.getElementById("slow-button").disabled = false;
-        document.getElementById("fast-button").disabled = false;
-        isPlaying = true;
+        startPlaying();
     }
     else {
         stopPlaying();
@@ -110,33 +107,38 @@ function playOrStopSlider() {
     })
 }
 
+function startPlaying(){
+    player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed]);
+    isPlaying = true;
+}
+
 function stopPlaying(){
-    if (player != null)
+    if (player != null && isPlaying)
     {
         clearInterval(player);
     }
-    document.getElementById("slow-button").disabled = true;
-    document.getElementById("fast-button").disabled = true;
     isPlaying = false;
 }
 
 function playFaster() {
+    console.log(player);
     if (sliderSpeed < sliderPlayingSpeeds.length) {
         sliderSpeed++;
     }
-    if (player != null) {
-        clearInterval(player);
-        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed])
+    if(isPlaying) {
+        stopPlaying();
+        startPlaying();
     }
 }
 
 function playSlower(){
+    console.log(player);
     if (sliderSpeed > 0) {
         sliderSpeed--;
     }
-    if (player != null) {
-        clearInterval(player);
-        player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed])
+    if(isPlaying) {
+        stopPlaying();
+        startPlaying();
     }
 }
 
@@ -157,7 +159,7 @@ function stepForwardSlider(){
     showSliderValue();
 }
 
-function backStepSlider(){
+function stepBackwardSlider(){
     d3.select('#slider')
         .property("value", function () {
             let nextValue = Number(this.value) - 1;
