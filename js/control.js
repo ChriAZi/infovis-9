@@ -75,6 +75,7 @@ function setCounty(id) {
 function setDate(date) {
     selectedDate = date;
     updateMap()
+    updateAreaChart(selectedDate)
     // TODO: updateAreaChart()
     // TODO: updateScatterPlot()
 }
