@@ -83,11 +83,18 @@
             </div>
             <div id="timeline"  uk-grid>
                 <div id="buttons-timeline" class="uk-grid-item-match" class="uk-width-1-5">
-                        <button class="longClickable uk-width-1-5" id="backward-button" onmousedown="stepBackwardSlider()" ondblclick="jumpToStart()" >&#9198</button>
-                        <button class="uk-width-1-5"id="slow-button" onclick="playSlower()" >&#9194</button>
-                        <button class="uk-width-1-5"id="play-button" onclick="playOrStopSlider()" > &#9199 </button>
-                        <button class="uk-width-1-5"id="fast-button" onclick="playFaster()" >&#9193</button>
-                        <button class="longClickable uk-width-1-5"id="forward-button" onmousedown="stepForwardSlider()" >&#9197</button>
+                        <button class="longClickable uk-width-1-5" id="backward-button"
+                                title="one click to move one step backward, a long click to jump to the start"
+                                onmousedown="stepBackwardSlider()" ondblclick="jumpToStart()" >&#9198</button>
+                        <button class="uk-width-1-5"id="slow-button" title="play slower"
+                                onclick="playSlower()" >&#9194</button>
+                        <button class="uk-width-1-5"id="play-button" title="play or stop"
+                                onclick="playOrStopSlider()" > &#9199 </button>
+                        <button class="uk-width-1-5"id="fast-button" title="play faster"
+                                onclick="playFaster()" >&#9193</button>
+                        <button class="longClickable uk-width-1-5" id="forward-button"
+                                title="one click to move one step forward, a long click to jump to the end"
+                                onmousedown="stepForwardSlider()" >&#9197</button>
                         <!-- <p>&#9198 &#9664 &#9199 &#9654 &#9197</p> -->
                 </div>
                 <div id="slider-wrapper" class="uk-width-4-5">
