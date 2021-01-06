@@ -5,12 +5,11 @@ function filterData(data) {
 }
 
 const color = ["lightblue", "lightgreen", "#CC99FF"];
-
 const svg = d3
     .select("#area-chart")
     .append("svg")
-    .attr("height", 500)
-    .attr("width", 690);
+    .attr("height", 460)
+    .attr("width", 640);
 
 const strokeWidth = 1.5;
 var margin = {top: 0, bottom: 20, left: 80, right: 20};
@@ -18,12 +17,16 @@ const chart = svg.append("g").attr("transform", `translate(${margin.left},0)`);
 
 var width = +svg.attr("width") - 200 - margin.left - margin.right - strokeWidth * 2;
 var height = +svg.attr("height") - 200 - margin.top - margin.bottom;
-
+var xAxis;
+var yAxis;
+var lineText;
+var lineDate = new Date();
+var lineDateFormated = lineDate.toISOString().split('T')[0];
+lineDateFormated = lineDateFormated.replace(/-/g, '/');
 
 const grp = chart
     .append("g")
     .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
-
 
 d3.csv("data/data_Auslastung.csv")
     .then(function (data) {
@@ -34,21 +37,18 @@ d3.csv("data/data_Auslastung.csv")
             d.Notfallreserve = +d.Notfallreserve
         })
 
-
         // Create stack
         const stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
         const stackedData = stack(data);// Create scales
         const xValue = d => d.date;
 
         //x-Axis
-        var xAxis = d3.scaleTime()
+        xAxis = d3.scaleTime()
             .domain(d3.extent(data, xValue))
-            //.domain([1,12])
             .range([0, width]);
 
-
         //y-Axis
-        var yAxis = d3.scaleLinear()
+        yAxis = d3.scaleLinear()
             .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
                 return d[1]
             })])
@@ -73,7 +73,7 @@ d3.csv("data/data_Auslastung.csv")
 
         series
             .append("path")
-            .attr("transform", `translate(${margin.left},0)`)
+            .attr("transform", `translate(${margin.left},20)`)
             .style("fill", (d, i) => color[i])
             .attr("stroke", "steelblue")
             .attr("stroke-linejoin", "round")
@@ -84,72 +84,72 @@ d3.csv("data/data_Auslastung.csv")
         // Add the X Axis
         chart
             .append("g")
-            .attr("transform", `translate(0,${height})`)
+            .attr("transform", `translate(0,${height+20})`)
             .call(d3.axisBottom(xAxis));
 
         // Add the Y Axis
         chart
             .append("g")
-            .attr("transform", `translate(0, 0)`)
-            .call(d3.axisLeft(yAxis));
-        // Highlight function TO DO
-        var highlight = function (d) {
-            console.log(d)
-        }
+            .attr("transform", `translate(${width+1}, 20)`)
+            .call(d3.axisRight(yAxis));
+    
+               // Add line
+        grp
+            .append("line")
+            .datum(data)
+            .attr('x1', xAxis(lineDate) + margin.left - strokeWidth / 2)
+            .attr('x2', xAxis(lineDate) + margin.left - strokeWidth / 2)
+            .attr('y1', 20)
+            .attr('y2', yAxis(0) + 20)
+            .attr('stroke', 'white')
+            .style("stroke-width", 2);
 
-        // And when it is not hovered anymore
-        var noHighlight = function (d) {
-        }
-        var size = 20
-        /*
-        svg.selectAll("rect")
-            .data(["Belegte", "Freie", "Notfallreserve"])
-            .enter()
-            .append("rect")
-            .attr("x", 500)
-            .attr("y", function (d, i) {
-                return 10 + i * (size + 80)
-            })
-            .attr("width", size)
-            .attr("height", size)
-            .style("fill", (d, i) => color[i])
-            .on("mouseover", highlight)
-            .on("mouseleave", noHighlight);
-
-        /*
-        svg.selectAll("labels")
-            .data(["Belegte", "Freie", "Notfallreserve"])
-            .enter()
-            .append("text")
-            .attr("x", 490)
-            .attr("y", function (d, i) {
-                return 50 + i * (size + 80) + (size / 2)
-            }) // 100 is where the first dot appears. 25 is the distance between dots
-            .style("fill", (d, i) => color[i])
-            .text(function (d) {
-                return d + ' Betten'
-            })
-            .attr("text-anchor", "left")
-            .style("alignment-baseline", "middle")
-            .on("mouseover", highlight)
-            .on("mouseleave", noHighlight);
-
-            */
+        //Add line text
+        lineText = chart.append("text")
+            .attr("y", 10)
+            .attr("x", xAxis(lineDate))
+            .attr('text-anchor', 'middle')
+            .attr('stroke', 'white')
+            .style("font-size", 12)
+            .text(lineDateFormated);
 
         // text label for the x axis
         chart.append("text")
             .attr("transform",
                 "translate(" + (width / 2) + " ," +
-                (height + margin.top + 40) + ")")
+                (height + margin.top + 60) + ")")
             .style("text-anchor", "middle")
             .text("Time")
 
         // text label for the y axis
         chart.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
+            .attr("y", width+50)
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("Number of Beds");
     })
+
+function updateAreaChart(selectedDate) {
+    lineDate = new Date(selectedDate);
+    console.log('selectedDate is: ' + lineDateFormated);
+    console.log('lineDate is: ' + lineDate);
+    grp.select("line")
+        .transition()
+        .duration(1000)
+        .ease(d3.easeLinear)
+        .attr('x1', xAxis(lineDate) + margin.left - strokeWidth / 2)
+        .attr('x2', xAxis(lineDate) + margin.left - strokeWidth / 2)
+        .attr('y1', 20)
+        .attr('y2', yAxis(0) + 20)
+        .attr("stroke", 'black')
+        .style("stroke-width", 2);
+    lineText.transition()
+        .duration(1000)
+        .ease(d3.easeLinear)
+        .attr('x', xAxis(lineDate))
+        .attr('y', 10)
+        .attr('stroke', 'black')
+        .text(selectedDate);
+}
