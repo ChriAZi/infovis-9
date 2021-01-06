@@ -10,9 +10,12 @@ const dateSlider = document.getElementById("slider");
 const sliderWidth = dateSlider.offsetWidth;
 const rangeHandler = document.getElementById("slider-handler");
 
-function showSliderValue() {
+const parseDateFromData = d3.timeParse("%Y/%m/%d");
+const timeFormatOverHandler = d3.timeFormat("%d.%m.%Y");
 
-    rangeHandler.innerHTML = Object.keys(data)[dateSlider.value];
+function showSliderValue() {
+    let date = parseDateFromData(Object.keys(data)[dateSlider.value]);
+    rangeHandler.innerHTML = timeFormatOverHandler(date);
     let bulletPosition = (dateSlider.value /dateSlider.max);
     rangeHandler.style.left = (bulletPosition * sliderWidth -30) + "px";
 }
@@ -39,11 +42,10 @@ function drawAxisSlider(id = "#axis-slider") {
         width = sliderWidth - margin.right -margin.left,
         height = 30;
     const date = Object.keys(data);
-    const parseTime = d3.timeParse("%Y/%m/%d");
-    //const formatDateIntoMonth = d3.timeFormat("%B");
+
     let dates = [];
     for(let obj of date){
-        dates.push(parseTime(obj));
+        dates.push(parseDateFromData(obj));
     }
     // append the svg object to the body of the page
     var svg = d3.select(id)
