@@ -21,8 +21,8 @@ var xAxis;
 var yAxis;
 var lineText;
 var lineDate = new Date();
-var lineDateFormated = lineDate.toISOString().split('T')[0];
-lineDateFormated = lineDateFormated.replace(/-/g, '/');
+var lineDateFormatted = lineDate.toISOString().split('T')[0];
+lineDateFormatted = lineDateFormatted.replace(/-/g, '/');
 
 const grp = chart
     .append("g")
@@ -111,7 +111,7 @@ d3.csv("data/data_Auslastung.csv")
             .attr('text-anchor', 'middle')
             .attr('stroke', 'white')
             .style("font-size", 12)
-            .text(lineDateFormated);
+            .text(lineDateFormatted);
 
         // text label for the x axis
         chart.append("text")
