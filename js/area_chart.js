@@ -131,7 +131,7 @@ d3.csv("data/data_Auslastung.csv")
             .text("Number of Beds");
     })
 
-function updateAreaChart(selectedDate) {
+function updateAreaChart() {
     lineDate = new Date(selectedDate);
     grp.select("line")
         .transition()
