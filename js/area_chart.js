@@ -133,8 +133,6 @@ d3.csv("data/data_Auslastung.csv")
 
 function updateAreaChart(selectedDate) {
     lineDate = new Date(selectedDate);
-    console.log('selectedDate is: ' + lineDateFormated);
-    console.log('lineDate is: ' + lineDate);
     grp.select("line")
         .transition()
         .duration(1000)
