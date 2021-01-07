@@ -1,10 +1,11 @@
 import csv
-import datetime
 import json
 import os
 import urllib.request
 import sys
+from datetime import date, datetime, timedelta
 
+DATE_FORMAT = '%Y/%m/%d'
 CASE_DATA = 'RKI_COVID19.csv'
 POP_DATA = 'einwohnerzahlen.csv'
 AREA_DATA = 'landkreisflaechen.csv'
@@ -165,10 +166,21 @@ def calculate_population_density(counties):
 def pad_data_set(data, counties):
     print("Padding data set with empty data points")
 
-    for date in data:
+    sorted_dates = sorted(list(data))
+    date = datetime.strptime(sorted_dates[0], DATE_FORMAT).date()
+    last_date = datetime.strptime(sorted_dates[-1], DATE_FORMAT).date()
+    delta = timedelta(days=1)
+
+    while date <= last_date:
+        id = date.strftime(DATE_FORMAT)
+        if id not in data:
+            data[id] = {}
+        date += delta
+
+    for d in data:
         for c in counties:
-            if c not in data[date]:
-                data[date][c] = create_empty_element()
+            if c not in data[d]:
+                data[d][c] = create_empty_element()
 
 
 def aggregate_daily_data(data, counties):
@@ -212,14 +224,14 @@ def compute_incidences(data, counties):
     print("Computing seven day incidences")
 
     for d in data:
-        date = datetime.datetime.strptime(d, "%Y/%m/%d").date()
+        date = datetime.strptime(d, DATE_FORMAT).date()
 
         for c in counties:
             data[d][c]["caseIncidence"] = data[d][c]["newCases"]
             data[d][c]["deathIncidence"] = data[d][c]["newDeaths"]
 
             for i in range(1, 7):
-                day = (date - datetime.timedelta(days=i)).strftime("%Y/%m/%d")
+                day = (date - timedelta(days=i)).strftime(DATE_FORMAT)
                 if day in data:
                     data[d][c]["caseIncidence"] += data[day][c]["newCases"]
                     data[d][c]["deathIncidence"] += data[day][c]["newDeaths"]
