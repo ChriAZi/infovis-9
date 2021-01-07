@@ -23,8 +23,8 @@ function showSliderValue() {
 function initSlider(){
     d3.select("#slider")
         .property("min", 0)
-        .property("max", Object.keys(data).length-1)
-        .property("value", Math.floor((Object.keys(data).length-1)/2))
+        .property("max", Object.keys(data).length - 1)
+        .property("value", Object.keys(data).length - 1)
         .property("step", 1)
         .attr("width",sliderWidth)
         .on("input", function() {
