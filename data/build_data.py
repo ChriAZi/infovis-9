@@ -51,7 +51,7 @@ def parse_case_data():
     data = {}
     counties = {}
 
-    with open(CASE_DATA, newline='') as csv_file:
+    with open(CASE_DATA, newline='', encoding='ISO-8859-1') as csv_file:
         reader = csv.reader(csv_file)
         first_row = True
 
@@ -106,7 +106,7 @@ def create_empty_element():
 def parse_population_data(counties):
     print("Parsing population data file")
 
-    with open(POP_DATA, newline='') as csv_file:
+    with open(POP_DATA, newline='', encoding='ISO-8859-1') as csv_file:
         reader = csv.reader(csv_file,  delimiter=';')
         row_count = 0
 
@@ -123,7 +123,7 @@ def parse_population_data(counties):
 def parse_area_data(counties):
     print("Parsing area data file")
 
-    with open(AREA_DATA, newline='') as csv_file:
+    with open(AREA_DATA, newline='', encoding='ISO-8859-1') as csv_file:
         reader = csv.reader(csv_file,  delimiter=';')
         row_count = 0
 
