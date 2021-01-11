@@ -1,0 +1,64 @@
+.timeline-row {
+    height: 25vh;
+    align-items: flex-end;
+    padding-bottom: 8.5%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+/** nach: https://codepen.io/mayuMPH/pen/ZjxGEY **/
+
+#axis-slider {
+    position: absolute;
+    top: 7vh;
+    z-index: 1;
+}
+
+#axis-slider path {
+    stroke: transparent;
+}
+
+#slider-wrapper {
+    position: relative;
+    padding: 0;
+}
+
+#slider {
+    position: relative;
+    outline: none;
+    -webkit-appearance: none;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: var(--shadow-default);
+    background: var(--background-white);
+    border-radius: 20px;
+    height: 3.5vh;
+    z-index: 99999;
+}
+
+#slider::-webkit-slider-thumb, #slider::-moz-range-thumb {
+    border: none;
+    height: 4.5vh;
+    width: 10px;
+    background-color: var(--background-dark-grey);
+    cursor: pointer;
+    -webkit-appearance: none;
+    box-shadow: var(--shadow-default);
+    z-index: 99999;
+}
+
+.slider-label {
+    position: relative;
+    transform-origin: center center;
+    display: block;
+    margin-bottom: 1.5%;
+    padding: 1.25%;
+    height: 5vh;
+    width: 12vh;
+    background-color: var(--background-white);
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--font-color);
+    font-size: var(--font-size-selector);
+}

@@ -1,0 +1,67 @@
+:root {
+
+    /** Metrics **/
+    --new-cases: #ffaa00;
+    --total-cases: #ffea4c;
+    --new-deaths: #333333;
+    --total-deaths: #002ea3;
+    --case-incidence: #78121e;
+    --death-incidence: #de0000;
+
+    /** Backgrounds **/
+    --background-dark-grey: #909090;
+    --background-light-grey: #B0B0B0;
+    --background-light-white: #F5F5F5;
+    --background-white: #FFFFFF;
+    --background-body: #EEEEEE;
+
+    /** Fonts **/
+    --font-color: #303030;
+    --font-family: 'Lato', sans-serif;
+    --font-size-heading: 1.5vw;
+    --font-size-metric: 1.4vw;
+    --font-size-metric-desc: 1.2vw;
+    --font-size-timeline: 0.8vw;
+    --font-size-selector: 1vw;
+
+    /** Box Shadows **/
+    --shadow-default: 0 10px 30px 0 rgba(110, 110, 110, 0.1);
+    --shadow-dashboard: 0 10px 10px 0 rgba(149, 157, 165, 0.5);
+    --shadow-timeline: 0 0 30px 0 rgba(0, 0, 0, 0.1);
+    --shadow-controls: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
+
+    --shadow-default-hover: 0 20px 50px 0 rgba(110, 110, 110, 0.5);
+    --shadow-controls-hover: 0 10px 40px 0px rgba(0, 0, 0, 0.3);
+
+}
+
+body {
+    background-color: var(--background-body);
+    font-family: var(--font-family);
+    color: var(--font-color);
+    height: 100%;
+    overflow: hidden;
+}
+
+.content-container {
+    height: 100vh;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.content-row {
+    height: inherit;
+}
+
+.preloader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999999;
+    background-image: url('../assets/preloader.gif');
+    background-repeat: no-repeat;
+    background-color: #FFF;
+    background-position: center;
+}

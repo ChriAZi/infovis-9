@@ -1,0 +1,67 @@
+.diagram-container {
+    padding: 2.5%;
+}
+
+.diagram-row {
+    max-height: 75vh;
+}
+
+.map-container,
+.scatter-container,
+.area-container {
+    background-color: var(--background-white);
+    box-shadow: var(--shadow-default);
+    border-radius: 20px;
+}
+
+.map-container, .small-diagram-container {
+    max-height: inherit;
+    height: 5000px;
+}
+
+.scatter-container, .area-container {
+    max-height: calc(50% - 10px);
+    height: 5000px;
+}
+
+.map-container {
+    padding: 2.5%;
+    position: relative;
+}
+
+.area-container {
+    margin-top: 20px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+.scatter-container, .area-container {
+    padding: 2.5%;
+    position: relative;
+}
+
+path.selected-county {
+    stroke-width: 3px;
+}
+
+.legend {
+    position: absolute;
+    background-color: var(--background-dark-grey);
+    box-shadow: var(--shadow-controls-hover);
+    border-radius: 5px;
+    top: 20px;
+    right: 3.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1%;
+    width: 30px;
+    height: 30px;
+}
+
+.legend img {
+    height: 15px;
+}

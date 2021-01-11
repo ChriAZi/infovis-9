@@ -1,0 +1,137 @@
+.dashboard-container {
+    background-color: var(--background-light-grey);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: var(--shadow-dashboard);
+    z-index: 999999;
+    padding: 2.5%;
+}
+
+.diagram-container {
+    background-color: var(--background-light-white);
+}
+
+.metric-selection {
+    text-align: center;
+}
+
+.selected-location {
+    font-size: var(--font-size-heading);
+    font-weight: bold;
+    margin-bottom: 5%;
+}
+
+.back-to-all-data {
+    font-size: var(--font-size-metric-desc);
+    color: var(--font-color);
+    font-weight: lighter;
+    cursor: pointer;
+    margin-bottom: 5%;
+    opacity: 0;
+}
+
+.back-to-all-data:hover {
+    text-decoration: underline;
+}
+
+.metric {
+    font-size: var(--font-size-metric);
+}
+
+.metric.newCases .selection.isSelected,
+.metric.newCases .metric-number {
+    color: var(--new-cases);
+}
+
+.metric.totalCases .selection.isSelected,
+.metric.totalCases .metric-number {
+    color: var(--total-cases);
+}
+
+.metric.newDeaths .selection.isSelected,
+.metric.newDeaths .metric-number {
+    color: var(--new-deaths);
+}
+
+.metric.totalDeaths .selection.isSelected,
+.metric.totalDeaths .metric-number {
+    color: var(--total-deaths);
+}
+
+.metric.caseIncidence .selection.isSelected,
+.metric.caseIncidence .metric-number {
+    color: var(--case-incidence);
+}
+
+.metric.deathIncidence .selection.isSelected,
+.metric.deathIncidence .metric-number {
+    color: var(--death-incidence);
+}
+
+.selection {
+    margin-bottom: 1vh;
+    cursor: pointer;
+    height: 11vh;
+    display: flex;
+    align-items: center;
+}
+
+.selection p {
+    margin-bottom: 0;
+}
+
+.metric-number-container {
+    text-align: right;
+}
+
+.metric-name-container {
+    text-align: left;
+}
+
+.selection.isSelected {
+    background-color: var(--background-light-white);
+    border-radius: 20px;
+    box-shadow: var(--shadow-default-hover);
+}
+
+.metric-number {
+    text-align: right;
+    font-weight: bold;
+}
+
+.metric-subname {
+    font-size: var(--font-size-metric-desc);
+    color: var(--font-color);
+    font-weight: lighter;
+}
+
+.metric-date {
+    font-size: var(--font-size-metric-desc);
+    color: var(--font-color);
+    font-weight: lighter;
+    margin-bottom: 12%;
+    margin-top: 7.5%;
+}
+
+.control-container {
+    background-color: var(--background-dark-grey);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    border-radius: 10px;
+    margin: 1.5%;
+    border: none;
+    box-shadow: var(--shadow-controls);
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.control-container:hover {
+    box-shadow: var(--shadow-controls-hover);
+}
+
+.control-container img {
+    width: 85%;
+    height: 85%;
+}
