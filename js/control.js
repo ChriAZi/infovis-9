@@ -74,10 +74,7 @@ function setCounty(id) {
 
 function setDate(date) {
     selectedDate = date;
-    updateMap();
-    updateAreaChart();
-    // TODO: updateAreaChart()
-    // TODO: updateScatterPlot()
+    updateAll();
 }
 
 function onDataLoaded() {
@@ -91,9 +88,8 @@ function onDataLoaded() {
 }
 
 function updateAll() {
-    // TODO: updateMetricSelection()
     updateMap();
-    // TODO: updateAreaChart()
+    updateAreaChart();
     // TODO: updateScatterPlot()
 }
 

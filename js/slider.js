@@ -14,10 +14,10 @@ const parseDateFromData = d3.timeParse("%Y/%m/%d");
 const timeFormatOverHandler = d3.timeFormat("%d.%m.%Y");
 
 function showSliderValue() {
-    let date = parseDateFromData(Object.keys(data)[dateSlider.value]);
-    rangeHandler.innerHTML = timeFormatOverHandler(date);
-    let bulletPosition = (dateSlider.value /dateSlider.max);
-    rangeHandler.style.left = (bulletPosition * sliderWidth -30) + "px";
+    rangeHandler.innerHTML = getDateInFormat(Object.keys(data)[dateSlider.value]);
+    let bulletPosition = (dateSlider.value / dateSlider.max);
+    let handleWidth = $('#slider-handler').width();
+    rangeHandler.style.left = (bulletPosition * sliderWidth - (handleWidth / 2) - 10) + 'px';
 }
 
 function initSlider(){
