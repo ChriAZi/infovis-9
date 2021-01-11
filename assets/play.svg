@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="22px" viewBox="0 0 19 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Triangle</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="A4" transform="translate(-182.000000, -829.000000)" fill="#FFFFFF">
+            <g id="Timeline-Controls" transform="translate(35.000000, 815.000000)">
+                <g id="Play/Pause" transform="translate(130.000000, 0.000000)">
+                    <path d="M29.2338126,18.0153263 L37.2767582,32.0030578 C37.8273542,32.960616 37.4974461,34.1832166 36.5398878,34.7338126 C36.2365776,34.908216 35.8928223,35 35.5429456,35 L19.4570544,35 C18.3524849,35 17.4570544,34.1045695 17.4570544,33 C17.4570544,32.6501233 17.5488384,32.306368 17.7232418,32.0030578 L25.7661874,18.0153263 C26.3167834,17.057768 27.539384,16.7278599 28.4969422,17.2784559 C28.8033651,17.454649 29.0576195,17.7089035 29.2338126,18.0153263 Z"
+                          id="Triangle"
+                          transform="translate(27.500000, 25.000000) rotate(90.000000) translate(-27.500000, -25.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
