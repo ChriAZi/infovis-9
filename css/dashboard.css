@@ -4,7 +4,7 @@
     border-bottom-right-radius: 20px;
     box-shadow: var(--shadow-dashboard);
     z-index: 999999;
-    padding: 2.5%;
+    padding: 1.5% 2.5%;
 }
 
 .diagram-container {
@@ -109,8 +109,8 @@
     font-size: var(--font-size-metric-desc);
     color: var(--font-color);
     font-weight: lighter;
-    margin-bottom: 12%;
-    margin-top: 7.5%;
+    margin-bottom: 2.5%;
+    margin-top: 5%;
 }
 
 .control-container {

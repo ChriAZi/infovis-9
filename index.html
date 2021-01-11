@@ -1,117 +1,172 @@
-<!DOCTYPE html>
-<html lang="de" dir="ltr">
+<!doctype html>
+<html lang="de">
     <head>
+        <!-- Required meta tags -->
         <meta charset="utf-8">
-        <title>IV Prototype</title>
-        <link rel='stylesheet' type='text/css' href='style.css'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+              crossorigin="anonymous">
+        
+        <link href="css/general.css" rel="stylesheet">
+        <link href="css/dashboard.css" rel="stylesheet">
+        <link href="css/diagrams.css" rel="stylesheet">
+        <link href="css/timeline.css" rel="stylesheet">
+        
+        <!-- D3.js Imports -->
         <script src="https://d3js.org/d3.v6.min.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
         <script src="https://d3js.org/d3-color.v2.min.js"></script>
         <script src="https://d3js.org/d3-scale.v3.min.js"></script>
-        <!-- UIkit CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/css/uikit.min.css"/>
-        <!-- UIkit JS -->
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/js/uikit.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.10/dist/js/uikit-icons.min.js"></script>
+        
+        <title>IV Project</title>
     </head>
-    
     <body>
-        <nav class="uk-navbar-container uk-margin" uk-navbar>
-            <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo" href="#">🦠 Corona in Deutschland – ein Überblick</a>
-            </div>
-        </nav>
-        <div class="content-container">
-            <div uk-grid>
-                <div class="uk-width-1-5">
-                    <div>
-                        <h3>Parameterauswahl</h3>
-                        <p>Wähle eine Kennzahl, um sie in den Diagrammen anzuzeigen.</p>
-                        <p class="uk-heading-divider"></p>
-                        <div id="parameter-container">
-                            <ul class="uk-tab-right"
-                                uk-tab="connect: #component-tab-right; animation: uk-animation-fade">
-                                <li class="uk-active"><a onclick="setMetric(Metric.NEW_CASES)">Neuinfektionen</a></li>
-                                <li><a onclick="setMetric(Metric.NEW_DEATHS)">Todesfälle</a></li>
-                                <li><a onclick="setMetric(Metric.TOTAL_CASES)">Gesamtzahl Infektionen</a></li>
-                                <li><a onclick="setMetric(Metric.TOTAL_DEATHS)">Gesamtzahl Todesfälle</a></li>
-                                <li><a onclick="setMetric(Metric.BED_CAPACITY)">Intensivkapazitäten</a></li>
-                                <li><a onclick="setMetric(Metric.CASE_INCIDENCE)">7-Tage-Inzidenz</a></li>
-                            </ul>
-                            <ul id="component-tab-right" class="uk-switcher">
-                                <li class="uk-active">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                    eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
-                                </li>
-                                <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                    ex ea commodo consequat.
-                                </li>
-                                <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                                    fugiat nulla pariatur, sed do eiusmod.
-                                </li>
-                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
-                                </li>
-                                <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                    ex ea commodo consequat.
-                                </li>
-                                <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                                    fugiat nulla pariatur, sed do eiusmod.
-                                </li>
-                            </ul>
+        <div class="preloader"></div>
+        <div class="container-fluid content-container">
+            <div class="row content-row g-0">
+                <div class="col-3 dashboard-container">
+                    <div class="metric-selection">
+                        <h1 class="selected-location">Deutschland</h1>
+                        <h4 class="back-to-all-data">zurück zu den Gesamtzahlen</h4>
+                        <div class="container metric newCases">
+                            <div class="row selection isSelected">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">Neuinfektionen</p>
+                                    <p class="metric-subname">heute</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container metric totalCases">
+                            <div class="row selection">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">Infektionen</p>
+                                    <p class="metric-subname">seit Beginn der Pandemie</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container metric newDeaths">
+                            <div class="row selection">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">neue Todesfälle</p>
+                                    <p class="metric-subname">heute</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container metric totalDeaths">
+                            <div class="row selection">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">Todesfälle</p>
+                                    <p class="metric-subname">seit Beginn der Pandemie</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container metric caseIncidence">
+                            <div class="row selection">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">7-Tage-Inzidenz</p>
+                                    <p class="metric-subname">der Neuinfektionen</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container metric deathIncidence">
+                            <div class="row selection">
+                                <div class="col-5 metric-number-container">
+                                    <p class="metric-number"></p>
+                                </div>
+                                <div class="col-7 metric-name-container">
+                                    <p class="metric-name">7-Tage-Inzidenz</p>
+                                    <p class="metric-subname">der Todesfälle</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="metric-date">Stand: 05.Januar 2021</h6>
+                    </div>
+                    <div class="container timeline-controls">
+                        <div id="buttons-timeline" class="row">
+                            <button id="backward-button" class="col control-container longClickable"
+                                    onmousedown="backStepSlider()" ondblclick="jumpToStart()">
+                                <img src="assets/backwards.svg" alt="Go Back or to Beginning">
+                            </button>
+                            <button id="slow-button" class="col control-container" onclick="playSlower()">
+                                <img src="assets/slower.svg" alt="Reduce Speed">
+                            </button>
+                            <button id="play-button" class="col control-container" onclick="playOrStopSlider()">
+                                <img src="assets/play.svg" alt="Play/Pause">
+                            </button>
+                            <button id="fast-button" class="col control-container" onclick="playFaster()">
+                                <img src="assets/faster.svg" alt="Increase Speed">
+                            </button>
+                            <button id="forward-button" class="col control-container longClickable"
+                                    onmousedown="stepForwardSlider()">
+                                <img src="assets/forwards.svg" alt="Go Forward or to End">
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="uk-width-4-5">
-                    <div uk-grid>
-                        <div class="uk-width-1-2">
-                            <div>
-                                <svg id="map" width="600" height="900"></svg>
+                <div class="col-9 diagram-container">
+                    <div class="row diagram-row">
+                        <div class="col-6 map-container">
+                            <div class="legend">
+                                <img src="assets/info.svg" alt="Legende zur Visualisierung">
                             </div>
+                            <svg id="map" width="200" height="500"></svg>
                         </div>
-                        <div class="uk-width-1-2">
-                            <div>
+                        <div class="col-6 small-diagram-container">
+                            <div class="scatter-container">
+                                <div class="legend">
+                                    <img src="assets/info.svg" alt="Legende zur Visualisierung">
+                                </div>
                                 <div id="scatter-plot"></div>
                             </div>
-                            <div>
+                            <div class="area-container">
+                                <div class="legend">
+                                    <img src="assets/info.svg" alt="Legende zur Visualisierung">
+                                </div>
                                 <div id="area-chart"></div>
                             </div>
                         </div>
                     </div>
+                    <div id="timeline" class="row timeline-row">
+                        <div id="slider-wrapper">
+                            <span id="slider-handler" class="slider-label"></span>
+                            <input id="slider" type="range" value="2" min="0" max="10" step="0.1">
+                            <div id="axis-slider"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="timeline"  uk-grid>
-                <div id="buttons-timeline" class="uk-grid-item-match" class="uk-width-1-5">
-                        <button class="longClickable uk-width-1-5" id="backward-button"
-                                title="one click to move one step backward, a long click to jump to the start"
-                                onmousedown="stepBackwardSlider()" ondblclick="jumpToStart()" >&#9198</button>
-                        <button class="uk-width-1-5"id="slow-button" title="play slower"
-                                onclick="playSlower()" >&#9194</button>
-                        <button class="uk-width-1-5"id="play-button" title="play or stop"
-                                onclick="playOrStopSlider()" > &#9199 </button>
-                        <button class="uk-width-1-5"id="fast-button" title="play faster"
-                                onclick="playFaster()" >&#9193</button>
-                        <button class="longClickable uk-width-1-5" id="forward-button"
-                                title="one click to move one step forward, a long click to jump to the end"
-                                onmousedown="stepForwardSlider()" >&#9197</button>
-                        <!-- <p>&#9198 &#9664 &#9199 &#9654 &#9197</p> -->
-                </div>
-                <div id="slider-wrapper" class="uk-width-4-5">
-                    <span id="slider-handler" class="slider-label">  </span>
-                    <input id="slider"  type="range" value="2" min="0" max="10" step="0.1">
-                    <div id="axis-slider" ></div>
-                </div>
-            </div>
-
         </div>
-        <footer>
-            <div class="uk-grid-divider" uk-grid>
-                <div>WS2020/21 – Informationsvisualisierung</div>
-                <div>Amina Dacikj – Maike Friedrich – David Spormann – Christopher Voit – Elena Wallwitz</div>
-            </div>
-        </footer>
         
+        <!-- JQuery Import -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+                integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        
+        <!-- Script Import and Application Start -->
+        <script src="js/ui/preloader.js"></script>
+        <script src="js/ui/dashboard.js"></script>
         <script src="js/load_data.js"></script>
         <script src="js/control.js"></script>
         <script src="js/map.js"></script>
