@@ -95,22 +95,22 @@ d3.csv("data/data_Auslastung.csv")
     
                // Add line
         grp
-            .append("line")
+            .append('line')
             .datum(data)
             .attr('x1', xAxis(lineDate) + margin.left - strokeWidth / 2)
             .attr('x2', xAxis(lineDate) + margin.left - strokeWidth / 2)
             .attr('y1', 20)
             .attr('y2', yAxis(0) + 20)
             .attr('stroke', 'white')
-            .style("stroke-width", 2);
+            .style('stroke-width', 2);
 
         //Add line text
-        lineText = chart.append("text")
-            .attr("y", 10)
-            .attr("x", xAxis(lineDate))
+        lineText = chart.append('text')
+            .attr('y', 10)
+            .attr('x', xAxis(lineDate))
             .attr('text-anchor', 'middle')
             .attr('stroke', 'white')
-            .style("font-size", 12)
+            .style('font-size', 12)
             .text(lineDateFormatted);
 
         // text label for the x axis
@@ -133,7 +133,7 @@ d3.csv("data/data_Auslastung.csv")
 
 function updateAreaChart() {
     lineDate = new Date(selectedDate);
-    grp.select("line")
+    grp.select('line')
         .transition()
         .duration(1000)
         .ease(d3.easeLinear)
@@ -141,8 +141,8 @@ function updateAreaChart() {
         .attr('x2', xAxis(lineDate) + margin.left - strokeWidth / 2)
         .attr('y1', 20)
         .attr('y2', yAxis(0) + 20)
-        .attr("stroke", 'black')
-        .style("stroke-width", 2);
+        .attr('stroke', 'black')
+        .style('stroke-width', 2);
     lineText.transition()
         .duration(1000)
         .ease(d3.easeLinear)
