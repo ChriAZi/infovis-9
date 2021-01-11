@@ -1,56 +1,46 @@
 const Metric = {
-    NEW_CASES: "newCases",
-    NEW_DEATHS: "newDeaths",
-    TOTAL_CASES: "totalCases",
-    TOTAL_DEATHS: "totalDeaths",
-    CASE_INCIDENCE: "caseIncidence",
-    BED_CAPACITY: "bedCapacity",
-    DEATH_INCIDENCE: "deathIncidence",
-    FREE_BEDS: "freeBeds",
-    OCCUPIED_BEDS: "occupiedBeds",
-    MORTALITY_RATE: "mortalityRate",
+    NEW_CASES: 'newCases',
+    TOTAL_CASES: 'totalCases',
+    NEW_DEATHS: 'newDeaths',
+    TOTAL_DEATHS: 'totalDeaths',
+    CASE_INCIDENCE: 'caseIncidence',
+    DEATH_INCIDENCE: 'deathIncidence',
     properties: {
-        "newCases": {
-            minValue: 0,
-            maxValue: 100,
-            baseColor: "#ffaa00",
-            scaleStartColor: "#fee3ab",
-            scaleEndColor: "#ffaa00"
+        'newCases': {
+            valueRange: [],
+            baseColor: '#ffaa00',
+            scaleStartColor: '#fee3ab',
+            scaleEndColor: '#ffaa00'
         },
-        "newDeaths": {
-            minValue: 0,
-            maxValue: 2,
-            baseColor: "#333333",
-            scaleStartColor: "#eaeaeb",
-            scaleEndColor: "#eaeaeb"
+        'totalCases': {
+            valueRange: [],
+            baseColor: '#ffea4c',
+            scaleStartColor: '#ffea4c',
+            scaleEndColor: '#6c067e'
         },
-        "totalCases": {
-            minValue: 0,
-            maxValue: 2,
-            baseColor: "#ffea4c",
-            scaleStartColor: "#ffea4c",
-            scaleEndColor: "#6c067e"
+        'newDeaths': {
+            valueRange: [],
+            baseColor: '#333333',
+            scaleStartColor: '#eaeaeb',
+            scaleEndColor: '#eaeaeb'
         },
-        "totalDeaths": {
-            minValue: 0,
-            maxValue: 2,
-            baseColor: "#002ea3",
-            scaleStartColor: "#6879a1",
-            scaleEndColor: "#002ea3"
+        'totalDeaths': {
+            valueRange: [],
+            baseColor: '#002ea3',
+            scaleStartColor: '#6879a1',
+            scaleEndColor: '#002ea3'
         },
-        "caseIncidence": {
-            minValue: 0,
-            maxValue: 2,
-            baseColor: "#78121e",
-            scaleStartColor: "#ffb753",
-            scaleEndColor: "#78121e"
+        'caseIncidence': {
+            valueRange: [],
+            baseColor: '#78121e',
+            scaleStartColor: '#ffb753',
+            scaleEndColor: '#78121e'
         },
-        "bedCapacity": {
-            minValue: 0,
-            maxValue: 2,
-            baseColor: "#de0000",
-            scaleStartColor: "#8ab670",
-            scaleEndColor: "#de0000"
+        'deathIncidence': {
+            valueRange: [],
+            baseColor: '#de0000',
+            scaleStartColor: '#8ab670',
+            scaleEndColor: '#de0000'
         }
     }
 };
@@ -67,9 +57,7 @@ function setMetric(metric) {
 
 function setCounty(id) {
     selectedCountyId = id;
-    // TODO: updateMap()
-    // TODO: updateAreaChart()
-    // TODO: updateScatterPlot()
+    updateAll();
 }
 
 function setDate(date) {
@@ -80,8 +68,10 @@ function setDate(date) {
 function onDataLoaded() {
     // select latest date (last element in sorted data)
     selectedDate = Object.keys(data)[Object.keys(data).length - 1];
-
-    initMap();    
+    // needs to happen before loading visualizations
+    setMinMaxValuesForMetricObject();
+    setDefaultDashboardValues();
+    initMap();
     initSlider();
     updateAreaChart();
     // TODO: initScatterPlot() or updateScatterPlot()
@@ -91,11 +81,34 @@ function updateAll() {
     updateMap();
     updateAreaChart();
     // TODO: updateScatterPlot()
+    updateMetrics();
+}
+
+function setMinMaxValuesForMetricObject() {
+    for (let metric in Metric.properties) {
+        Metric.properties[metric].valueRange = getMinMax(metric);
+    }
+}
+
+function getMinMax(metric) {
+    let keys = Object.keys(data[selectedDate]);
+    let tmpMin, tmpMax;
+    tmpMin = tmpMax = 0;
+    keys.forEach(obj => {
+        let val = data[selectedDate][obj][metric];
+        if (val < tmpMin) {
+            tmpMin = val;
+        }
+        if (val > tmpMax) {
+            tmpMax = val;
+        }
+    })
+    return [tmpMin, tmpMax];
 }
 
 function getColor(value) {
     let scale = d3.scaleLinear()
-        .domain([Metric.properties[selectedMetric].minValue, Metric.properties[selectedMetric].maxValue])
+        .domain([Metric.properties[selectedMetric].valueRange[0], (Metric.properties[selectedMetric].valueRange[1] / 500)])
         .range([Metric.properties[selectedMetric].scaleStartColor, Metric.properties[selectedMetric].scaleEndColor]);
     return scale(value);
 }

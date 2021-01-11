@@ -49,22 +49,21 @@ function drawAxisSlider(id = "#axis-slider") {
     }
     // append the svg object to the body of the page
     var svg = d3.select(id)
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom);
     const domain = d3.extent(dates);
 
     // Add X axis
     var x = d3.scaleTime()
         .domain(domain)
-        .range([ 0, width ]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .range([0, width]);
+    svg.append('g')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(d3.axisBottom(x))
+        .append('style').text('text { font-family: var(--font-family)}')
+        .append('style').text('text { font-size: var(--font-size-timeline)}')
+        .append('style').text('text { color: var(--font-color)}');
 }
 
 function initButtons(){
@@ -111,6 +110,7 @@ function playOrStopSlider() {
 
 function startPlaying(){
     player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed]);
+    $('#play-button').find('img').attr('src', 'assets/pause.svg')
     isPlaying = true;
 }
 
@@ -119,6 +119,7 @@ function stopPlaying(){
     {
         clearInterval(player);
     }
+    $('#play-button').find('img').attr('src', 'assets/play.svg')
     isPlaying = false;
 }
 
@@ -150,7 +151,7 @@ function stepForwardSlider(){
             let nextValue = Number(this.value) + 1;
             let date = Object.keys(data)[nextValue];
             if(this.value < Object.keys(data).length - 1) {
-                if (date != undefined) {
+                if (date !== undefined) {
                     setDate(date);
                 }
                 return nextValue;
@@ -167,7 +168,7 @@ function stepBackwardSlider(){
             let nextValue = Number(this.value) - 1;
             let date = Object.keys(data)[nextValue];
             if(this.value > 0 ) {
-                if (date != undefined) {
+                if (date !== undefined) {
                     setDate(date)
                 }
                 return nextValue;
@@ -179,26 +180,26 @@ function stepBackwardSlider(){
 }
 
 function longClickedButton(button) {
-    if(isPlaying){stopPlaying();}
-    if(button.id == "forward-button"){
+    if (isPlaying) {
+        stopPlaying();
+    }
+    if (button.id === 'forward-button') {
         d3.select('#slider')
-            .property("value", function () {
+            .property('value', function () {
                 let lastDate = Object.keys(data)[Object.keys(data).length - 1];
                 setDate(lastDate);
                 return Object.keys(data).length - 1;
-                });
+            });
         showSliderValue();
-    }
-    else if(button.id == "backward-button"){
+    } else if (button.id === 'backward-button') {
         d3.select('#slider')
-            .property("value", function () {
+            .property('value', function () {
                 let firstDate = Object.keys(data)[0];
                 setDate(firstDate);
                 return 0;
             });
         showSliderValue();
-    }
-    else{
-        console.log("No function for longClick implemented");
+    } else {
+        console.log('No function for longClick implemented');
     }
 }
