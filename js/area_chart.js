@@ -4,19 +4,19 @@ function filterData(data) {
     );
 }
 
-const color = ["lightblue", "lightgreen", "#CC99FF"];
+const color = ['lightblue', 'lightgreen', '#CC99FF'];
 const svg = d3
-    .select("#area-chart")
-    .append("svg")
-    .attr("height", 460)
-    .attr("width", 640);
+    .select('#area-chart')
+    .append('svg')
+    .attr('height', 460)
+    .attr('width', 640);
 
 const strokeWidth = 1.5;
 var margin = {top: 0, bottom: 20, left: 80, right: 20};
-const chart = svg.append("g").attr("transform", `translate(${margin.left},0)`);
+const chart = svg.append('g').attr('transform', `translate(${margin.left},0)`);
 
-var width = +svg.attr("width") - 200 - margin.left - margin.right - strokeWidth * 2;
-var height = +svg.attr("height") - 200 - margin.top - margin.bottom;
+var width = +svg.attr('width') - 200 - margin.left - margin.right - strokeWidth * 2;
+var height = +svg.attr('height') - 200 - margin.top - margin.bottom;
 var xAxis;
 var yAxis;
 var lineText;
@@ -25,10 +25,10 @@ var lineDateFormatted = lineDate.toISOString().split('T')[0];
 lineDateFormatted = lineDateFormatted.replace(/-/g, '/');
 
 const grp = chart
-    .append("g")
-    .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
+    .append('g')
+    .attr('transform', `translate(-${margin.left - strokeWidth},-${margin.top})`);
 
-d3.csv("data/data_Auslastung.csv")
+d3.csv('data/data_Auslastung.csv')
     .then(function (data) {
         data.forEach(d => {
             d.date = new Date(d.date)
@@ -38,7 +38,7 @@ d3.csv("data/data_Auslastung.csv")
         })
 
         // Create stack
-        const stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
+        const stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
         const stackedData = stack(data);// Create scales
         const xValue = d => d.date;
 
@@ -65,35 +65,41 @@ d3.csv("data/data_Auslastung.csv")
             })
 
         const series = grp
-            .selectAll(".series")
+            .selectAll('.series')
             .data(stackedData)
             .enter()
-            .append("g")
-            .attr("class", "series");
+            .append('g')
+            .attr('class', 'series');
 
         series
-            .append("path")
-            .attr("transform", `translate(${margin.left},20)`)
-            .style("fill", (d, i) => color[i])
-            .attr("stroke", "steelblue")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-width", strokeWidth)
-            .attr("d", d => area(d));
+            .append('path')
+            .attr('transform', `translate(${margin.left},20)`)
+            .style('fill', (d, i) => color[i])
+            .attr('stroke', 'steelblue')
+            .attr('stroke-linejoin', 'round')
+            .attr('stroke-linecap', 'round')
+            .attr('stroke-width', strokeWidth)
+            .attr('d', d => area(d));
 
         // Add the X Axis
         chart
-            .append("g")
-            .attr("transform", `translate(0,${height+20})`)
-            .call(d3.axisBottom(xAxis));
+            .append('g')
+            .attr('transform', `translate(0,${height + 20})`)
+            .call(d3.axisBottom(xAxis))
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
 
         // Add the Y Axis
         chart
-            .append("g")
-            .attr("transform", `translate(${width+1}, 20)`)
-            .call(d3.axisRight(yAxis));
-    
-               // Add line
+            .append('g')
+            .attr('transform', `translate(${width + 1}, 20)`)
+            .call(d3.axisRight(yAxis))
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
+
+        // Add line
         grp
             .append('line')
             .datum(data)
@@ -114,21 +120,27 @@ d3.csv("data/data_Auslastung.csv")
             .text(lineDateFormatted);
 
         // text label for the x axis
-        chart.append("text")
-            .attr("transform",
-                "translate(" + (width / 2) + " ," +
-                (height + margin.top + 60) + ")")
-            .style("text-anchor", "middle")
-            .text("Time")
+        chart.append('text')
+            .attr('transform',
+                'translate(' + (width / 2) + ' ,' +
+                (height + margin.top + 60) + ')')
+            .style('text-anchor', 'middle')
+            .text('Time')
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
 
         // text label for the y axis
-        chart.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", width+50)
-            .attr("x", 0 - (height / 2))
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("Number of Beds");
+        chart.append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', width + 50)
+            .attr('x', 0 - (height / 2))
+            .attr('dy', '1em')
+            .style('text-anchor', 'middle')
+            .text('Number of Beds')
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
     })
 
 function updateAreaChart() {
