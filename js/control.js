@@ -74,14 +74,14 @@ function onDataLoaded() {
     initMap();
     initSlider();
     updateAreaChart();
-    // TODO: initScatterPlot() or updateScatterPlot()
+    initScatterPlot();
 }
 
 function updateAll() {
     updateMap();
     updateAreaChart();
-    // TODO: updateScatterPlot()
     updateMetrics();
+    updateScatterPlot();
 }
 
 function setMinMaxValuesForMetricObject() {
