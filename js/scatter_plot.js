@@ -85,6 +85,17 @@ function initScatterPlot(){
         .style("padding", "5px")
         .style("display", "none");
     
+    var divClick = d3.select("#scatter-plot").append("div")	
+        .attr('id', 'plot-click')
+        .style("position", "absolute")
+        .style("opacity", .9)
+        .style("border-radius", "15px")
+        .style("text-align", "center")
+        .style("background-color", "gray")
+        .style("color", "white")
+        .style("font-size", "14px")
+        .style("padding", "5px")
+        .style("display", "none");
 
     d3.selection.prototype.moveToFront = function(){
         return this.each(function(){
@@ -131,6 +142,12 @@ function initScatterPlot(){
         .style("stroke", "black")
         .style("stroke-width", function(d){
             if(selectedCountyId==d){
+                divClick.style("display", "inline")
+                    .style("padding-top", 6+"px")
+                    .style("height", 35+"px")
+                    .style("left", (this.getBBox().x+margin.left) + "px")
+                    .style("top", (this.getBBox().y+margin.top-25) + "px")
+                    .html(countyNames[this.id]);
                 d3.select(this).moveToFront();
                 return d3.select(this).style("stroke-width", 3);
             }
@@ -141,7 +158,7 @@ function initScatterPlot(){
         })
         .on("mouseover", function(d){
             //d3.select(this).moveToFront();
-
+            div.moveToFront();
             div.style("padding-top", 6+"px")
                 .style("height", 35+"px")
                 .style("left", (d.layerX) + "px")
