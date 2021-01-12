@@ -129,6 +129,13 @@ function initScatterPlot(){
             return "white";
         })
         .style("stroke", "black")
+        .style("stroke-width", function(d){
+            if(selectedCountyId==d){
+                d3.select(this).moveToFront();
+                return d3.select(this).style("stroke-width", 3);
+            }
+            return d3.select(this).style("stroke-width", 1);
+        })
         .on("mousemove", function(d){
             div.style("display", "inline");
         })
@@ -145,10 +152,13 @@ function initScatterPlot(){
         })                
         .on("mouseout", function(){
             div.style("display", "none");
-            d3.select(this).style("stroke-width", 1);
+            if(selectedCountyId!=this.id){
+                d3.select(this).style("stroke-width", 1);
+            }
         })
         .on("click", function(d){ 
-            console.log(d);
+            d3.select("#i"+this.id).dispatch('click');
+            //console.log(d);
         });
 }
  
