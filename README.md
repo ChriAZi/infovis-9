@@ -12,16 +12,16 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
 ### Datensatz: 
 
   *	ein statischer Datensatz wird mit build_data.py als Nested Maps in data.json und counties.json angelegt. Dieser sollte vor Verwendung täglich lokal aktualisiert werden. 
-  *	Der Aufbau des Datensatzes findet sich unter Notion Dokumentation/Code/Datensatz Spec
+  *	Der Aufbau des Datensatzes findet sich in [Notion](https://www.notion.so/Datensatz-Spec-f26643879ff14ed98793cc5ac79c40f7)
 
 ### Kartenansicht:
 
   *	Geodaten werden als Landkreise angezeigt
   *	Der Wert der Kennzahl der einzelnen Landkreise wird aus dem statischen Datensatz ausgelesen und der Wert der Farbe wird dynamisch berechnet
   *	Bei anderer Parameterauswahl wird die Farbe aller Landkreise entsprechend der neuen Kennzahl berechnet
-  *	die Landkreise sind mit einem mouseover-event markierbar
+  *	die Landkreise sind mit einem click-event markierbar
   *	die Visualisierung kann die Daten tagesgenau darstellen
-  *	TODO unterschiedlich Farben für Kennzahlen und Farbverlauf?
+  *	unterschiedliche Farben für Kennzahlen und Farbverlauf?
 
 ### Schichtdiagramm:
 
@@ -34,14 +34,15 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
 
 ### Scatterplot:
 
-  *	Der Scatterplot zeigt bis jetzt die Anzahl der Neuinfektionen in Abhängigkeit der Bevölkerungsanzahl der einzelnen Landkreise an
+  *	Der Scatterplot zeigt die Anzahl der Neuinfektionen in Abhängigkeit der Bevölkerungsanzahl der einzelnen Landkreise an
 
 ### Interaktionen: 
 
-  *	Zeitlich Interaktion: 
+  *	Zeitliche Interaktion: 
       *	Bei Auswahl eines neuen Datums:
           *	Aktualisierung der Karte
           *	Verschiebung der zeitanzeigenden Senkrechten im Schichtdiagramm
+          *	Aktualisierung der Kennzahlen
       *	Möglichkeiten der Interaktionen mit der Timeline:
           *	Auswahl des Datums über den Slider
           *	Play/Stop-Button: Datum wird automatisch fortlaufend angezeigt
@@ -52,18 +53,21 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
       *	Bei Auswahl neuer Kennzahl:
           *	Kartendiagramm zeigt Farben in Abhängigkeit der neuen Kennzahl
           *	TODO Liniendiagramm im Schichtdiagramm zeigt Verlauf der ausgewählten Kennzahl an
+  * Karteninteraktion:
+      * Auswahl der Landkreise über die Karte
+      * Anzeige des Namens und der Daten des ausgewählten Landkreises links von dem Kartendiagramm
 
 ### Layout: 
 
  * Layout für die Parameterauswahl, die drei Visualisierungen und die Timeline steht
+ * Layout ist responsive für Bildschirme zwischen 1440px | 900px und 1280px | 800px
 
 
 ## Folgende Features sollen noch umgesetzt werden: 
 
 ### Layout und Interaktion:
   * Legende mit Farben/Kennzahl Erklärung
-  * Auswahl der Landkreise über die Karte und evtl. Anpassung des Schichtdiagrammes
-  * Anzeige des Namens und der Daten des ausgewählten Landkreises links von dem Kartendiagramm
+  * Anpassung des Schichtdiagrammes an Landkreisauswahl
 
 ### Kartenansicht:
   * Daten des Landkreises über dem sich die Maus befindet, sollen über dem Mauszeiger erscheinen
