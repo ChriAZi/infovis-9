@@ -61,7 +61,7 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
  * Layout ist responsive für Bildschirme zwischen 1440px | 900px und 1280px | 800px
 
 
-## Folgende Features sollen noch umgesetzt werden: 
+## Features für den Final Release
 
 ### Layout und Interaktion:
   * Legende mit Farben/Kennzahl Erklärung
