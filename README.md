@@ -30,7 +30,6 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
      *	die grüne Fläche der Anzahl der freien Betten
      *	die violette Fläche den zur Verfügung stehenden Reservebetten
   *	die ausgewählte Zeit wird als Senkrechte mit Datum dargestellt
-  *	TODO Liniendiagramms, welches den Verlauf der gewählten Kennzahl anzeigt
 
 ### Scatterplot:
 
@@ -52,7 +51,6 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
       *	Kennzahlen können über die Buttons in der Parameterauswahl selektiert werden
       *	Bei Auswahl neuer Kennzahl:
           *	Kartendiagramm zeigt Farben in Abhängigkeit der neuen Kennzahl
-          *	TODO Liniendiagramm im Schichtdiagramm zeigt Verlauf der ausgewählten Kennzahl an
   * Karteninteraktion:
       * Auswahl der Landkreise über die Karte
       * Anzeige des Namens und der Daten des ausgewählten Landkreises links von dem Kartendiagramm
@@ -74,6 +72,7 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
 
 ### Schichtdiagramm und Liniendiagramm:
   * evtl. Auswahl zwischen Landkreisen und ganz Deutschland
+  * Liniendiagramms, welches den Verlauf der gewählten Kennzahl anzeigt
 
 ### Scatterplot:
   * Bevölkerungsdichte statt Einwohnerzahl auf x-Achse
