@@ -153,21 +153,26 @@ function initScatterPlot(){
 }
  
 function getMetricsText(){
-    var text = "";
-    if(selectedMetric == Metric.NEW_CASES){
-        text = "Neuinfektionen";
-    }else if(selectedMetric == Metric.NEW_DEATHS){
-        text = "neue Todesfälle";
-    }else if(selectedMetric == Metric.TOTAL_CASES){
-        text = "Infektionen";
-    }else if(selectedMetric == Metric.TOTAL_DEATHS){
-        text = "Gesamtzahl Todesfälle";
-    }else if(selectedMetric == Metric.CASE_INCIDENCE){
-        text = "7-Tage-Inzidenz Neuinfektionen";
-    }else if(selectedMetric == Metric.BED_CAPACITY){
-        text = "Intensivkapazitäten";
-    } else if(selectedMetric == Metric.DEATH_INCIDENCE){
-        text = "7-Tage-Inzidenz Todesfälle";
-    } 
+    var text = '';
+    switch (selectedMetric) {
+        case Metric.NEW_CASES:
+            text = 'Neuinfektionen';
+            break;
+        case Metric.NEW_DEATHS:
+            text = 'neue Todesfälle';
+            break;
+        case Metric.TOTAL_CASES:
+            text = 'Infektionen';
+            break;
+        case Metric.TOTAL_DEATHS:
+            text = 'Gesamtzahl Todesfälle';
+            break;
+        case Metric.CASE_INCIDENCE:
+            text = '7-Tage-Inzidenz Neuinfektionen';
+            break;
+        case Metric.DEATH_INCIDENCE:
+            text = '7-Tage-Inzidenz Todesfälle';
+            break;
+    }
     return text;
 }
