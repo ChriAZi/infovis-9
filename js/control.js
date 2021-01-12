@@ -107,8 +107,22 @@ function getMinMax(metric) {
 }
 
 function getColor(value) {
+    let scalingFactor;
+    switch (selectedMetric) {
+        case Metric.NEW_DEATHS:
+            scalingFactor = 5000;
+            break;
+        case Metric.CASE_INCIDENCE:
+            scalingFactor = 2;
+            break;
+        case Metric.DEATH_INCIDENCE:
+            scalingFactor = 0.5;
+            break;
+        default:
+            scalingFactor = 500;
+    }
     let scale = d3.scaleLinear()
-        .domain([Metric.properties[selectedMetric].valueRange[0], (Metric.properties[selectedMetric].valueRange[1] / 500)])
+        .domain([Metric.properties[selectedMetric].valueRange[0], (Metric.properties[selectedMetric].valueRange[1] / scalingFactor)])
         .range([Metric.properties[selectedMetric].scaleStartColor, Metric.properties[selectedMetric].scaleEndColor]);
     return scale(value);
 }
