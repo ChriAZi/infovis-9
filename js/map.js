@@ -36,6 +36,10 @@ function initMap() {
         .append('path')
         .attr('fill', function (d) {
             if (Object.keys(data[selectedDate]).includes(d.properties.AGS) && data[selectedDate][d.properties.AGS][selectedMetric] !== 0) {
+                // keep county selection while resizing
+                if (d.properties.AGS === selectedCountyId) {
+                    this.classList.add('selected-county');
+                }
                 return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
             }
             return 'white'
@@ -55,9 +59,9 @@ function initMap() {
         })
         .on('click', function (d) {
                 removeSelection();
-            d3.select('#infoText').text(this.id);
-            updateMetricsForSelectedCounty(d.target.__data__.properties);
-            this.classList.add('selected-county');
+                d3.select('#infoText').text(this.id);
+                updateMetricsForSelectedCounty(d.target.__data__.properties);
+                this.classList.add('selected-county');
             }
         );
 }
