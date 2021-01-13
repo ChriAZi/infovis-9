@@ -81,10 +81,21 @@ function updateMetricElements(county) {
         default:
             config = selectedCountyId || 'all';
     }
-    $('.metric.newCases').find('.metric-number').html(data[selectedDate][config][Metric.NEW_CASES] || 'keine Daten');
-    $('.metric.totalCases').find('.metric-number').html(data[selectedDate][config][Metric.TOTAL_CASES] || 'keine Daten');
-    $('.metric.newDeaths').find('.metric-number').html(data[selectedDate][config][Metric.NEW_DEATHS] || 'keine Daten');
-    $('.metric.totalDeaths').find('.metric-number').html(data[selectedDate][config][Metric.TOTAL_DEATHS] || 'keine Daten');
-    $('.metric.caseIncidence').find('.metric-number').html(Math.round(data[selectedDate][config][Metric.CASE_INCIDENCE] * 10) / 10 || 'keine Daten');
-    $('.metric.deathIncidence').find('.metric-number').html(Math.round(data[selectedDate][config][Metric.DEATH_INCIDENCE] * 10) / 10 || 'keine Daten');
+    let newCases = getNumberWithCommas(data[selectedDate][config][Metric.NEW_CASES]);
+    let totalCases = getNumberWithCommas(data[selectedDate][config][Metric.TOTAL_CASES]);
+    let newDeaths = getNumberWithCommas(data[selectedDate][config][Metric.NEW_DEATHS]);
+    let totalDeaths = getNumberWithCommas(data[selectedDate][config][Metric.TOTAL_DEATHS]);
+    let caseIncidence = (Math.round(data[selectedDate][config][Metric.CASE_INCIDENCE] * 10) / 10).toString().replace(/\./g, ',');
+    let deathIncidence = (Math.round(data[selectedDate][config][Metric.DEATH_INCIDENCE] * 10) / 10).toString().replace(/\./g, ',');
+
+    $('.metric.newCases').find('.metric-number').html(newCases === null ? 'keine Daten' : newCases);
+    $('.metric.totalCases').find('.metric-number').html(totalCases === null ? 'keine Daten' : totalCases);
+    $('.metric.newDeaths').find('.metric-number').html(newDeaths === null ? 'keine Daten' : newDeaths);
+    $('.metric.totalDeaths').find('.metric-number').html(totalDeaths === null ? 'keine Daten' : totalDeaths);
+    $('.metric.caseIncidence').find('.metric-number').html(caseIncidence === null ? 'keine Daten' : caseIncidence);
+    $('.metric.deathIncidence').find('.metric-number').html(deathIncidence === null ? 'keine Daten' : deathIncidence);
+
+    function getNumberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
 }

@@ -58,10 +58,15 @@ function initMap() {
             // todo handle popup info
         })
         .on('click', function (d) {
-                removeSelection();
                 d3.select('#infoText').text(this.id);
-                updateMetricsForSelectedCounty(d.target.__data__.properties);
-                this.classList.add('selected-county');
+                if (this.classList.contains('selected-county')) {
+                    removeSelection();
+                    updateMetricsForGermany();
+                } else {
+                    removeSelection();
+                    updateMetricsForSelectedCounty(d.target.__data__.properties);
+                    this.classList.add('selected-county');
+                }
             }
         );
 }

@@ -37,7 +37,7 @@ function initSlider() {
 }
 
 function drawSliderAxis(id = '#axis-slider') {
-    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    var margin = {top: 20, right: 2, bottom: 20, left: 2},
         width = sliderWidth - margin.right - margin.left,
         height = $('#slider').height();
     const date = Object.keys(data);

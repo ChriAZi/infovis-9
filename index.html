@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-7 metric-name-container">
                                     <p class="metric-name">Neuinfektionen</p>
-                                    <p class="metric-subname">heute</p>
+                                    <p class="metric-subname">gewähltes Datum</p>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="col-7 metric-name-container">
                                     <p class="metric-name">neue Todesfälle</p>
-                                    <p class="metric-subname">heute</p>
+                                    <p class="metric-subname">gewähltes Datum</p>
                                 </div>
                             </div>
                         </div>
@@ -106,21 +106,24 @@
                     </div>
                     <div class="container timeline-controls">
                         <div id="buttons-timeline" class="row">
-                            <button id="backward-button" class="col control-container longClickable"
-                                    onmousedown="backStepSlider()" ondblclick="jumpToStart()">
+                            <button title="Schritt zurück" id="backward-button"
+                                    class="col control-container longClickable" onmousedown="stepBackwardSlider()">
                                 <img src="assets/backwards.svg" alt="Go Back or to Beginning">
                             </button>
-                            <button id="slow-button" class="col control-container" onclick="playSlower()">
-                                <img src="assets/slower.svg" alt="Reduce Speed">
+                            <button title="Geschwindigkeit halbieren" id="slow-button" class="col control-container"
+                                    onclick="playSlower()">
+                                <img id="slower-image" src="assets/slower.svg" alt="Reduce Speed">
                             </button>
-                            <button id="play-button" class="col control-container" onclick="playOrStopSlider()">
+                            <button title="Play/Pause" id="play-button" class="col control-container"
+                                    onclick="playOrStopSlider()">
                                 <img src="assets/play.svg" alt="Play/Pause">
                             </button>
-                            <button id="fast-button" class="col control-container" onclick="playFaster()">
+                            <button title="Geschwindigkeit verdoppeln" id="fast-button" class="col control-container"
+                                    onclick="playFaster()">
                                 <img src="assets/faster.svg" alt="Increase Speed">
                             </button>
-                            <button id="forward-button" class="col control-container longClickable"
-                                    onmousedown="stepForwardSlider()">
+                            <button title="Schritt vorwärts" id="forward-button"
+                                    class="col control-container longClickable" onmousedown="stepForwardSlider()">
                                 <img src="assets/forwards.svg" alt="Go Forward or to End">
                             </button>
                         </div>
