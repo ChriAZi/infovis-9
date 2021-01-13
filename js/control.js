@@ -70,18 +70,18 @@ function onDataLoaded() {
     selectedDate = Object.keys(data)[Object.keys(data).length - 1];
     // needs to happen before loading visualizations
     setMinMaxValuesForMetricObject();
-    setDefaultDashboardValues();
     initMap();
-    initSlider();
-    updateAreaChart();
     initScatterPlot();
+    initAreaChart();
+    initSlider();
+    initDashboard();
 }
 
 function updateAll() {
     updateMap();
+    initScatterPlot();
     updateAreaChart();
     updateMetrics();
-    updateScatterPlot();
 }
 
 function setMinMaxValuesForMetricObject() {

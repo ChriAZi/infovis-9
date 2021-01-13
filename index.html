@@ -175,7 +175,12 @@
         <script src="js/slider.js"></script>
         <script src="data/values.js"></script>
         <script>
-             window.addEventListener("resize", initScatterPlot);
+            window.addEventListener('resize', function () {
+                initMap();
+                initScatterPlot();
+                initSlider();
+                initAreaChart();
+            });
         </script>
     </body>
 </html>

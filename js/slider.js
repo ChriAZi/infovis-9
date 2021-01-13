@@ -6,12 +6,11 @@ let player = null;
 
 const longpress = 1000;
 
-const dateSlider = document.getElementById("slider");
-const sliderWidth = dateSlider.offsetWidth;
-const rangeHandler = document.getElementById("slider-handler");
+const dateSlider = document.getElementById('slider');
+let sliderWidth;
+const rangeHandler = document.getElementById('slider-handler');
 
-const parseDateFromData = d3.timeParse("%Y/%m/%d");
-const timeFormatOverHandler = d3.timeFormat("%d.%m.%Y");
+const parseDateFromData = d3.timeParse('%Y/%m/%d');
 
 function showSliderValue() {
     rangeHandler.innerHTML = getDateInFormat(Object.keys(data)[dateSlider.value]);
@@ -20,33 +19,34 @@ function showSliderValue() {
     rangeHandler.style.left = (bulletPosition * sliderWidth - (handleWidth / 2) - 10) + 'px';
 }
 
-function initSlider(){
-    d3.select("#slider")
-        .property("min", 0)
-        .property("max", Object.keys(data).length - 1)
-        .property("value", Object.keys(data).length - 1)
-        .property("step", 1)
-        .attr("width",sliderWidth)
-        .on("input", function() {
-                //console.log("slider: "+this.value);
-                setDate(Object.keys(data)[this.value]);
-            });
-    drawAxisSlider();
+function initSlider() {
+    d3.select('#slider')
+        .property('min', 0)
+        .property('max', Object.keys(data).length - 1)
+        .property('value', Object.keys(data).length - 1)
+        .property('step', 1)
+        .attr('width', sliderWidth)
+        .on('input', function () {
+            setDate(Object.keys(data)[this.value]);
+        });
+    sliderWidth = $('#slider').width();
+    drawSliderAxis();
     initButtons();
     showSliderValue();
-    dateSlider.addEventListener("input", showSliderValue, false);
+    dateSlider.addEventListener('input', showSliderValue, false);
 }
 
-function drawAxisSlider(id = "#axis-slider") {
-    var margin = {top: 0, right: 6, bottom: 20, left: 10},  // 20 is the width of the slider-thumb
-        width = sliderWidth - margin.right -margin.left,
-        height = 30;
+function drawSliderAxis(id = '#axis-slider') {
+    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+        width = sliderWidth - margin.right - margin.left,
+        height = $('#slider').height();
     const date = Object.keys(data);
 
     let dates = [];
-    for(let obj of date){
+    for (let obj of date) {
         dates.push(parseDateFromData(obj));
     }
+    d3.select('#axis-slider').selectAll('*').remove();
     // append the svg object to the body of the page
     var svg = d3.select(id)
         .append('svg')
@@ -66,7 +66,7 @@ function drawAxisSlider(id = "#axis-slider") {
         .append('style').text('text { color: var(--font-color)}');
 }
 
-function initButtons(){
+function initButtons() {
     //document.getElementById("fast-button").disabled = true;
     //document.getElementById("slow-button").disabled = true;
     let delay;
@@ -93,30 +93,28 @@ function initButtons(){
             clearTimeout(delay);
         });
 
-        }
+    }
 }
 
 function playOrStopSlider() {
-    if(!isPlaying) {
+    if (!isPlaying) {
         startPlaying();
-    }
-    else {
+    } else {
         stopPlaying();
     }
-    document.querySelector('#slider').addEventListener(("input"), function(){
+    document.querySelector('#slider').addEventListener(('input'), function () {
         stopPlaying();
     })
 }
 
-function startPlaying(){
+function startPlaying() {
     player = setInterval(stepForwardSlider, sliderPlayingSpeeds[sliderSpeed]);
     $('#play-button').find('img').attr('src', 'assets/pause.svg')
     isPlaying = true;
 }
 
-function stopPlaying(){
-    if (player != null && isPlaying)
-    {
+function stopPlaying() {
+    if (player != null && isPlaying) {
         clearInterval(player);
     }
     $('#play-button').find('img').attr('src', 'assets/play.svg')
@@ -124,33 +122,31 @@ function stopPlaying(){
 }
 
 function playFaster() {
-    console.log(player);
     if (sliderSpeed < sliderPlayingSpeeds.length) {
         sliderSpeed++;
     }
-    if(isPlaying) {
+    if (isPlaying) {
         stopPlaying();
         startPlaying();
     }
 }
 
-function playSlower(){
-    console.log(player);
+function playSlower() {
     if (sliderSpeed > 0) {
         sliderSpeed--;
     }
-    if(isPlaying) {
+    if (isPlaying) {
         stopPlaying();
         startPlaying();
     }
 }
 
-function stepForwardSlider(){
+function stepForwardSlider() {
     d3.select('#slider')
-        .property("value", function () {
+        .property('value', function () {
             let nextValue = Number(this.value) + 1;
             let date = Object.keys(data)[nextValue];
-            if(this.value < Object.keys(data).length - 1) {
+            if (this.value < Object.keys(data).length - 1) {
                 if (date !== undefined) {
                     setDate(date);
                 }
@@ -162,12 +158,12 @@ function stepForwardSlider(){
     showSliderValue();
 }
 
-function stepBackwardSlider(){
+function stepBackwardSlider() {
     d3.select('#slider')
-        .property("value", function () {
+        .property('value', function () {
             let nextValue = Number(this.value) - 1;
             let date = Object.keys(data)[nextValue];
-            if(this.value > 0 ) {
+            if (this.value > 0) {
                 if (date !== undefined) {
                     setDate(date)
                 }

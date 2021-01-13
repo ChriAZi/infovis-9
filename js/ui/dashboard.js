@@ -10,40 +10,47 @@ $(document).ready(function () {
     })
 
     $('.back-to-all-data').click(function () {
-        setDefaultDashboardValues();
+        updateMetricsForGermany();
     })
 })
 
-const updateConfig = {
+const UpdateConfig = {
     COUNTY: 'county',
     TOTAL: 'total',
     GENERAL: 'general'
 }
-Object.freeze(updateConfig)
+Object.freeze(UpdateConfig)
 
-let selectedConfig = updateConfig.TOTAL;
+let selectedConfig = UpdateConfig.TOTAL;
 
-function updateDashboard(county) {
+function initDashboard() {
+    $('.selected-location').html('Deutschland');
+    selectedConfig = UpdateConfig.TOTAL;
+    updateMetricElements();
+    $('.metric-date').html('Stand: ' + getDateInFormat(selectedDate));
+    $('.back-to-all-data').css('opacity', '0');
+}
+
+function updateMetricsForSelectedCounty(county) {
     $('.selected-location').html(county['GEN']);
-    selectedConfig = updateConfig.COUNTY;
-    updateMetricHTML(county);
+    selectedConfig = UpdateConfig.COUNTY;
+    updateMetricElements(county);
     $('.back-to-all-data').css('opacity', '1');
     setCounty(county['AGS']);
 }
 
-function setDefaultDashboardValues() {
+function updateMetricsForGermany() {
     $('.selected-location').html('Deutschland');
-    selectedConfig = updateConfig.TOTAL;
-    updateMetricHTML();
-    $('.metric-date').html('Stand: ' + getDateInFormat(selectedDate));
+    selectedConfig = UpdateConfig.TOTAL;
+    updateMetricElements();
     $('.back-to-all-data').css('opacity', '0');
     setCounty(null);
     removeSelection();
 }
 
 function updateMetrics() {
-    selectedConfig = updateConfig.GENERAL;
-    updateMetricHTML();
+    selectedConfig = UpdateConfig.GENERAL;
+    updateMetricElements();
 }
 
 function removeSelection() {
@@ -59,16 +66,19 @@ function getDateInFormat(date) {
     return readableDateParser(parseDateFromData(date));
 }
 
-function updateMetricHTML(county) {
+function updateMetricElements(county) {
     let config;
     switch (selectedConfig) {
-        case updateConfig.COUNTY:
+        case UpdateConfig.COUNTY:
             config = county['AGS'];
             break;
-        case updateConfig.TOTAL:
+        case UpdateConfig.TOTAL:
             config = 'all'
             break;
-        case updateConfig.GENERAL:
+        case UpdateConfig.GENERAL:
+            config = selectedCountyId || 'all';
+            break;
+        default:
             config = selectedCountyId || 'all';
     }
     $('.metric.newCases').find('.metric-number').html(data[selectedDate][config][Metric.NEW_CASES] || 'keine Daten');

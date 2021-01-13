@@ -10,7 +10,7 @@
 
 #axis-slider {
     position: absolute;
-    top: 7vh;
+    top: 8vh;
     z-index: 1;
 }
 
@@ -53,8 +53,8 @@
     display: block;
     margin-bottom: 1.5%;
     padding: 1.25%;
-    height: 5vh;
-    width: 12vh;
+    height: 6vh;
+    width: 7.5vw;
     background-color: var(--background-white);
     border-radius: 10px;
     text-align: center;

@@ -16,6 +16,8 @@ function updateMap() {
 }
 
 function initMap() {
+    // needed for window resize
+    d3.select('#map').selectAll('*').remove();
     [min, max] = getMinMax(selectedMetric);
     var svg = d3.select('#map');
     let map = $('#map');
@@ -53,9 +55,9 @@ function initMap() {
         })
         .on('click', function (d) {
                 removeSelection();
-                d3.select('#infoText').text(this.id);
-                updateDashboard(d.target.__data__.properties);
-                this.classList.add('selected-county');
+            d3.select('#infoText').text(this.id);
+            updateMetricsForSelectedCounty(d.target.__data__.properties);
+            this.classList.add('selected-county');
             }
         );
 }
