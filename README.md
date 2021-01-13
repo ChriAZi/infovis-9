@@ -33,7 +33,8 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
 
 ### Scatterplot:
 
-  *	Der Scatterplot zeigt die Anzahl der Neuinfektionen in Abhängigkeit der Bevölkerungsanzahl der einzelnen Landkreise an
+  *	Der Scatterplot zeigt die Anzahl der Neuinfektionen in Abhängigkeit der Bevölkerungsdichte der einzelnen Landkreise an
+  * Die Landkreise werden entsprechend der Kennzahl eingefärbt (siehe Kartendiagramm)
 
 ### Interaktionen: 
 
@@ -75,6 +76,4 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
   * Liniendiagramms, welches den Verlauf der gewählten Kennzahl anzeigt
 
 ### Scatterplot:
-  * Bevölkerungsdichte statt Einwohnerzahl auf x-Achse
-  * Kennzahl auf y-Achse veränderbar
-  * evtl. Selektion von Landkreisen möglich -> Hervorhebung
+  * evtl. Zoomfunktion
