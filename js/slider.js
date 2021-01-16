@@ -150,6 +150,9 @@ function stepForwardSlider() {
                 if (date !== undefined) {
                     setDate(date);
                 }
+                if (this.value >= Object.keys(data).length - 2) {
+                    stopPlaying();
+                }
                 return nextValue;
             } else {
                 return 0;
