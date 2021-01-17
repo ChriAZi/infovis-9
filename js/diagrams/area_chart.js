@@ -123,7 +123,7 @@ function initAreaChart() {
             xAxis = chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
-                .call(d3.axisBottom(xScale))
+                .call(xAxisGerman)
                 .append('style').text('text { font-family: var(--font-family)}')
                 .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
                 .append('style').text('text { color: var(--font-color)}');
@@ -216,7 +216,7 @@ function updateAreaChart() {
             .transition().duration(60)
             .style("opacity", 1)
             .attr("d", d => area(d));
-        
+
         d3.select("path.line").remove();
     }
 
