@@ -4,6 +4,10 @@ function filterData(data) {
     );
 }
 
+let chart;
+
+let xScale;
+let yScale;
 let xAxis;
 let yAxis;
 
@@ -12,8 +16,15 @@ let margin = {top: 0, right: 0, bottom: 0, left: 0};
 
 const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
+let lineV;
 let lineText;
 let lineDate = new Date();
+
+let area;
+let series;
+let stack;
+let stackedData;
+let xValue;
 
 function initAreaChart() {
     d3.csv('data/data_Auslastung.csv')
@@ -38,38 +49,38 @@ function initAreaChart() {
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom);
 
-            let chart = svg.append('g');
+            chart = svg.append('g');
 
             grp = chart.append('g');
 
             // Create stack
-            const stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
-            const stackedData = stack(data);// Create scales
-            const xValue = d => d.date;
+            stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
+            stackedData = stack(data);// Create scales
+            xValue = d => d.date;
 
             //x-Axis
-            xAxis = d3.scaleTime()
+            xScale = d3.scaleTime()
                 .domain(d3.extent(data, xValue))
                 .range([0, width]);
             xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
             //y-Axis
-            yAxis = d3.scaleLinear()
+            yScale = d3.scaleLinear()
                 .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
                     return d[1]
                 })])
                 .range([height, 0]);
 
-            var area = d3.area().x(function (d) {
-                return xAxis(d.data.date);
+            area = d3.area().x(function (d) {
+                return xScale(d.data.date);
             })
                 .y0(function (d) {
-                    return yAxis(d[0]);
+                    return yScale(d[0]);
                 })
                 .y1(function (d) {
-                    return yAxis(d[1]);
+                    return yScale(d[1]);
                 })
 
-            const series = grp
+            series = grp
                 .selectAll('.series')
                 .data(stackedData)
                 .enter()
@@ -86,33 +97,33 @@ function initAreaChart() {
                 .attr('d', d => area(d));
 
             // Add the X Axis
-            chart
+            xAxis = chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
                 .attr('id', 'area-chart-x-axis')
                 .call(xAxisGerman)
 
             // Add the Y Axis
-            chart
+            yAxis = chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
                 .attr('id', 'area-chart-y-axis')
                 .call(d3.axisRight(yAxis))
 
             // Add line
-            grp
+            lineV = grp
                 .append('line')
                 .datum(data)
-                .attr('x1', xAxis(lineDate) - margin.right)
-                .attr('x2', xAxis(lineDate) - margin.right)
+                .attr('x1', xScale(lineDate) - margin.right)
+                .attr('x2', xScale(lineDate) - margin.right)
                 .attr('y1', margin.top + 10)
-                .attr('y2', yAxis(margin.bottom))
+                .attr('y2', yScale(margin.bottom))
                 .attr('stroke', 'black')
                 .style('stroke-width', 1.5);
 
             //Add line text
             lineText = chart.append('text')
-                .attr('x', xAxis(lineDate) - margin.right)
+                .attr('x', xScale(lineDate) - margin.right)
                 .attr('y', margin.top)
                 .attr('text-anchor', 'middle')
                 .attr('stroke', 'black')
@@ -144,16 +155,16 @@ function updateAreaChart() {
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xAxis(lineDate) - margin.right)
-        .attr('x2', xAxis(lineDate) - margin.right)
+        .attr('x1', xScale(lineDate) - margin.right)
+        .attr('x2', xScale(lineDate) - margin.right)
         .attr('y1', margin.top + 10)
-        .attr('y2', yAxis(margin.bottom))
+        .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
         .style('stroke-width', 1.5);
     lineText.transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x', xAxis(lineDate) - margin.right)
+        .attr('x', xScale(lineDate) - margin.right)
         .attr('y', margin.top)
         .attr('stroke', 'black')
         .text(getDateInFormat(selectedDate));
