@@ -61,7 +61,10 @@ function drawSliderAxis(id = '#axis-slider') {
     let xAxis = d3.axisBottom(x).tickFormat(customTimeFormat);
     svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(xAxis);
+        .call(xAxis)
+        .append('style').text('text { font-family: var(--font-family)}')
+        .append('style').text('text { font-size: var(--font-size-timeline)}')
+        .append('style').text('text { color: var(--font-color)}');
 }
 
 function initButtons() {
@@ -150,10 +153,8 @@ function stepForwardSlider() {
                     stopPlaying();
                 }
                 return nextValue;
-            } else if (isPlaying) {
-                return 0;
             } else {
-                return Number(this.value);
+                return 0;
             }
         });
     showSliderValue();
@@ -170,7 +171,7 @@ function stepBackwardSlider() {
                 }
                 return nextValue;
             } else {
-                return Number(this.value);
+                return Object.keys(data).length - 1;
             }
         });
     showSliderValue();
