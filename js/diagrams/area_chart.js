@@ -16,6 +16,7 @@ let grp;
 const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
 let lineV;
+let lineV;
 let lineDate;
 
 let area;
@@ -30,6 +31,12 @@ let dynamicLine;
 
 let bedOccData;
 let countyBasedData;
+
+let area;
+let series;
+let stack;
+let stackedData;
+let xValue;
 
 function initAreaChart() {
     d3.csv('data/data_Auslastung.csv')
@@ -123,10 +130,18 @@ function initAreaChart() {
             lineV = grp
                 .append('line')
                 .datum(data)
-                .attr('x1', xScale(lineDate))
-                .attr('x2', xScale(lineDate))
-                .attr('y1', 0)
-                .attr('y2', yScale(0))
+                .attr('x1', xScale(lineDate) - margin.right)
+                .attr('x2', xScale(lineDate) - margin.right)
+                .attr('y1', margin.top + 10)
+                .attr('y2', yScale(margin.bottom))
+                .attr('stroke', 'black')
+                .style('stroke-width', 1.5);
+
+            //Add line text
+            lineText = chart.append('text')
+                .attr('x', xScale(lineDate) - margin.right)
+                .attr('y', margin.top)
+                .attr('text-anchor', 'middle')
                 .attr('stroke', 'black')
                 .style('stroke-width', 1);
 
@@ -195,11 +210,19 @@ function updateAreaChart() {
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate))
-        .attr('x2', xScale(lineDate))
-        .attr('y1', 0)
-        .attr('y2', yScale(0))
+        .attr('x1', xScale(lineDate) - margin.right)
+        .attr('x2', xScale(lineDate) - margin.right)
+        .attr('y1', margin.top + 10)
+        .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
+        .style('stroke-width', 1.5);
+    lineText.transition()
+        .duration(0)
+        .ease(d3.easeLinear)
+        .attr('x', xScale(lineDate) - margin.right)
+        .attr('y', margin.top)
+        .attr('stroke', 'black')
+        .text(getDateInFormat(selectedDate));
         .style('stroke-width', 1);
 
 }
