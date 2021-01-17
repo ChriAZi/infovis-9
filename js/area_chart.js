@@ -51,7 +51,7 @@ function initAreaChart() {
             xAxis = d3.scaleTime()
                 .domain(d3.extent(data, xValue))
                 .range([0, width]);
-
+            xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
             //y-Axis
             yAxis = d3.scaleLinear()
                 .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
@@ -89,7 +89,7 @@ function initAreaChart() {
             chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
-                .call(d3.axisBottom(xAxis))
+                .call(xAxisGerman)
                 .append('style').text('text { font-family: var(--font-family)}')
                 .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
                 .append('style').text('text { color: var(--font-color)}');
