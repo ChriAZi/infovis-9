@@ -56,7 +56,7 @@ function initAreaChart() {
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom)
                 .attr('transform', 'translate(' + (margin.left + 14) + ',' + margin.top + ')');
-        
+
             chart = svg.append('g');
 
             grp = chart.append('g');
@@ -70,7 +70,7 @@ function initAreaChart() {
             xScale = d3.scaleTime()
                 .domain(d3.extent(data, xValue))
                 .range([0, width]);
-
+            xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
             //y-Axis
             yScale = d3.scaleLinear()
                 .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
@@ -108,7 +108,7 @@ function initAreaChart() {
             xAxis = chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
-                .call(d3.axisBottom(xScale))
+                .call(xAxisGerman)
                 .append('style').text('text { font-family: var(--font-family)}')
                 .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
                 .append('style').text('text { color: var(--font-color)}');
@@ -188,13 +188,13 @@ function updateAreaChart() {
             .y1(function (d) {
                 return yScale(d[1]);
             })
-        
+
         chart.selectAll("path")
             .data(stackedData)
             .transition().duration(60)
             .style("opacity", 1)
             .attr("d", d => area(d));
-        
+
         d3.select("path.line").remove();
     }
 
