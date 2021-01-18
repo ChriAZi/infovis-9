@@ -122,7 +122,7 @@ function initAreaChart() {
                 .attr('y1', margin.top + 10)
                 .attr('y2', yScale(margin.bottom))
                 .attr('stroke', 'black')
-                .style('stroke-width', 1.5);
+                .style('stroke-width', 3);
 
             // add styles
             chart.append('style').text('text { font-weight: lighter;)}')
@@ -158,7 +158,7 @@ function updateAreaChart() {
         .attr('y1', margin.top + 10)
         .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
-        .style('stroke-width', 1.5);
+        .style('stroke-width', 3);
 
 }
 
