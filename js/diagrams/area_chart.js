@@ -16,6 +16,7 @@ let grp;
 const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
 let lineV;
+let lineDate = new Date();
 let lineV;
 let lineDate;
 
