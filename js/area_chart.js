@@ -162,6 +162,45 @@ function updateAreaChart() {
 
 }
 
+function updateAreaCountyBased() {
+
+    d3.csv("data/Landkreise_Auslastung.csv")
+        .then(function (countyData) {
+            filteredDataC = countyData.filter(function (d) {
+                d.daten_stand = new Date(d.daten_stand)
+                d.gemeindeschluessel = d.gemeindeschluessel
+                d.betten_frei = +d.betten_frei
+                d.betten_belegt = +d.betten_belegt
+                return d["gemeindeschluessel"] === selectedCountyId;
+            })
+
+            stack = d3.stack().keys(["betten_belegt", "betten_frei", "notfallreserve_betten"]);
+            stackedData = stack(filteredDataC);
+            yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
+                return d[1]
+            })])
+            yAxis.transition().duration(1500).ease(d3.easeLinear)
+                .call(d3.axisRight(yScale));
+
+            area = d3.area().x(function (d) {
+                return xScale(d.data.daten_stand);
+            })
+                .y0(function (d) {
+                    return yScale(d[0]);
+                })
+                .y1(function (d) {
+                    return yScale(d[1]);
+                })
+
+            chart.selectAll("path")
+                .data(stackedData)
+                .transition().duration(1000)
+                .style("opacity", 1)
+                .attr("d", d => area(d));
+
+        })
+}
+
 function setMargin() {
     margin = {
         top: 2.5 * (document.documentElement.clientHeight / 100),
