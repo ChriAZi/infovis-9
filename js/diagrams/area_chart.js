@@ -136,7 +136,7 @@ function initAreaChart() {
                 .attr('y1', margin.top + 10)
                 .attr('y2', yScale(margin.bottom))
                 .attr('stroke', 'black')
-                .style('stroke-width', 1.5);
+                .style('stroke-width', 3);
 
             //Add line text
             lineText = chart.append('text')
@@ -216,7 +216,7 @@ function updateAreaChart() {
         .attr('y1', margin.top + 10)
         .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
-        .style('stroke-width', 1.5);
+        .style('stroke-width', 3);
     lineText.transition()
         .duration(0)
         .ease(d3.easeLinear)
