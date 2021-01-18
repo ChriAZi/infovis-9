@@ -14,10 +14,9 @@ let yAxis;
 let grp;
 let margin = {top: 0, right: 0, bottom: 0, left: 0};
 
-const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
+const color = ['#ffea4c', '#F5F5F5', '#8ab670'];
 
 let lineV;
-let lineText;
 let lineDate = new Date();
 
 let area;
@@ -62,7 +61,7 @@ function initAreaChart() {
             xScale = d3.scaleTime()
                 .domain(d3.extent(data, xValue))
                 .range([0, width]);
-            xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
+
             //y-Axis
             yScale = d3.scaleLinear()
                 .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
@@ -100,15 +99,19 @@ function initAreaChart() {
             xAxis = chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
-                .attr('id', 'area-chart-x-axis')
-                .call(xAxisGerman)
+                .call(d3.axisBottom(xAxis))
+                .append('style').text('text { font-family: var(--font-family)}')
+                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
+                .append('style').text('text { color: var(--font-color)}');
 
             // Add the Y Axis
             yAxis = chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
-                .attr('id', 'area-chart-y-axis')
                 .call(d3.axisRight(yAxis))
+                .append('style').text('text { font-family: var(--font-family)}')
+                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
+                .append('style').text('text { color: var(--font-color)}');
 
             // Add line
             lineV = grp
@@ -121,13 +124,8 @@ function initAreaChart() {
                 .attr('stroke', 'black')
                 .style('stroke-width', 1.5);
 
-            //Add line text
-            lineText = chart.append('text')
-                .attr('x', xScale(lineDate) - margin.right)
-                .attr('y', margin.top)
-                .attr('text-anchor', 'middle')
-                .attr('stroke', 'black')
-                .text(getDateInFormat(selectedDate));
+            // add styles
+            chart.append('style').text('text { font-weight: lighter;)}')
 
             // text label for the x axis
             chart.append('text')
@@ -161,13 +159,7 @@ function updateAreaChart() {
         .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
         .style('stroke-width', 1.5);
-    lineText.transition()
-        .duration(0)
-        .ease(d3.easeLinear)
-        .attr('x', xScale(lineDate) - margin.right)
-        .attr('y', margin.top)
-        .attr('stroke', 'black')
-        .text(getDateInFormat(selectedDate));
+
 }
 
 function setMargin() {
