@@ -39,6 +39,9 @@ let stack;
 let stackedData;
 let xValue;
 
+let bedOccData;
+let countyBasedData;
+
 function initAreaChart() {
     d3.csv('data/data_Auslastung.csv')
         .then(function (data) {
@@ -49,7 +52,7 @@ function initAreaChart() {
                 d.Notfallreserve = +d.Notfallreserve
             })
             bedOccData=data;
-            //setMargin();
+            setMargin();
 
             let parent = $('.area-container');
             let margin = {top: 50, right: 60, bottom: 50, left: 40};
@@ -290,7 +293,7 @@ function updateAreaCountyBased() {
 
     d3.csv("data/Landkreise_Auslastung.csv")
         .then(function (countyData) {
-            filteredDataC = countyData.filter(function (d) {
+            countyBasedData = countyData.filter(function (d) {
                 d.daten_stand = new Date(d.daten_stand)
                 d.gemeindeschluessel = d.gemeindeschluessel
                 d.betten_frei = +d.betten_frei
@@ -299,7 +302,7 @@ function updateAreaCountyBased() {
             })
 
             stack = d3.stack().keys(["betten_belegt", "betten_frei", "notfallreserve_betten"]);
-            stackedData = stack(filteredDataC);
+            stackedData = stack(countyBasedData);
             yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
                 return d[1]
             })])
