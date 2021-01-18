@@ -17,7 +17,6 @@ let margin = {top: 0, right: 0, bottom: 0, left: 0};
 const color = ['#ffea4c', '#F5F5F5', '#8ab670'];
 
 let lineV;
-let lineText;
 let lineDate = new Date();
 
 let area;
@@ -125,14 +124,6 @@ function initAreaChart() {
                 .attr('stroke', 'black')
                 .style('stroke-width', 1.5);
 
-            //Add line text
-            lineText = chart.append('text')
-                .attr('x', xScale(lineDate) - margin.right)
-                .attr('y', margin.top)
-                .attr('text-anchor', 'middle')
-                .attr('stroke', 'black')
-                .text(getDateInFormat(selectedDate));
-
             // add styles
             chart.append('style').text('text { font-weight: lighter;)}')
 
@@ -168,13 +159,7 @@ function updateAreaChart() {
         .attr('y2', yScale(margin.bottom))
         .attr('stroke', 'black')
         .style('stroke-width', 1.5);
-    lineText.transition()
-        .duration(0)
-        .ease(d3.easeLinear)
-        .attr('x', xScale(lineDate) - margin.right)
-        .attr('y', margin.top)
-        .attr('stroke', 'black')
-        .text(getDateInFormat(selectedDate));
+
 }
 
 function setMargin() {
