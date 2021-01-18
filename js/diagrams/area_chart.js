@@ -210,6 +210,7 @@ function updateAreaChart() {
         .attr('y1', 0)
         .attr('y2', yScale(0))
         .attr('stroke', 'black')
+        .style('stroke-width', 3);
         .style('stroke-width', 1);
 
 }
