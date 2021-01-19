@@ -69,4 +69,5 @@ function initMap() {
                 }
             }
         );
+    initMapLegend();
 }
