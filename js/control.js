@@ -91,18 +91,17 @@ function setMinMaxValuesForMetricObject() {
 }
 
 function getMinMax(metric) {
-    let keys = Object.keys(data[selectedDate]);
     let tmpMin, tmpMax;
     tmpMin = tmpMax = 0;
-    keys.forEach(obj => {
-        let val = data[selectedDate][obj][metric];
+    for (let date in data) {
+        let val = data[date]['all'][metric];
         if (val < tmpMin) {
             tmpMin = val;
         }
         if (val > tmpMax) {
             tmpMax = val;
         }
-    })
+    }
     return [tmpMin, tmpMax];
 }
 
