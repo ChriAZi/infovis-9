@@ -19,6 +19,7 @@ def main():
         download_case_data()
 
     d, c = parse_case_data()
+    add_missing_counties(c)
     parse_population_data(c)
     parse_area_data(c)
 
@@ -31,6 +32,7 @@ def main():
     pad_data_set(d, c)
     aggregate_daily_data(d, c)
     assemble_nationwide_data(d, c)
+    handle_special_cases(d, c)
     compute_incidences(d, c)
 
     write_to_file(d, "data.json", format)
@@ -100,6 +102,15 @@ def create_empty_element():
         "totalDeaths": None,
         "caseIncidence": None,
         "deathIncidence": None
+    }
+
+
+def add_missing_counties(counties):
+    counties["11000"] = {
+        "name": "Berlin",
+        "population": None,
+        "area": None,
+        "density": None
     }
 
 
@@ -219,6 +230,21 @@ def assemble_nationwide_data(data, counties):
             all["totalDeaths"] += date[c]["totalDeaths"]
 
         date["all"] = all
+
+
+def handle_special_cases(data, counties):
+    print("Handling special cases")
+
+    # Berlin
+    districts = ["11001", "11002", "11003", "11004", "11005", "11006",
+                 "11007", "11008", "11009", "11010", "11011", "11012"]
+
+    for d in data.values():
+        for dis in districts:
+            d["11000"]["newCases"] += d[dis]["newCases"]
+            d["11000"]["newDeaths"] += d[dis]["newDeaths"]
+            d["11000"]["totalCases"] += d[dis]["totalCases"]
+            d["11000"]["totalDeaths"] += d[dis]["totalDeaths"]
 
 
 def compute_incidences(data, counties):
