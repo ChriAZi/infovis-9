@@ -1,8 +1,4 @@
-var min = 0;
-var max = 0;
-
 function updateMap() {
-    [min, max] = getMinMax(selectedMetric);
     //color path fill based on data
     d3.select('#map').selectAll('path').nodes().forEach(function (d) {
         var str = (d.id).substring(1);
@@ -13,13 +9,11 @@ function updateMap() {
             d3.select(d).style('fill', 'white')
         }
     });
-    updateMapLegend();
 }
 
 function initMap() {
     // needed for window resize
     d3.select('#map').selectAll('*').remove();
-    [min, max] = getMinMax(selectedMetric);
     var svg = d3.select('#map');
     let map = $('#map');
 
@@ -70,5 +64,4 @@ function initMap() {
                 }
             }
         );
-    initMapLegend();
 }

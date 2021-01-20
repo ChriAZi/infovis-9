@@ -46,7 +46,7 @@ const Metric = {
 };
 Object.freeze(Metric);
 
-var selectedMetric = Metric.NEW_CASES;
+var selectedMetric = Metric.CASE_INCIDENCE;
 var selectedCountyId = null;
 var selectedDate = null;
 
@@ -71,6 +71,7 @@ function onDataLoaded() {
     // needs to happen before loading visualizations
     setMinMaxValuesForMetricObject();
     initMap();
+    initMapLegend();
     initScatterPlot();
     initAreaChart();
     initSlider();
@@ -79,6 +80,7 @@ function onDataLoaded() {
 
 function updateAll() {
     updateMap();
+    updateMapLegend();
     initScatterPlot();
     updateAreaChart();
     updateMetrics();
@@ -94,14 +96,14 @@ function getMinMax(metric) {
     let tmpMin, tmpMax;
     tmpMin = tmpMax = 0;
     for (let date in data) {
-        let val = data[date]['all'][metric];
-        if (val < tmpMin) {
-            tmpMin = val;
-        }
-        if (val > tmpMax) {
-            tmpMax = val;
+        for (let county in data[date]) {
+            let val = data[date][county][metric];
+            if (val < tmpMin) tmpMin = val;
+            if (val > tmpMax) tmpMax = val;
         }
     }
+    console.log(metric)
+    console.log(tmpMin, tmpMax)
     return [tmpMin, tmpMax];
 }
 
@@ -112,7 +114,7 @@ function getColor(value) {
             scalingFactor = 5000;
             break;
         case Metric.CASE_INCIDENCE:
-            scalingFactor = 2;
+            scalingFactor = 4;
             break;
         case Metric.DEATH_INCIDENCE:
             scalingFactor = 0.5;
