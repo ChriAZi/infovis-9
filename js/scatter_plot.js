@@ -13,6 +13,9 @@ function updateScatterplot() {
     let width = parent.width() - margin.left - margin.right;
     let height = parent.height() - margin.top - margin.bottom;
 
+    let formatPercent = d3.format('.0%');
+    let offsetYAxis = 1;
+
     d3.select('#scatter-plot').selectAll('*').remove();
     var filteredIds = Object.keys(counties).filter(item => item !== 'all' && Object.keys(countyNames).includes(item));
 
@@ -49,16 +52,29 @@ function updateScatterplot() {
     // Add Y axis
     var y = d3.scaleLinear()
         .domain([0, d3.max(filteredIds, function (d) {
-            return data[selectedDate][d][selectedMetric] != null ? scaleByPopulation(data[selectedDate][d][selectedMetric], d) : 0;
-        }) + 1])
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                offsetYAxis = 0;
+                return getLethalityRate(d);
+            } else {
+                return data[selectedDate][d][selectedMetric] !== null ? scaleByPopulation(data[selectedDate][d][selectedMetric], d) : 0;
+            }
+        }) + offsetYAxis])
         .range([height, 0]);
 
-    svg.append('g')
-        //.attr("transform", "translate(14," + 0 + ")")
-        .call(d3.axisLeft(y).ticks(5, 'f'))
-        .append('style').text('text { font-family: var(--font-family)}')
-        .append('style').text('text { font-size: var(--font-size-timeline)}')
-        .append('style').text('text { color: var(--font-color)}');
+    if (selectedMetric === Metric.LETHALITY_RATE) {
+        svg.append('g')
+            .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent))
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
+    } else {
+        svg.append('g')
+            .call(d3.axisLeft(y).ticks(5, 'f'))
+            .append('style').text('text { font-family: var(--font-family)}')
+            .append('style').text('text { font-size: var(--font-size-timeline)}')
+            .append('style').text('text { color: var(--font-color)}');
+    }
+
 
     // text label for the y axis
     svg.append('text')
@@ -114,28 +130,29 @@ function updateScatterplot() {
             return counties[d].name;
         })
         .attr('cy', function (d) {
-            return y(scaleByPopulation(data[selectedDate][d][selectedMetric], d));
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return y(getLethalityRate(d));
+            } else {
+                return y(scaleByPopulation(data[selectedDate][d][selectedMetric], d));
+            }
         })
         .attr('cx', function (d) {
             return x(counties[d].density);
         })
         .attr('r', function (d) {
-
-            //Circle size is population based
-            /*
-            var max = d3.max(filteredIds, function(d){
-                return counties[d].population!=null ? counties[d].population : 0;
-            });
-            if(data[selectedDate][d][selectedMetric] == null){
-                return 0;
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return 3;
+            } else {
+                return data[selectedDate][d][selectedMetric] == null ? 0 : 3;
             }
-            return counties[d].population/max*20;
-            */
-            return data[selectedDate][d][selectedMetric] == null ? 0 : 3;
         })
         .style('fill', function (d) {
-            if (data[selectedDate][d][selectedMetric] !== 0) {
-                return getColor(data[selectedDate][d][selectedMetric])
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return getColor(getLethalityRate(d));
+            } else {
+                if (data[selectedDate][d][selectedMetric] !== 0) {
+                    return getColor(data[selectedDate][d][selectedMetric])
+                }
             }
             return 'white';
         })
@@ -195,14 +212,14 @@ function getMetricsText() {
         case Metric.CASE_INCIDENCE:
             text = '7-Tage-Inzidenz Neuinfektionen';
             break;
-        case Metric.DEATH_INCIDENCE:
-            text = '7-Tage-Inzidenz Todesfälle';
+        case Metric.LETHALITY_RATE:
+            text = 'Letalitätsrate';
             break;
     }
     return text;
 }
 
-function scaleByPopulation(value, county) {  
+function scaleByPopulation(value, county) {
     switch (selectedMetric) {
         case Metric.NEW_CASES:
         case Metric.NEW_DEATHS:
