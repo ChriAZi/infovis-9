@@ -4,7 +4,7 @@ const Metric = {
     NEW_DEATHS: 'newDeaths',
     TOTAL_DEATHS: 'totalDeaths',
     CASE_INCIDENCE: 'caseIncidence',
-    DEATH_INCIDENCE: 'deathIncidence',
+    LETHALITY_RATE: 'lethalityRate',
     properties: {
         'newCases': {
             valueRange: [],
@@ -36,7 +36,7 @@ const Metric = {
             scaleStartColor: '#ffb753',
             scaleEndColor: '#78121e'
         },
-        'deathIncidence': {
+        'lethalityRate': {
             valueRange: [],
             baseColor: '#de0000',
             scaleStartColor: '#8ab670',
@@ -51,6 +51,7 @@ var selectedCountyId = null;
 var selectedDate = null;
 
 function setMetric(metric) {
+
     selectedMetric = metric;
     updateAll();
 }
@@ -97,13 +98,16 @@ function getMinMax(metric) {
     tmpMin = tmpMax = 0;
     for (let date in data) {
         for (let county in data[date]) {
-            let val = data[date][county][metric];
+            let val;
+            if (metric === Metric.LETHALITY_RATE) {
+                val = getLethalityRate(county, date)
+            } else {
+                val = data[date][county][metric];
+            }
             if (val < tmpMin) tmpMin = val;
             if (val > tmpMax) tmpMax = val;
         }
     }
-    console.log(metric)
-    console.log(tmpMin, tmpMax)
     return [tmpMin, tmpMax];
 }
 
@@ -116,7 +120,7 @@ function getColor(value) {
         case Metric.CASE_INCIDENCE:
             scalingFactor = 4;
             break;
-        case Metric.DEATH_INCIDENCE:
+        case Metric.LETHALITY_RATE:
             scalingFactor = 0.5;
             break;
         default:
@@ -126,4 +130,8 @@ function getColor(value) {
         .domain([Metric.properties[selectedMetric].valueRange[0], (Metric.properties[selectedMetric].valueRange[1] / scalingFactor)])
         .range([Metric.properties[selectedMetric].scaleStartColor, Metric.properties[selectedMetric].scaleEndColor]);
     return scale(value);
+}
+
+function getLethalityRate(totalOrCounty, date = selectedDate) {
+    return (data[date][totalOrCounty][Metric.TOTAL_DEATHS] / data[date][totalOrCounty][Metric.TOTAL_CASES]);
 }

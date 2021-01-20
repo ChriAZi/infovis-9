@@ -63,8 +63,8 @@
     color: var(--case-incidence);
 }
 
-.metric.deathIncidence .selection.isSelected,
-.metric.deathIncidence .metric-number {
+.metric.lethalityRate .selection.isSelected,
+.metric.lethalityRate .metric-number {
     color: var(--death-incidence);
 }
 

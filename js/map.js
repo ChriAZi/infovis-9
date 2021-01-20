@@ -2,11 +2,15 @@ function updateMap() {
     //color path fill based on data
     d3.select('#map').selectAll('path').nodes().forEach(function (d) {
         var str = (d.id).substring(1);
-        if (Object.keys(data[selectedDate]).includes(str) && data[selectedDate][str][selectedMetric] !== 0) {
-            var val = data[selectedDate][str][selectedMetric];
-            d3.select(d).style('fill', getColor(val));
+        if (selectedMetric === Metric.LETHALITY_RATE) {
+            d3.select(d).style('fill', getColor(getLethalityRate(str)));
         } else {
-            d3.select(d).style('fill', 'white')
+            if (Object.keys(data[selectedDate]).includes(str) && data[selectedDate][str][selectedMetric] !== 0) {
+                var val = data[selectedDate][str][selectedMetric];
+                d3.select(d).style('fill', getColor(val));
+            } else {
+                d3.select(d).style('fill', 'white')
+            }
         }
     });
 }
@@ -30,12 +34,20 @@ function initMap() {
         .enter()
         .append('path')
         .attr('fill', function (d) {
-            if (Object.keys(data[selectedDate]).includes(d.properties.AGS) && data[selectedDate][d.properties.AGS][selectedMetric] !== 0) {
-                // keep county selection while resizing
-                if (d.properties.AGS === selectedCountyId) {
-                    this.classList.add('selected-county');
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return getColor(getLethalityRate(d.properties.AGS))
+            } else {
+                if (Object.keys(data[selectedDate]).includes(d.properties.AGS) && data[selectedDate][d.properties.AGS][selectedMetric] !== 0) {
+                    // keep county selection while resizing
+                    if (d.properties.AGS === selectedCountyId) {
+                        this.classList.add('selected-county');
+                    }
+                    if (selectedMetric === Metric.LETHALITY_RATE) {
+
+                    } else {
+                        return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
+                    }
                 }
-                return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
             }
             return 'white'
         })

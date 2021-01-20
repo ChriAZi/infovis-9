@@ -86,14 +86,14 @@ function updateMetricElements(county) {
     let newDeaths = getNumberWithCommas(data[selectedDate][config][Metric.NEW_DEATHS]);
     let totalDeaths = getNumberWithCommas(data[selectedDate][config][Metric.TOTAL_DEATHS]);
     let caseIncidence = (Math.round(data[selectedDate][config][Metric.CASE_INCIDENCE] * 10) / 10).toString().replace(/\./g, ',');
-    let deathIncidence = (Math.round(data[selectedDate][config][Metric.DEATH_INCIDENCE] * 10) / 10).toString().replace(/\./g, ',');
+    let lethalityRate = (Math.round(((getLethalityRate(config) * 100) + Number.EPSILON) * 100) / 100).toString().replace(/\./g, ',') + '%';
 
     $('.metric.newCases').find('.metric-number').html(newCases === null ? 'keine Daten' : newCases);
     $('.metric.totalCases').find('.metric-number').html(totalCases === null ? 'keine Daten' : totalCases);
     $('.metric.newDeaths').find('.metric-number').html(newDeaths === null ? 'keine Daten' : newDeaths);
     $('.metric.totalDeaths').find('.metric-number').html(totalDeaths === null ? 'keine Daten' : totalDeaths);
     $('.metric.caseIncidence').find('.metric-number').html(caseIncidence === null ? 'keine Daten' : caseIncidence);
-    $('.metric.deathIncidence').find('.metric-number').html(deathIncidence === null ? 'keine Daten' : deathIncidence);
+    $('.metric.lethalityRate').find('.metric-number').html(lethalityRate === null ? 'keine Daten' : lethalityRate);
 
     function getNumberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

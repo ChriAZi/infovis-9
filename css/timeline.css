@@ -36,13 +36,26 @@
     z-index: 99999;
 }
 
-#slider::-webkit-slider-thumb, #slider::-moz-range-thumb {
+
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border-radius: 5px;
     border: none;
     height: 4.5vh;
     width: 10px;
     background-color: var(--background-dark-grey);
     cursor: pointer;
-    -webkit-appearance: none;
+    box-shadow: var(--shadow-default);
+    z-index: 99999;
+}
+
+#slider::-moz-range-thumb {
+    border: none;
+    border-radius: 5px;
+    height: 4.5vh;
+    width: 10px;
+    background-color: var(--background-dark-grey);
+    cursor: pointer;
     box-shadow: var(--shadow-default);
     z-index: 99999;
 }
