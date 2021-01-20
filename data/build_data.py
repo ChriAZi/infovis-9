@@ -209,7 +209,6 @@ def assemble_nationwide_data(data, counties):
 
     for date in data.values():
         all = create_empty_element()
-        date["all"] = all
         all["totalCases"] = 0
         all["totalDeaths"] = 0
 
@@ -218,6 +217,8 @@ def assemble_nationwide_data(data, counties):
             all["newDeaths"] += date[c]["newDeaths"]
             all["totalCases"] += date[c]["totalCases"]
             all["totalDeaths"] += date[c]["totalDeaths"]
+
+        date["all"] = all
 
 
 def compute_incidences(data, counties):
