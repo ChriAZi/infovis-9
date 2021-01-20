@@ -148,10 +148,11 @@ function getMinMaxInCounties(metric) {
         for (let county in data[date]) {
             if (county !== 'all') {
                 let val;
-                if (metric === Metric.LETHALITY_RATE) {
-                    val = getLethalityRate(county, date)
-                } else {
-                    val = data[date][county][metric];
+            if (metric === Metric.LETHALITY_RATE) {
+                val = getLethalityRate(county, date)
+            } else {
+                val = data[date][county][metric];
+            }
                 }
                 if (val < tmpMin) tmpMin = val;
                 if (val > tmpMax) {

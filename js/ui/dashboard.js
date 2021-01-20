@@ -100,7 +100,6 @@ function updateMetricElements(county) {
     $('.metric.totalDeaths').find('.metric-number').html(totalDeaths === null ? 'keine Daten' : totalDeaths);
     $('.metric.caseIncidence').find('.metric-number').html(caseIncidence === null ? 'keine Daten' : caseIncidence);
     $('.metric.lethalityRate').find('.metric-number').html(lethalityRate === null ? 'keine Daten' : lethalityRate);
-}
 
 function getNumberWithDots(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
