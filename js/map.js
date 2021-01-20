@@ -13,6 +13,7 @@ function updateMap() {
             d3.select(d).style('fill', 'white')
         }
     });
+    updateMapLegend();
 }
 
 function initMap() {
