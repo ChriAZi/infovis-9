@@ -5,7 +5,7 @@ const disCircles = 15;
 const radiusCircle = 5;
 let svgMapLegend;
 
-let mapLegendisShown = false;
+let MapLegendIsShown = false;
 
 function initMapLegend(){
     /*scalingFactorColor = 500;
@@ -54,12 +54,12 @@ function initMapLegend(){
 }
 
 function showHideMapLegend() {
-    if (mapLegendisShown) {
+    if (MapLegendIsShown) {
         svgMapLegend.style("opacity", 0);
-        mapLegendisShown = false;
+        MapLegendIsShown = false;
     } else{
         svgMapLegend.style("opacity", 1);
-        mapLegendisShown = true;
+        MapLegendIsShown = true;
     }
 }
 function updateMapLegend(){
@@ -80,9 +80,10 @@ function getStepsForLegend(){ //TODO Scaling Factor?
     let numberSteps = numberPoints-1;
     let step = difMinMax/(numberSteps);
     for(let i =0;i < numberSteps; i++){
-        stepsForLegend.push(Math.round(min+i*step));
+        stepsForLegend.push(Math.round((min+i*step)/10)*10);
     }
-    stepsForLegend.push(max);
+    stepsForLegend.push(Math.round(max));
     return stepsForLegend;
 }
+
 
