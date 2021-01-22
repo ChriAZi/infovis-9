@@ -43,6 +43,7 @@ function updateScatterplot() {
         .attr('transform', 'translate(' + (width / 2) + ' ,' + (height + margin.top - 10) + ')')
         .style('text-anchor', 'middle')
         .text('Bevölkerungsdichte');
+        .text('Bevölkerungsdichte (Einwohner pro km²)');
 
     // Add Y axis
     var y = d3.scaleLinear()
@@ -51,7 +52,7 @@ function updateScatterplot() {
                 offsetYAxis = 0;
                 return getLethalityRate(d);
             } else {
-                return data[selectedDate][d][selectedMetric] !== null ? data[selectedDate][d][selectedMetric] : 0;
+                return data[selectedDate][d][selectedMetric] !== null ? scaleByPopulation(data[selectedDate][d][selectedMetric], d) : 0;
             }
         }) + offsetYAxis])
         .range([height, 0]);
@@ -104,7 +105,7 @@ function updateScatterplot() {
             if (selectedMetric === Metric.LETHALITY_RATE) {
                 return y(getLethalityRate(d));
             } else {
-                return y(data[selectedDate][d][selectedMetric]);
+                return y(scaleByPopulation(data[selectedDate][d][selectedMetric], d));
             }
         })
         .attr('cx', function (d) {
@@ -159,4 +160,20 @@ function updateScatterplot() {
         .on('click', function () {
             document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
+}
+        .on('click', function (d) {
+            d3.select('#i' + this.id).dispatch('click');
+        });
+}
+
+function scaleByPopulation(value, county) {
+    switch (selectedMetric) {
+        case Metric.NEW_CASES:
+        case Metric.NEW_DEATHS:
+        case Metric.TOTAL_CASES:
+        case Metric.TOTAL_DEATHS:
+            return value * 100000 / counties[county]['population'];
+        default:
+            return value;
+    }
 }
