@@ -172,7 +172,7 @@ function updateAreaChart() {
         updateAreaCountyBased();
     } else {
         stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
-        stackedData = stack(summedData);
+        stackedData = stack(bedOccData);
         xValue = d => d.date;
         yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
             return d[1] + 1000
