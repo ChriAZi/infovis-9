@@ -136,12 +136,12 @@ function initAreaChart() {
             lineV = grp
                 .append('line')
                 .datum(data)
-                .attr('x1', xScale(lineDate) - margin.right)
-                .attr('x2', xScale(lineDate) - margin.right)
-                .attr('y1', yScale(0))
-                .attr('y2', 0)
+                .attr('x1', xScale(lineDate))
+                .attr('x2', xScale(lineDate))
+                .attr('y1', 0)
+                .attr('y2', yScale(0))
                 .attr('stroke', 'black')
-                .style('stroke-width', 3);
+                .style('stroke-width', 1);
 
             //Add line text
             lineText = chart.append('text')
@@ -185,7 +185,7 @@ function updateAreaChart() {
         updateAreaCountyBased();
     } else {
         stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
-        stackedData = stack(bedOccData);
+        stackedData = stack(summedData);
         xValue = d => d.date;
         yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
             return d[1] + 1000
@@ -209,19 +209,18 @@ function updateAreaChart() {
             .style("opacity", 1)
             .attr("d", d => area(d));
 
-        d3.select("path.line").remove();
     }
 
     lineV
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate) - margin.right)
-        .attr('x2', xScale(lineDate) - margin.right)
-        .attr('y1', yScale(0))
-        .attr('y2', 0)
+        .attr('x1', xScale(lineDate))
+        .attr('x2', xScale(lineDate))
+        .attr('y1', 0)
+        .attr('y2', yScale(0))
         .attr('stroke', 'black')
-        .style('stroke-width', 3);
+        .style('stroke-width', 1);
     lineText.transition()
         .duration(0)
         .ease(d3.easeLinear)
