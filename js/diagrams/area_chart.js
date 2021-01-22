@@ -39,6 +39,10 @@ let stack;
 let stackedData;
 let xValue;
 
+let dataDates;
+let lineChart;
+let dynamicLine;
+
 let bedOccData;
 let countyBasedData;
 
@@ -167,6 +171,17 @@ function initAreaChart() {
                 .attr('dy', '1em')
                 .style('text-anchor', 'middle')
                 .text('Anzahl Betten');
+        
+            dataDates = Object.keys(data);
+            lineChart = d3.line()
+                .x(function (d) {
+                    d = new Date(d);
+                    return xScale(d)
+                })
+                .y(function (d) {
+                    return yScale(data[d][selectedCountyId][selectedMetric]);
+                })
+
         })
     dataDates = Object.keys(data);
     lineChart = d3.line()
@@ -208,7 +223,8 @@ function updateAreaChart() {
             .transition().duration(60)
             .style("opacity", 1)
             .attr("d", d => area(d));
-
+        
+        d3.select("path.line").remove();
     }
 
     lineV
@@ -325,7 +341,26 @@ function updateAreaCountyBased() {
                 .transition().duration(1000)
                 .style("opacity", 1)
                 .attr("d", d => area(d));
+            dynamicLine = chart.append("path")
+                .attr('class', 'line')
+                // .attr("d", lineChart(dataDates))
+                .attr("fill", "none")
+                //.attr("stroke", metricColor)
+                .attr("stroke-width", 2);
 
+            chart.select('.line').datum(dataDates)
+                .transition()
+                .duration(1000)
+                .attr("stroke", metricColor)
+                .attr("d", d3.line()
+                    .x(function (d) {
+                        d = new Date(d);
+                        return xScale(d)
+                    })
+                    .y(function (d) {
+                        return yScale(data[d][selectedCountyId][selectedMetric]);
+                    })
+                )
         })
 }
 
