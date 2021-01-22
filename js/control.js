@@ -14,21 +14,21 @@ const Metric = {
         },
         'totalCases': {
             valueRange: [],
-            baseColor: '#ffea4c',
+            baseColor: '#3D0154',
             scaleStartColor: '#ffea4c',
-            scaleEndColor: '#6c067e'
+            scaleEndColor: '#3D0154'
         },
         'newDeaths': {
             valueRange: [],
-            baseColor: '#333333',
-            scaleStartColor: '#eaeaeb',
-            scaleEndColor: '#eaeaeb'
+            baseColor: '#5A5EC8',
+            scaleStartColor: '#BDE1EA',
+            scaleEndColor: '#5A5EC8'
         },
         'totalDeaths': {
             valueRange: [],
-            baseColor: '#002ea3',
-            scaleStartColor: '#6879a1',
-            scaleEndColor: '#002ea3'
+            baseColor: '#333333',
+            scaleStartColor: '#eaeaeb',
+            scaleEndColor: '#333333'
         },
         'caseIncidence': {
             valueRange: [],
@@ -89,49 +89,89 @@ function updateAll() {
 
 function setMinMaxValuesForMetricObject() {
     for (let metric in Metric.properties) {
-        Metric.properties[metric].valueRange = getMinMax(metric);
+        if (metric !== 'all') {
+            Metric.properties[metric].valueRange = getMinMaxInCounties(metric);
+        }
     }
 }
 
-function getMinMax(metric) {
+function getMinMaxInCounties(metric) {
     let tmpMin, tmpMax;
     tmpMin = tmpMax = 0;
+    let test;
     for (let date in data) {
         for (let county in data[date]) {
-            let val;
-            if (metric === Metric.LETHALITY_RATE) {
-                val = getLethalityRate(county, date)
-            } else {
-                val = data[date][county][metric];
+            if (county !== 'all') {
+                let val;
+                if (metric === Metric.LETHALITY_RATE) {
+                    val = getLethalityRate(county, date)
+                } else {
+                    val = data[date][county][metric];
+                }
+                if (val < tmpMin) tmpMin = val;
+                if (val > tmpMax) {
+                    tmpMax = val;
+                    if (metric === Metric.TOTAL_CASES) {
+                        test = county;
+                    }
+                }
             }
-            if (val < tmpMin) tmpMin = val;
-            if (val > tmpMax) tmpMax = val;
         }
     }
     return [tmpMin, tmpMax];
 }
 
 function getColor(value) {
-    let scalingFactor;
+    let scalingFactor, scale;
+    let min = Metric.properties[selectedMetric].valueRange[0];
+    let max = Metric.properties[selectedMetric].valueRange[1];
+    let startColor = Metric.properties[selectedMetric].scaleStartColor;
+    let endColor = Metric.properties[selectedMetric].scaleEndColor;
     switch (selectedMetric) {
+        case Metric.NEW_CASES:
+            scalingFactor = 10;
+            scale = d3.scalePow()
+                .exponent(2)
+                .domain([min, (max / scalingFactor)])
+                .range([startColor, endColor]);
+            break;
+        case Metric.TOTAL_CASES:
+            scalingFactor = 50;
+            scale = d3.scaleSequential()
+                .interpolator(d3.interpolateViridis)
+                .domain([min, (max / scalingFactor)])
+            break;
         case Metric.NEW_DEATHS:
-            scalingFactor = 5000;
+            scalingFactor = 5;
+            scale = getLinearScale(scalingFactor);
+            break;
+        case Metric.TOTAL_DEATHS:
+            scalingFactor = 10;
+            scale = getLinearScale(scalingFactor);
             break;
         case Metric.CASE_INCIDENCE:
             scalingFactor = 4;
+            scale = getLinearScale(scalingFactor);
             break;
         case Metric.LETHALITY_RATE:
-            scalingFactor = 0.5;
-            break;
-        default:
-            scalingFactor = 500;
+            scalingFactor = 10;
+            scale = d3.scaleSequential()
+                .interpolator(d3.interpolatePurples)
+                .domain([min, (max / scalingFactor)])
     }
-    let scale = d3.scaleLinear()
-        .domain([Metric.properties[selectedMetric].valueRange[0], (Metric.properties[selectedMetric].valueRange[1] / scalingFactor)])
-        .range([Metric.properties[selectedMetric].scaleStartColor, Metric.properties[selectedMetric].scaleEndColor]);
     return scale(value);
+
+    function getLinearScale(scalingFactor) {
+        return d3.scaleLinear()
+            .domain([min, (max / scalingFactor)])
+            .range([startColor, endColor]);
+    }
 }
 
 function getLethalityRate(totalOrCounty, date = selectedDate) {
-    return (data[date][totalOrCounty][Metric.TOTAL_DEATHS] / data[date][totalOrCounty][Metric.TOTAL_CASES]);
+    if (!+data[date][totalOrCounty][Metric.TOTAL_CASES]) {
+        return 0;
+    } else {
+        return (data[date][totalOrCounty][Metric.TOTAL_DEATHS] / data[date][totalOrCounty][Metric.TOTAL_CASES]);
+    }
 }

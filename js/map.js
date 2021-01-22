@@ -2,16 +2,16 @@ function updateMap() {
     //color path fill based on data
     d3.select('#map').selectAll('path').nodes().forEach(function (d) {
         var str = (d.id).substring(1);
-        if (selectedMetric === Metric.LETHALITY_RATE) {
-            d3.select(d).style('fill', getColor(getLethalityRate(str)));
-        } else {
-            if (Object.keys(data[selectedDate]).includes(str) && data[selectedDate][str][selectedMetric] !== 0) {
+        if (Object.keys(data[selectedDate]).includes(str) &&
+            (data[selectedDate][str][selectedMetric] !== 0 || getLethalityRate(str) !== 0)) {
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                d3.select(d).style('fill', getColor(getLethalityRate(str)));
+            } else {
                 var val = data[selectedDate][str][selectedMetric];
                 d3.select(d).style('fill', getColor(val));
-            } else {
-                d3.select(d).style('fill', 'white')
             }
-        }
+        } else
+            d3.select(d).style('fill', 'white')
     });
 }
 
@@ -34,19 +34,16 @@ function initMap() {
         .enter()
         .append('path')
         .attr('fill', function (d) {
-            if (selectedMetric === Metric.LETHALITY_RATE) {
-                return getColor(getLethalityRate(d.properties.AGS))
-            } else {
-                if (Object.keys(data[selectedDate]).includes(d.properties.AGS) && data[selectedDate][d.properties.AGS][selectedMetric] !== 0) {
+            if (Object.keys(data[selectedDate]).includes(d.properties.AGS) &&
+                (data[selectedDate][d.properties.AGS][selectedMetric] !== 0 || getLethalityRate(d.properties.AGS) !== 0)) {
+                if (selectedMetric === Metric.LETHALITY_RATE) {
+                    return getColor(getLethalityRate(d.properties.AGS))
+                } else {
                     // keep county selection while resizing
                     if (d.properties.AGS === selectedCountyId) {
                         this.classList.add('selected-county');
                     }
-                    if (selectedMetric === Metric.LETHALITY_RATE) {
-
-                    } else {
-                        return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
-                    }
+                    return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
                 }
             }
             return 'white'
