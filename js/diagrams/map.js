@@ -76,21 +76,16 @@ function initMap() {
             div.style('left', (d.layerX) + 'px')
                 .style('top', (d.layerY - 40) + 'px')
                 .html(d.target.__data__.properties['GEN']);
-            let pathStyles = d.target.attributes['style'].value.split(';');
-            let rgbInStyles = pathStyles.filter(s => s.includes('rgb'));
-            if (rgbInStyles.length) {
-                let rgbValue = rgbInStyles[0].substr(rgbInStyles[0].indexOf('rgb'));
-                strokeColor = getHighContrastColor(rgbValue);
-            } else {
-                strokeColor = getHighContrastColor(d.target.attributes['fill'].value);
-            }
+            strokeColor = getStrokeColor(d);
             d3.select(this).style('stroke', strokeColor);
             d3.select(this).style('stroke-width', 2);
         })
         .on('mouseout', function () {
             div.style('display', 'none');
-            d3.select(this).style('stroke', 'var(--background-dark-grey)');
-            d3.select(this).style('stroke-width', 0.5);
+            if (!this.classList.contains('selected-county')) {
+                d3.select(this).style('stroke', 'var(--background-dark-grey)');
+                d3.select(this).style('stroke-width', 0.5);
+            }
         })
         .on('click', function (d) {
                 if (this.classList.contains('selected-county')) {
@@ -99,8 +94,21 @@ function initMap() {
                 } else {
                     removeCountySelectionOnMap();
                     updateMetricsForSelectedCounty(d.target.__data__.properties);
+                    strokeColor = getStrokeColor(d);
+                    d3.select(this).style('stroke', strokeColor);
                     this.classList.add('selected-county');
                 }
             }
         );
+
+    function getStrokeColor(d) {
+        let pathStyles = d.target.attributes['style'].value.split(';');
+        let rgbInStyles = pathStyles.filter(s => s.includes('rgb'));
+        if (rgbInStyles.length) {
+            let rgbValue = rgbInStyles[0].substr(rgbInStyles[0].indexOf('rgb'));
+            return strokeColor = getHighContrastColor(rgbValue);
+        } else {
+            return strokeColor = getHighContrastColor(d.target.attributes['fill'].value);
+        }
+    }
 }

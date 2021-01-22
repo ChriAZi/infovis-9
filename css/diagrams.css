@@ -44,7 +44,7 @@
 }
 
 [id^=i].selected-county {
-    stroke-width: 2px;
+    stroke-width: 2px !important;
 }
 
 .legend {

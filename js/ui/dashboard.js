@@ -56,6 +56,8 @@ function updateMetrics() {
 function removeCountySelectionOnMap() {
     let prevElement = $('#map').find('.selected-county');
     if (prevElement[0]) {
+        prevElement[0].style.stroke = 'var(--background-dark-grey)';
+        prevElement[0].style.strokeWidth = '0.5px';
         prevElement[0].classList.remove('selected-county');
     }
 }
