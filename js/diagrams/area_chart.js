@@ -121,12 +121,12 @@ function initAreaChart() {
             lineV = grp
                 .append('line')
                 .datum(data)
-                .attr('x1', xScale(lineDate) - margin.right)
-                .attr('x2', xScale(lineDate) - margin.right)
-                .attr('y1', yScale(0))
-                .attr('y2', 0)
+                .attr('x1', xScale(lineDate))
+                .attr('x2', xScale(lineDate))
+                .attr('y1', 0)
+                .attr('y2', yScale(0))
                 .attr('stroke', 'black')
-                .style('stroke-width', 3);
+                .style('stroke-width', 1);
 
             // add styles
             chart.append('style').text('text { font-weight: lighter;)}')
@@ -135,7 +135,7 @@ function initAreaChart() {
             chart.append('text')
                 .attr('transform',
                     'translate(' + (width / 2) + ' ,' +
-                    (height + margin.bottom) + ')')
+                    (height + margin.top - 10) + ')')
                 .style('text-anchor', 'middle')
                 .text('Zeit');
 
@@ -153,16 +153,46 @@ function initAreaChart() {
 
 function updateAreaChart() {
     lineDate = new Date(selectedDate);
+    if (selectedCountyId !== null) {
+        updateAreaCountyBased();
+    } else {
+        stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
+        stackedData = stack(summedData);
+        xValue = d => d.date;
+        yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
+            return d[1] + 1000
+        })])
+        yAxis.transition().duration(1500).ease(d3.easeLinear)
+            .call(d3.axisRight(yScale));
+
+        area = d3.area().x(function (d) {
+            return xScale(d.data.date);
+        })
+            .y0(function (d) {
+                return yScale(d[0]);
+            })
+            .y1(function (d) {
+                return yScale(d[1]);
+            })
+        
+        chart.selectAll("path")
+            .data(stackedData)
+            .transition().duration(60)
+            .style("opacity", 1)
+            .attr("d", d => area(d));
+
+    }
+
     lineV
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate) - margin.right)
-        .attr('x2', xScale(lineDate) - margin.right)
-        .attr('y1', yScale(0))
-        .attr('y2', 0)
+        .attr('x1', xScale(lineDate))
+        .attr('x2', xScale(lineDate))
+        .attr('y1', 0)
+        .attr('y2', yScale(0))
         .attr('stroke', 'black')
-        .style('stroke-width', 3);
+        .style('stroke-width', 1);
 
 }
 
