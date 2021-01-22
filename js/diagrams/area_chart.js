@@ -13,7 +13,7 @@ let yAxis;
 
 let grp;
 
-const color = ['#ffea4c', '#F5F5F5', '#8ab670'];
+const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
 let lineV;
 let lineDate;

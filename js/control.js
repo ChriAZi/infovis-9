@@ -50,30 +50,6 @@ var selectedMetric = Metric.CASE_INCIDENCE;
 var selectedCountyId = null;
 var selectedDate = null;
 
-var germanFormatters = d3.timeFormatDefaultLocale({
-    "decimal": ",",
-    "thousands": ".",
-    "grouping": [3],
-    "currency": ["€", ""],
-    "dateTime": "%a %b %e %X %Y",
-    "date": "%d.%m.%Y",
-    "time": "%H:%M:%S",
-    "periods": ["AM", "PM"],
-    "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
-    "shortDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-    "months": ["Jannuar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-    "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
-});
-
-var customTimeFormat = germanFormatters.timeFormat.multi([
-    [".%L", function(d) { return d.getMilliseconds(); }],
-    [":%S", function(d) { return d.getSeconds(); }],
-    ["%I:%M", function(d) { return d.getMinutes(); }],
-    ["%Hh", function(d) { return d.getHours(); }],
-    ["%B", function(d) { return d.getMonth(); }],
-    ["%Y", function() { return true; }]
-]);
-
 function setMetric(metric) {
 
     selectedMetric = metric;
@@ -143,6 +119,53 @@ function getMinMaxInCounties(metric) {
         }
     }
     return [tmpMin, tmpMax];
+}
+
+function getColor(value) {
+    let scalingFactor, scale;
+    let min = Metric.properties[selectedMetric].valueRange[0];
+    let max = Metric.properties[selectedMetric].valueRange[1];
+    let startColor = Metric.properties[selectedMetric].scaleStartColor;
+    let endColor = Metric.properties[selectedMetric].scaleEndColor;
+    switch (selectedMetric) {
+        case Metric.NEW_CASES:
+            scalingFactor = 10;
+            scale = d3.scalePow()
+                .exponent(2)
+                .domain([min, (max / scalingFactor)])
+                .range([startColor, endColor]);
+            break;
+        case Metric.TOTAL_CASES:
+            scalingFactor = 50;
+            scale = d3.scaleSequential()
+                .interpolator(d3.interpolateViridis)
+                .domain([min, (max / scalingFactor)])
+            break;
+        case Metric.NEW_DEATHS:
+            scalingFactor = 5;
+            scale = getLinearScale(scalingFactor);
+            break;
+        case Metric.TOTAL_DEATHS:
+            scalingFactor = 10;
+            scale = getLinearScale(scalingFactor);
+            break;
+        case Metric.CASE_INCIDENCE:
+            scalingFactor = 4;
+            scale = getLinearScale(scalingFactor);
+            break;
+        case Metric.LETHALITY_RATE:
+            scalingFactor = 10;
+            scale = d3.scaleSequential()
+                .interpolator(d3.interpolatePurples)
+                .domain([min, (max / scalingFactor)])
+    }
+    return scale(value);
+
+    function getLinearScale(scalingFactor) {
+        return d3.scaleLinear()
+            .domain([min, (max / scalingFactor)])
+            .range([startColor, endColor]);
+    }
 }
 
 function getLethalityRate(totalOrCounty, date = selectedDate) {
