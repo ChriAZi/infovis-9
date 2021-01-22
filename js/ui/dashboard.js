@@ -45,7 +45,7 @@ function updateMetricsForGermany() {
     updateMetricElements();
     $('.back-to-all-data').css('opacity', '0');
     setCounty(null);
-    removeSelection();
+    removeCountySelectionOnMap();
 }
 
 function updateMetrics() {
@@ -53,7 +53,7 @@ function updateMetrics() {
     updateMetricElements();
 }
 
-function removeSelection() {
+function removeCountySelectionOnMap() {
     let prevElement = $('#map').find('.selected-county');
     if (prevElement[0]) {
         prevElement[0].classList.remove('selected-county');

@@ -10,23 +10,35 @@ function updateMap() {
                 var val = data[selectedDate][str][selectedMetric];
                 d3.select(d).style('fill', getColor(val));
             }
-        } else
-            d3.select(d).style('fill', 'white')
+        } else {
+            d3.select(d).style('fill', 'white');
+        }
     });
 }
 
 function initMap() {
     // needed for window resize
     d3.select('#map').selectAll('*').remove();
-    var svg = d3.select('#map');
+    let svg = d3.select('#map');
     let map = $('#map');
+    let strokeColor
 
-    var width = map.parent().width(),
+    let width = map.parent().width(),
         height = map.parent().height();
 
     // Map and projection
-    var projection = d3.geoMercator()
+    let projection = d3.geoMercator()
         .fitExtent([[0, 0], [width, height]], geoData);
+
+    //hover div
+    let div = d3.select('.map-container').append('div')
+        .attr('class', 'popup');
+
+    d3.selection.prototype.moveToFront = function () {
+        return this.each(function () {
+            this.parentNode.appendChild(this);
+        })
+    }
 
     svg.append('g')
         .selectAll('path')
@@ -43,7 +55,7 @@ function initMap() {
                     if (d.properties.AGS === selectedCountyId) {
                         this.classList.add('selected-county');
                     }
-                    return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
+                    return getColor(data[selectedDate][d.properties.AGS][selectedMetric]);
                 }
             }
             return 'white'
@@ -54,20 +66,38 @@ function initMap() {
         .attr('d', d3.geoPath()
             .projection(projection)
         )
-        .style('stroke', 'black')
-        .on('mouseover', function () {
-            // todo handle popup info
+        .style('stroke', 'var(--background-dark-grey)')
+        .style('stroke-width', '0.5px')
+        .on('mousemove', function () {
+            div.style('display', 'inline');
+        })
+        .on('mouseover', function (d) {
+            div.moveToFront();
+            div.style('left', (d.layerX) + 'px')
+                .style('top', (d.layerY - 40) + 'px')
+                .html(d.target.__data__.properties['GEN']);
+            let pathStyles = d.target.attributes['style'].value.split(';');
+            let rgbInStyles = pathStyles.filter(s => s.includes('rgb'));
+            if (rgbInStyles.length) {
+                let rgbValue = rgbInStyles[0].substr(rgbInStyles[0].indexOf('rgb'));
+                strokeColor = getHighContrastColor(rgbValue);
+            } else {
+                strokeColor = getHighContrastColor(d.target.attributes['fill'].value);
+            }
+            d3.select(this).style('stroke', strokeColor);
+            d3.select(this).style('stroke-width', 2);
         })
         .on('mouseout', function () {
-            // todo handle popup info
+            div.style('display', 'none');
+            d3.select(this).style('stroke', 'var(--background-dark-grey)');
+            d3.select(this).style('stroke-width', 0.5);
         })
         .on('click', function (d) {
-                d3.select('#infoText').text(this.id);
                 if (this.classList.contains('selected-county')) {
-                    removeSelection();
+                    removeCountySelectionOnMap();
                     updateMetricsForGermany();
                 } else {
-                    removeSelection();
+                    removeCountySelectionOnMap();
                     updateMetricsForSelectedCounty(d.target.__data__.properties);
                     this.classList.add('selected-county');
                 }

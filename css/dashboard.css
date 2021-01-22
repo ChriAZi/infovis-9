@@ -89,7 +89,7 @@
 }
 
 .selection.isSelected {
-    background-color: var(--background-light-white);
+    background-color: var(--background-dark-grey);
     border-radius: 20px;
     box-shadow: var(--shadow-default-hover);
 }

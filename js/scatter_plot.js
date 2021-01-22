@@ -91,27 +91,12 @@ function updateScatterplot() {
     //hover div
     var div = d3.select('#scatter-plot').append('div')
         .attr('id', 'plot-hover')
-        .style('position', 'absolute')
-        .style('opacity', .9)
-        .style('border-radius', '15px')
-        .style('text-align', 'center')
-        .style('background-color', 'gray')
-        .style('color', 'white')
-        .style('font-size', '14px')
-        .style('padding', '5px')
-        .style('display', 'none');
+        .attr('class', 'popup');
 
     var divClick = d3.select('#scatter-plot').append('div')
         .attr('id', 'plot-click')
-        .style('position', 'absolute')
-        .style('opacity', .9)
-        .style('border-radius', '15px')
-        .style('text-align', 'center')
-        .style('background-color', 'gray')
-        .style('color', 'white')
-        .style('font-size', '14px')
-        .style('padding', '5px')
-        .style('display', 'none');
+        .attr('class', 'popup');
+
 
     d3.selection.prototype.moveToFront = function () {
         return this.each(function () {
@@ -160,8 +145,6 @@ function updateScatterplot() {
         .style('stroke-width', function (d) {
             if (selectedCountyId === d) {
                 divClick.style('display', 'inline')
-                    .style('padding-top', 6 + 'px')
-                    .style('height', 35 + 'px')
                     .style('left', (this.getBBox().x + margin.left) + 'px')
                     .style('top', (this.getBBox().y + margin.top - 25) + 'px')
                     .html(countyNames[this.id]);
@@ -175,9 +158,7 @@ function updateScatterplot() {
         })
         .on('mouseover', function (d) {
             div.moveToFront();
-            div.style('padding-top', 6 + 'px')
-                .style('height', 35 + 'px')
-                .style('left', (d.layerX) + 'px')
+            div.style('left', (d.layerX) + 'px')
                 .style('top', (d.layerY - 40) + 'px')
                 .html(countyNames[this.id]);
 
