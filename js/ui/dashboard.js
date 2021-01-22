@@ -54,15 +54,11 @@ function updateMetrics() {
 }
 
 function removeCountySelectionOnMap() {
-    let countySelection = $('#map').find('.selected-county');
-    if (countySelection[0]) {
-        countySelection[0].style.stroke = 'var(--background-dark-grey)';
-        countySelection[0].style.strokeWidth = '0.5px';
-        countySelection[0].classList.remove('selected-county');
-    }
-    let clickPopup = $('.map-container').find('.click-popup');
-    if (clickPopup[0].style.display === 'inline') {
-        clickPopup[0].style.display = 'none';
+    let prevElement = $('#map').find('.selected-county');
+    if (prevElement[0]) {
+        prevElement[0].style.stroke = 'var(--background-dark-grey)';
+        prevElement[0].style.strokeWidth = '0.5px';
+        prevElement[0].classList.remove('selected-county');
     }
 }
 
@@ -87,10 +83,10 @@ function updateMetricElements(county) {
         default:
             config = selectedCountyId || 'all';
     }
-    let newCases = getNumberWithDots(data[selectedDate][config][Metric.NEW_CASES]);
-    let totalCases = getNumberWithDots(data[selectedDate][config][Metric.TOTAL_CASES]);
-    let newDeaths = getNumberWithDots(data[selectedDate][config][Metric.NEW_DEATHS]);
-    let totalDeaths = getNumberWithDots(data[selectedDate][config][Metric.TOTAL_DEATHS]);
+    let newCases = getNumberWithCommas(data[selectedDate][config][Metric.NEW_CASES]);
+    let totalCases = getNumberWithCommas(data[selectedDate][config][Metric.TOTAL_CASES]);
+    let newDeaths = getNumberWithCommas(data[selectedDate][config][Metric.NEW_DEATHS]);
+    let totalDeaths = getNumberWithCommas(data[selectedDate][config][Metric.TOTAL_DEATHS]);
     let caseIncidence = (Math.round(data[selectedDate][config][Metric.CASE_INCIDENCE] * 10) / 10).toString().replace(/\./g, ',');
     let lethalityRate = (Math.round(((getLethalityRate(config) * 100) + Number.EPSILON) * 100) / 100).toString().replace(/\./g, ',') + '%';
 
@@ -100,8 +96,8 @@ function updateMetricElements(county) {
     $('.metric.totalDeaths').find('.metric-number').html(totalDeaths === null ? 'keine Daten' : totalDeaths);
     $('.metric.caseIncidence').find('.metric-number').html(caseIncidence === null ? 'keine Daten' : caseIncidence);
     $('.metric.lethalityRate').find('.metric-number').html(lethalityRate === null ? 'keine Daten' : lethalityRate);
-}
 
-function getNumberWithDots(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    function getNumberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
 }
