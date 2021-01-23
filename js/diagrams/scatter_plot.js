@@ -42,7 +42,6 @@ function updateScatterplot() {
     svg.append('text')
         .attr('transform', 'translate(' + (width / 2) + ' ,' + (height + margin.top - 10) + ')')
         .style('text-anchor', 'middle')
-        .text('Bevölkerungsdichte');
         .text('Bevölkerungsdichte (Einwohner pro km²)');
 
     // Add Y axis
@@ -161,7 +160,7 @@ function updateScatterplot() {
             document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
 }
-        .on('click', function (d) {
+        .on('click', function () {
             d3.select('#i' + this.id).dispatch('click');
         });
 }

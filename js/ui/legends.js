@@ -182,10 +182,11 @@ function getValueSteps(legend) {
             let min = Metric.properties[selectedMetric].valueRange[0];
             let max = Metric.properties[selectedMetric].valueRange[1];
             if (selectedMetric === Metric.LETHALITY_RATE) {
-                min = Metric.properties[selectedMetric].valueRange[0] * 100;
-                max = Metric.properties[selectedMetric].valueRange[1] * 100;
-            }
-            let difMinMax = max - min;
+        min = Metric.properties[selectedMetric].valueRange[0] * 100;
+        max = Metric.properties[selectedMetric].valueRange[1] * 100;
+    }
+    let difMinMax = max - min;
+
             let numberSteps = numberOfLegendItems - 1;
             let step = difMinMax / (numberSteps);
             for (let i = 0; i < numberSteps; i++) {

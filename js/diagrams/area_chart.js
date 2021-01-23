@@ -101,7 +101,7 @@ async function initAreaChart() {
         .append('g')
         .attr('transform', `translate(${width}, 0)`)
         .attr('id', 'area-chart-y-axis')
-        .call(d3.axisRight(yAxis))
+                .call(d3.axisRight(yAxis))
 
     // Add line
     grp
