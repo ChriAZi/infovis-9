@@ -108,19 +108,15 @@ function initAreaChart() {
             xAxis = chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
+                .attr('id', 'area-chart-x-axis')
                 .call(xAxisGerman)
-                .append('style').text('text { font-family: var(--font-family)}')
-                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
-                .append('style').text('text { color: var(--font-color)}');
 
             // Add the Y Axis
             yAxis = chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
-                .call(d3.axisRight(yScale));
-                //.append('style').text('text { font-family: var(--font-family)}')
-                //.append('style').text('text { font-size: var(--font-size-axis-label) !important}')
-                //.append('style').text('text { color: var(--font-color)}');
+                .attr('id', 'area-chart-y-axis')
+                .call(d3.axisRight(yAxis))
 
             lineDate = new Date(selectedDate);
             // Add line
@@ -133,9 +129,6 @@ function initAreaChart() {
                 .attr('y2', yScale(0))
                 .attr('stroke', 'black')
                 .style('stroke-width', 1);
-
-            // add styles
-            chart.append('style').text('text { font-weight: lighter;)}')
 
             // text label for the x axis
             chart.append('text')

@@ -1,32 +1,54 @@
 function updateMap() {
     //color path fill based on data
     d3.select('#map').selectAll('path').nodes().forEach(function (d) {
-        var str = (d.id).substring(1);
-        if (Object.keys(data[selectedDate]).includes(str) &&
-            (data[selectedDate][str][selectedMetric] !== 0 || getLethalityRate(str) !== 0)) {
+        let county = (d.id).substring(1);
+        if (Object.keys(data[selectedDate]).includes(county)
+            && data[selectedDate][county][selectedMetric] !== 0) {
             if (selectedMetric === Metric.LETHALITY_RATE) {
-                d3.select(d).style('fill', getColor(getLethalityRate(str)));
+                if (getLethalityRate(county) !== 0) {
+                    d3.select(d).style('fill', getColor(getLethalityRate(county)));
+                } else {
+                    d3.select(d).style('fill', 'white');
+                }
             } else {
-                var val = data[selectedDate][str][selectedMetric];
+                let val = data[selectedDate][county][selectedMetric];
                 d3.select(d).style('fill', getColor(val));
             }
-        } else
-            d3.select(d).style('fill', 'white')
+        } else {
+            d3.select(d).style('fill', 'white');
+        }
     });
 }
 
 function initMap() {
     // needed for window resize
     d3.select('#map').selectAll('*').remove();
-    var svg = d3.select('#map');
-    let map = $('#map');
+    $('.popup').remove();
 
-    var width = map.parent().width(),
+    let svg = d3.select('#map');
+    let map = $('#map');
+    let strokeColor
+
+    let width = map.parent().width(),
         height = map.parent().height();
 
     // Map and projection
-    var projection = d3.geoMercator()
+    let projection = d3.geoMercator()
         .fitExtent([[0, 0], [width, height]], geoData);
+
+    //hover div
+    let hoverPopup = d3.select('.map-container').append('div')
+        .attr('class', 'popup');
+
+    // click div
+    let clickPopup = d3.select('.map-container').append('div')
+        .attr('class', 'popup click-popup');
+
+    d3.selection.prototype.moveToFront = function () {
+        return this.each(function () {
+            this.parentNode.appendChild(this);
+        })
+    }
 
     svg.append('g')
         .selectAll('path')
@@ -34,19 +56,24 @@ function initMap() {
         .enter()
         .append('path')
         .attr('fill', function (d) {
-            if (Object.keys(data[selectedDate]).includes(d.properties.AGS) &&
-                (data[selectedDate][d.properties.AGS][selectedMetric] !== 0 || getLethalityRate(d.properties.AGS) !== 0)) {
+            if (Object.keys(data[selectedDate]).includes(d.properties.AGS)
+                && data[selectedDate][d.properties.AGS][selectedMetric] !== 0) {
                 if (selectedMetric === Metric.LETHALITY_RATE) {
-                    return getColor(getLethalityRate(d.properties.AGS))
+                    if (getLethalityRate(d.properties.AGS) !== 0) {
+                        return getColor(getLethalityRate(d.properties.AGS))
+                    } else {
+                        return 'white';
+                    }
                 } else {
                     // keep county selection while resizing
                     if (d.properties.AGS === selectedCountyId) {
                         this.classList.add('selected-county');
                     }
-                    return getColor(data[selectedDate][d.properties.AGS][selectedMetric])
+                    return getColor(data[selectedDate][d.properties.AGS][selectedMetric]);
                 }
+            } else {
+                return 'white';
             }
-            return 'white'
         })
         .attr('id', function (d) {
             return 'i' + d.properties.AGS;
@@ -54,47 +81,35 @@ function initMap() {
         .attr('d', d3.geoPath()
             .projection(projection)
         )
-<<<<<<<< HEAD:js/diagrams/map.js
         .style('stroke', 'var(--background-dark-grey)')
         .style('stroke-width', '0.5px')
-        .on('mousemove', function () {
-            div.style('display', 'inline');
-        })
         .on('mouseover', function (d) {
-            div.moveToFront();
-            div.style('left', (d.layerX) + 'px')
-                .style('top', (d.layerY - 40) + 'px')
-                .html(d.target.__data__.properties['GEN']);
+            showDiv(d, hoverPopup);
             strokeColor = getStrokeColor(d);
             d3.select(this).style('stroke', strokeColor);
             d3.select(this).style('stroke-width', 2);
         })
         .on('mouseout', function () {
-            div.style('display', 'none');
+            hideDiv(hoverPopup);
             if (!this.classList.contains('selected-county')) {
                 d3.select(this).style('stroke', 'var(--background-dark-grey)');
                 d3.select(this).style('stroke-width', 0.5);
             }
-========
-        .style('stroke', 'black')
-        .on('mouseover', function () {
-            // todo handle popup info
-        })
-        .on('mouseout', function () {
-            // todo handle popup info
->>>>>>>> County Pop Refactor:js/map.js
         })
         .on('click', function (d) {
-                d3.select('#infoText').text(this.id);
                 if (this.classList.contains('selected-county')) {
-                    removeSelection();
+                    hideDiv(clickPopup);
+                    removeCountySelectionOnMap();
                     updateMetricsForGermany();
                 } else {
-                    removeSelection();
+                    hideDiv(clickPopup);
+                    removeCountySelectionOnMap();
                     updateMetricsForSelectedCounty(d.target.__data__.properties);
                     strokeColor = getStrokeColor(d);
                     d3.select(this).style('stroke', strokeColor);
                     this.classList.add('selected-county');
+                    showDiv(d, clickPopup);
+                    console.log('Showing click div.');
                 }
             }
         );
@@ -108,5 +123,17 @@ function initMap() {
         } else {
             return strokeColor = getHighContrastColor(d.target.attributes['fill'].value);
         }
+    }
+
+    function showDiv(d, element) {
+        element.moveToFront();
+        element.style('left', (d.layerX) + 'px')
+            .style('display', 'inline')
+            .style('top', (d.layerY - 40) + 'px')
+            .html(d.target.__data__.properties['GEN']);
+    }
+
+    function hideDiv(element) {
+        element.style('display', 'none');
     }
 }
