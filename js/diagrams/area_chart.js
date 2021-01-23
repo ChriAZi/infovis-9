@@ -19,10 +19,10 @@ const color = [
     Metric.properties.icuBeds.reserve.color
 ];
 let margin = {
-    top: 2.5 * (document.documentElement.clientHeight / 100),
-    right: 3 * (document.documentElement.clientWidth / 100),
-    bottom: 2.5 * (document.documentElement.clientWidth / 100),
-    left: 3 * (document.documentElement.clientHeight / 100)
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
 }
 
 let lineV;
@@ -215,7 +215,7 @@ function updateAreaChart() {
 
 }
 
-async function updateAreaCountyBased() {
+function updateAreaCountyBased() {
 
     d3.csv('data/Landkreise_Auslastung.csv').then(countyData => {
         countyBasedData = countyData.filter(function (d) {
