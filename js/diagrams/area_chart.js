@@ -26,7 +26,7 @@ let margin = {
 }
 
 let lineV;
-let lineDate;
+let lineDate = new Date();
 
 let area;
 let series;
