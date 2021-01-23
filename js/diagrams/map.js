@@ -109,7 +109,6 @@ function initMap() {
                     d3.select(this).style('stroke', strokeColor);
                     this.classList.add('selected-county');
                     showDiv(d, clickPopup);
-                    console.log('Showing click div.');
                 }
             }
         );

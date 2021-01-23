@@ -4,47 +4,16 @@ function filterData(data) {
     );
 }
 
-let chart;
-
-let xScale;
-let yScale;
 let xAxis;
 let yAxis;
 
 let grp;
+let margin = {top: 0, right: 0, bottom: 0, left: 0};
 
 const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
-let lineV;
-let lineDate;
-let lineV;
-let lineDate;
-
-let area;
-let series;
-let stack;
-let stackedData;
-let xValue;
-
-let dataDates;
-let lineChart;
-let dynamicLine;
-
-let bedOccData;
-let countyBasedData;
-
-let area;
-let series;
-let stack;
-let stackedData;
-let xValue;
-
-let dataDates;
-let lineChart;
-let dynamicLine;
-
-let bedOccData;
-let countyBasedData;
+let lineText;
+let lineDate = new Date();
 
 function initAreaChart() {
     d3.csv('data/data_Auslastung.csv')
@@ -55,11 +24,9 @@ function initAreaChart() {
                 d.Freie = +d.Freie
                 d.Notfallreserve = +d.Notfallreserve
             })
-            bedOccData=data;
-            //setMargin();
+            setMargin();
 
             let parent = $('.area-container');
-            let margin = {top: 50, right: 60, bottom: 50, left: 40};
             let width = parent.width() - margin.left - margin.right;
             let height = parent.height() - margin.top - margin.bottom;
 
@@ -69,41 +36,40 @@ function initAreaChart() {
                 .select('#area-chart')
                 .append('svg')
                 .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom)
-                .attr('transform', 'translate(' + (margin.left + 14) + ',' + margin.top + ')');
+                .attr('height', height + margin.top + margin.bottom);
 
-            chart = svg.append('g');
+            let chart = svg.append('g');
 
             grp = chart.append('g');
 
             // Create stack
-            stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
-            stackedData = stack(data);// Create scales
-            xValue = d => d.date;
+            const stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
+            const stackedData = stack(data);// Create scales
+            const xValue = d => d.date;
 
             //x-Axis
-            xScale = d3.scaleTime()
+            xAxis = d3.scaleTime()
                 .domain(d3.extent(data, xValue))
                 .range([0, width]);
             xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
             //y-Axis
-            yScale = d3.scaleLinear()
+            yAxis = d3.scaleLinear()
                 .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
                     return d[1]
                 })])
                 .range([height, 0]);
 
-            area = d3.area().x(function (d) {
-                return xScale(d.data.date);
+            var area = d3.area().x(function (d) {
+                return xAxis(d.data.date);
             })
                 .y0(function (d) {
-                    return yScale(d[0]);
+                    return yAxis(d[0]);
                 })
                 .y1(function (d) {
-                    return yScale(d[1]);
+                    return yAxis(d[1]);
                 })
 
-            series = grp
+            const series = grp
                 .selectAll('.series')
                 .data(stackedData)
                 .enter()
@@ -120,235 +86,77 @@ function initAreaChart() {
                 .attr('d', d => area(d));
 
             // Add the X Axis
-            xAxis = chart
+            chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
                 .attr('id', 'area-chart-x-axis')
                 .call(xAxisGerman)
 
             // Add the Y Axis
-            yAxis = chart
+            chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
                 .attr('id', 'area-chart-y-axis')
                 .call(d3.axisRight(yAxis))
 
-            lineDate = new Date(selectedDate);
             // Add line
-            lineV = grp
+            grp
                 .append('line')
                 .datum(data)
-                .attr('x1', xScale(lineDate))
-                .attr('x2', xScale(lineDate))
-                .attr('y1', 0)
-                .attr('y2', yScale(0))
+                .attr('x1', xAxis(lineDate) - margin.right)
+                .attr('x2', xAxis(lineDate) - margin.right)
+                .attr('y1', margin.top + 10)
+                .attr('y2', yAxis(margin.bottom))
                 .attr('stroke', 'black')
-                .style('stroke-width', 1);
+                .style('stroke-width', 1.5);
 
             //Add line text
             lineText = chart.append('text')
-                .attr('x', xScale(lineDate) - margin.right)
+                .attr('x', xAxis(lineDate) - margin.right)
                 .attr('y', margin.top)
                 .attr('text-anchor', 'middle')
                 .attr('stroke', 'black')
-                .style('stroke-width', 1);
+                .text(getDateInFormat(selectedDate));
 
             // text label for the x axis
             chart.append('text')
                 .attr('transform',
                     'translate(' + (width / 2) + ' ,' +
-                    (height + margin.top - 10) + ')')
+                    (height + margin.bottom) + ')')
                 .style('text-anchor', 'middle')
                 .text('Zeit');
 
             // text label for the y axis
             chart.append('text')
                 .attr('transform', 'rotate(-90)')
-                .attr('y', width + margin.left)
+                .attr('y', width + margin.right)
                 .attr('x', 0 - (height / 2))
                 .attr('dy', '1em')
                 .style('text-anchor', 'middle')
                 .text('Anzahl Betten');
         })
-    dataDates = Object.keys(data);
-    lineChart = d3.line()
-        .x(function (d) {
-            d = new Date(d);
-            return xScale(d)
-        })
-        .y(function (d) {
-            return yScale(data[d][selectedCountyId][selectedMetric]);
-        })
+
 }
 
 function updateAreaChart() {
     lineDate = new Date(selectedDate);
-    if (selectedCountyId !== null) {
-        updateAreaCountyBased();
-    } else {
-        stack = d3.stack().keys(["Belegte", "Freie", "Notfallreserve"]);
-        stackedData = stack(bedOccData);
-        xValue = d => d.date;
-        yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
-            return d[1] + 1000
-        })])
-        yAxis.transition().duration(1500).ease(d3.easeLinear)
-            .call(d3.axisRight(yScale));
-
-        area = d3.area().x(function (d) {
-            return xScale(d.data.date);
-        })
-            .y0(function (d) {
-                return yScale(d[0]);
-            })
-            .y1(function (d) {
-                return yScale(d[1]);
-            })
-
-        chart.selectAll("path")
-            .data(stackedData)
-            .transition().duration(60)
-            .style("opacity", 1)
-            .attr("d", d => area(d));
-
-        d3.select("path.line").remove();
-    }
-
-    lineV
+    grp.select('line')
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate))
-        .attr('x2', xScale(lineDate))
-        .attr('y1', 0)
-        .attr('y2', yScale(0))
+        .attr('x1', xAxis(lineDate) - margin.right)
+        .attr('x2', xAxis(lineDate) - margin.right)
+        .attr('y1', margin.top + 10)
+        .attr('y2', yAxis(margin.bottom))
         .attr('stroke', 'black')
-        .style('stroke-width', 1);
+        .style('stroke-width', 1.5);
     lineText.transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x', xScale(lineDate) - margin.right)
+        .attr('x', xAxis(lineDate) - margin.right)
         .attr('y', margin.top)
         .attr('stroke', 'black')
         .text(getDateInFormat(selectedDate));
-        .style('stroke-width', 1);
-
-}
-
-function updateAreaCountyBased() {
-
-    d3.csv("data/Landkreise_Auslastung.csv")
-        .then(function (countyData) {
-            countyBasedData = countyData.filter(function (d) {
-                d.daten_stand = new Date(d.daten_stand)
-                d.gemeindeschluessel = d.gemeindeschluessel
-                d.betten_frei = +d.betten_frei
-                d.betten_belegt = +d.betten_belegt
-                return d["gemeindeschluessel"] === selectedCountyId;
-            })
-
-            stack = d3.stack().keys(["betten_belegt", "betten_frei", "notfallreserve_betten"]);
-            stackedData = stack(countyBasedData);
-            yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
-                return d[1]
-            })])
-            yAxis.transition().duration(1500).ease(d3.easeLinear)
-                .call(d3.axisRight(yScale));
-
-            area = d3.area().x(function (d) {
-                return xScale(d.data.daten_stand);
-            })
-                .y0(function (d) {
-                    return yScale(d[0]);
-                })
-                .y1(function (d) {
-                    return yScale(d[1]);
-                })
-
-            chart.selectAll("path")
-                .data(stackedData)
-                .transition().duration(1000)
-                .style("opacity", 1)
-                .attr("d", d => area(d));
-            dynamicLine = chart.append("path")
-                .attr('class', 'line')
-                // .attr("d", lineChart(dataDates))
-                .attr("fill", "none")
-                //.attr("stroke", metricColor)
-                .attr("stroke-width", 2);
-
-            chart.select('.line').datum(dataDates)
-                .transition()
-                .duration(1000)
-                .attr("stroke", 'orange')
-                .attr("d", d3.line()
-                    .x(function (d) {
-                        d = new Date(d);
-                        return xScale(d)
-                    })
-                    .y(function (d) {
-                        return yScale(data[d][selectedCountyId][selectedMetric]);
-                    })
-                )
-        })
-}
-
-function updateAreaCountyBased() {
-
-    d3.csv("data/Landkreise_Auslastung.csv")
-        .then(function (countyData) {
-            countyBasedData = countyData.filter(function (d) {
-                d.daten_stand = new Date(d.daten_stand)
-                d.gemeindeschluessel = d.gemeindeschluessel
-                d.betten_frei = +d.betten_frei
-                d.betten_belegt = +d.betten_belegt
-                return d["gemeindeschluessel"] === selectedCountyId;
-            })
-
-            stack = d3.stack().keys(["betten_belegt", "betten_frei", "notfallreserve_betten"]);
-            stackedData = stack(countyBasedData);
-            yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
-                return d[1]
-            })])
-            yAxis.transition().duration(1500).ease(d3.easeLinear)
-                .call(d3.axisRight(yScale));
-
-            area = d3.area().x(function (d) {
-                return xScale(d.data.daten_stand);
-            })
-                .y0(function (d) {
-                    return yScale(d[0]);
-                })
-                .y1(function (d) {
-                    return yScale(d[1]);
-                })
-
-            chart.selectAll("path")
-                .data(stackedData)
-                .transition().duration(1000)
-                .style("opacity", 1)
-                .attr("d", d => area(d));
-            dynamicLine = chart.append("path")
-                .attr('class', 'line')
-                // .attr("d", lineChart(dataDates))
-                .attr("fill", "none")
-                //.attr("stroke", metricColor)
-                .attr("stroke-width", 2);
-
-            chart.select('.line').datum(dataDates)
-                .transition()
-                .duration(1000)
-                .attr("stroke", 'orange')
-                .attr("d", d3.line()
-                    .x(function (d) {
-                        d = new Date(d);
-                        return xScale(d)
-                    })
-                    .y(function (d) {
-                        return yScale(data[d][selectedCountyId][selectedMetric]);
-                    })
-                )
-        })
 }
 
 function setMargin() {
