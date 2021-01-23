@@ -151,19 +151,16 @@ function initAreaChart() {
                 .attr('dy', '1em')
                 .style('text-anchor', 'middle')
                 .text('Anzahl Betten');
-        
-            dataDates = Object.keys(data);
-            lineChart = d3.line()
-                .x(function (d) {
-                    d = new Date(d);
-                    return xScale(d)
-                })
-                .y(function (d) {
-                    return yScale(data[d][selectedCountyId][selectedMetric]);
-                })
-
         })
-
+    dataDates = Object.keys(data);
+    lineChart = d3.line()
+        .x(function (d) {
+            d = new Date(d);
+            return xScale(d)
+        })
+        .y(function (d) {
+            return yScale(data[d][selectedCountyId][selectedMetric]);
+        })
 }
 
 function updateAreaChart() {
@@ -257,7 +254,7 @@ function updateAreaCountyBased() {
             chart.select('.line').datum(dataDates)
                 .transition()
                 .duration(1000)
-                .attr("stroke", metricColor)
+                .attr("stroke", 'orange')
                 .attr("d", d3.line()
                     .x(function (d) {
                         d = new Date(d);
