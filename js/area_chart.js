@@ -12,12 +12,11 @@ let xAxis;
 let yAxis;
 
 let grp;
-let margin = {top: 0, right: 0, bottom: 0, left: 0};
 
 const color = ['#ffea4c', '#F5F5F5', '#8ab670'];
 
 let lineV;
-let lineDate = new Date();
+let lineDate;
 
 let area;
 let series;
@@ -42,9 +41,10 @@ function initAreaChart() {
                 d.Notfallreserve = +d.Notfallreserve
             })
             bedOccData=data;
-            setMargin();
+            //setMargin();
 
             let parent = $('.area-container');
+            let margin = {top: 50, right: 60, bottom: 50, left: 40};
             let width = parent.width() - margin.left - margin.right;
             let height = parent.height() - margin.top - margin.bottom;
 
@@ -54,8 +54,9 @@ function initAreaChart() {
                 .select('#area-chart')
                 .append('svg')
                 .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom);
-
+                .attr('height', height + margin.top + margin.bottom)
+                .attr('transform', 'translate(' + (margin.left + 14) + ',' + margin.top + ')');
+        
             chart = svg.append('g');
 
             grp = chart.append('g');
@@ -116,11 +117,12 @@ function initAreaChart() {
             yAxis = chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
-                .call(d3.axisRight(yScale))
-                .append('style').text('text { font-family: var(--font-family)}')
-                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
-                .append('style').text('text { color: var(--font-color)}');
+                .call(d3.axisRight(yScale));
+                //.append('style').text('text { font-family: var(--font-family)}')
+                //.append('style').text('text { font-size: var(--font-size-axis-label) !important}')
+                //.append('style').text('text { color: var(--font-color)}');
 
+            lineDate = new Date(selectedDate);
             // Add line
             lineV = grp
                 .append('line')
@@ -146,7 +148,7 @@ function initAreaChart() {
             // text label for the y axis
             chart.append('text')
                 .attr('transform', 'rotate(-90)')
-                .attr('y', width + margin.right)
+                .attr('y', width + margin.left)
                 .attr('x', 0 - (height / 2))
                 .attr('dy', '1em')
                 .style('text-anchor', 'middle')
