@@ -26,9 +26,10 @@ function initMapLegend() {
         .data(stepsForLegend)
         .enter()
         .append('text')
-        .attr('x', (offsetX + radiusCircle + 5))
+        .attr('dominant-baseline', 'central')
+        .attr('x', (offsetX + radiusCircle + 7.5))
         .attr('y', function (d, i) {
-            return (offsetY + i * distanceBetweenCircles + radiusCircle)
+            return (offsetY + i * distanceBetweenCircles)
         })
         .text((d) => {
             if (selectedMetric === Metric.LETHALITY_RATE) {
