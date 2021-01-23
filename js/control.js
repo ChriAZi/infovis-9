@@ -66,18 +66,23 @@ function onDataLoaded() {
     // needs to happen before loading visualizations
     setMinMaxValuesForMetricObject();
     initMap();
-    initMapLegend();
     initScatterPlot();
-    initAreaChart();
+    initAreaChart().then(() => {
+        initLegends(Legend.MAP);
+        initLegends(Legend.SCATTER);
+        initLegends(Legend.AREA);
+    });
     initSlider();
     initDashboard();
 }
 
 function updateAll() {
     updateMap();
-    updateMapLegend();
     initScatterPlot();
     updateAreaChart();
+    updateLegends(Legend.MAP);
+    updateLegends(Legend.SCATTER);
+    updateLegends(Legend.AREA);
     updateMetrics();
 }
 
