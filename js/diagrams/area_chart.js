@@ -16,7 +16,7 @@ let grp;
 const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
 
 let lineV;
-let lineDate = new Date();
+let lineDate;
 let lineV;
 let lineDate;
 
@@ -56,7 +56,7 @@ function initAreaChart() {
                 d.Notfallreserve = +d.Notfallreserve
             })
             bedOccData=data;
-            setMargin();
+            //setMargin();
 
             let parent = $('.area-container');
             let margin = {top: 50, right: 60, bottom: 50, left: 40};
@@ -132,6 +132,10 @@ function initAreaChart() {
             yAxis = chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
+                .call(d3.axisRight(yScale));
+                //.append('style').text('text { font-family: var(--font-family)}')
+                //.append('style').text('text { font-size: var(--font-size-axis-label) !important}')
+                //.append('style').text('text { color: var(--font-color)}');
                 .attr('id', 'area-chart-y-axis')
                 .call(d3.axisRight(yScale))
 
