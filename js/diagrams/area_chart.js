@@ -89,19 +89,15 @@ function initAreaChart() {
             chart
                 .append('g')
                 .attr('transform', `translate(0,${height})`)
+                .attr('id', 'area-chart-x-axis')
                 .call(xAxisGerman)
-                .append('style').text('text { font-family: var(--font-family)}')
-                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
-                .append('style').text('text { color: var(--font-color)}');
 
             // Add the Y Axis
             chart
                 .append('g')
                 .attr('transform', `translate(${width}, 0)`)
+                .attr('id', 'area-chart-y-axis')
                 .call(d3.axisRight(yAxis))
-                .append('style').text('text { font-family: var(--font-family)}')
-                .append('style').text('text { font-size: var(--font-size-axis-label) !important}')
-                .append('style').text('text { color: var(--font-color)}');
 
             // Add line
             grp
@@ -121,9 +117,6 @@ function initAreaChart() {
                 .attr('text-anchor', 'middle')
                 .attr('stroke', 'black')
                 .text(getDateInFormat(selectedDate));
-
-            // add styles
-            chart.append('style').text('text { font-weight: lighter;)}')
 
             // text label for the x axis
             chart.append('text')

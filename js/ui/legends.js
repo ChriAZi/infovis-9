@@ -1,13 +1,10 @@
 const numberPoints = 5;
-const offsetX = 10;
-const offsetY = 10;
-const disCircles = 15;
-const radiusCircle = 5;
+let [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing();
 let svgMapLegend;
-
-let MapLegendIsShown = false;
+let mapLegendIsShown = true;
 
 function initMapLegend() {
+    [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing();
     let stepsForLegend = getStepsForLegend();
     svgMapLegend = d3.select('#map')
         .append('svg')
@@ -18,9 +15,9 @@ function initMapLegend() {
         .append('circle')
         .attr('cx', offsetX)
         .attr('cy', function (d, i) {
-            return offsetY + i * disCircles
+            return offsetY + i * distanceBetweenCircles
         })
-        .attr('r', 5)
+        .attr('r', radiusCircle)
         .attr('fill', function (d) {
             return getColor(d)
         });
@@ -29,24 +26,29 @@ function initMapLegend() {
         .data(stepsForLegend)
         .enter()
         .append('text')
-        .attr('x', (offsetX + 10))
+        .attr('x', (offsetX + radiusCircle + 5))
         .attr('y', function (d, i) {
-            return (offsetY + i * disCircles + radiusCircle)
+            return (offsetY + i * distanceBetweenCircles + radiusCircle)
         })
-        .text((d) => d)
-        .append('style').text('text { font-family: var(--font-family)}')
-        .append('style').text('text { font-size: var(--font-size-timeline)}')
-        .append('style').text('text { color: var(--font-color)}');
-    svgMapLegend.style('opacity', 0);
+        .text((d) => {
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return d.toString().replace(/\./g, ',') + '%';
+            } else if (selectedMetric === Metric.CASE_INCIDENCE) {
+                return d.toString().replace(/\./g, ',');
+            } else {
+                getNumberWithDots(d)
+            }
+        })
+    svgMapLegend.style('opacity', 1);
 }
 
 function showHideMapLegend() {
-    if (MapLegendIsShown) {
+    if (mapLegendIsShown) {
         svgMapLegend.style('opacity', 0);
-        MapLegendIsShown = false;
+        mapLegendIsShown = false;
     } else {
         svgMapLegend.style('opacity', 1);
-        MapLegendIsShown = true;
+        mapLegendIsShown = true;
     }
 }
 
@@ -56,13 +58,23 @@ function updateMapLegend() {
         .style('fill', (d) => getColor(d));
     svgMapLegend.selectAll('text')
         .data(getStepsForLegend())
-        .text((d) => d);
+        .text((d) => {
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return d.toString().replace(/\./g, ',') + '%';
+            } else {
+                return getNumberWithDots(d);
+            }
+        });
 }
 
 
 function getStepsForLegend() {
     let min = Metric.properties[selectedMetric].valueRange[0];
     let max = Metric.properties[selectedMetric].valueRange[1];
+    if (selectedMetric === Metric.LETHALITY_RATE) {
+        min = Metric.properties[selectedMetric].valueRange[0] * 100;
+        max = Metric.properties[selectedMetric].valueRange[1] * 100;
+    }
     let difMinMax = max - min;
     let stepsForLegend = [];
     let numberSteps = numberPoints - 1;
@@ -72,6 +84,14 @@ function getStepsForLegend() {
     }
     stepsForLegend.push(Math.round(max));
     return stepsForLegend;
+}
+
+function getRelativeSizing() {
+    const offsetX = 1.5 * (document.documentElement.clientHeight / 100);
+    const offsetY = 1.5 * (document.documentElement.clientHeight / 100);
+    const disCircles = 2.5 * (document.documentElement.clientHeight / 100);
+    const radiusCircle = (document.documentElement.clientHeight / 100);
+    return [offsetX, offsetY, disCircles, radiusCircle];
 }
 
 

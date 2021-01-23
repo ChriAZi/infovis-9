@@ -16,7 +16,7 @@ function getColor(value) {
             scalingFactor = 50;
             scale = d3.scaleSequential()
                 .interpolator(d3.interpolateViridis)
-                .domain([min, (max / scalingFactor)])
+                .domain([(max / scalingFactor), (min)])
             break;
         case Metric.NEW_DEATHS:
             scalingFactor = 5;

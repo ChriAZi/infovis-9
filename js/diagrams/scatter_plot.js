@@ -35,19 +35,13 @@ function updateScatterplot() {
 
     svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x).ticks(5, 'f'))
-        .append('style').text('text { font-family: var(--font-family)}')
-        .append('style').text('text { font-size: var(--font-size-timeline)}')
-        .append('style').text('text { color: var(--font-color)}');
+        .call(d3.axisBottom(x).ticks(5, 'f'));
 
     // text label for the x axis
     svg.append('text')
         .attr('transform', 'translate(' + (width / 2) + ' ,' + (height + margin.top - 10) + ')')
         .style('text-anchor', 'middle')
-        .text('Bevölkerungsdichte')
-        .append('style').text('text { font-family: var(--font-family)}')
-        .append('style').text('text { font-size: var(--font-size-timeline)}')
-        .append('style').text('text { color: var(--font-color)}');
+        .text('Bevölkerungsdichte');
 
     // Add Y axis
     var y = d3.scaleLinear()
@@ -63,16 +57,10 @@ function updateScatterplot() {
 
     if (selectedMetric === Metric.LETHALITY_RATE) {
         svg.append('g')
-            .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent))
-            .append('style').text('text { font-family: var(--font-family)}')
-            .append('style').text('text { font-size: var(--font-size-timeline)}')
-            .append('style').text('text { color: var(--font-color)}');
+            .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent));
     } else {
         svg.append('g')
-            .call(d3.axisLeft(y).ticks(5, 'f'))
-            .append('style').text('text { font-family: var(--font-family)}')
-            .append('style').text('text { font-size: var(--font-size-timeline)}')
-            .append('style').text('text { color: var(--font-color)}');
+            .call(d3.axisLeft(y).ticks(5, 'f'));
     }
 
 
@@ -83,17 +71,14 @@ function updateScatterplot() {
         .attr('x', 0 - (height / 2))
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text(getMetricsText())
-        .append('style').text('text { font-family: var(--font-family)}')
-        .append('style').text('text { font-size: var(--font-size-timeline)}')
-        .append('style').text('text { color: var(--font-color)}');
+        .text(getMetricsText());
 
     //hover div
-    var div = d3.select('#scatter-plot').append('div')
+    var hoverPopup = d3.select('#scatter-plot').append('div')
         .attr('id', 'plot-hover')
         .attr('class', 'popup');
 
-    var divClick = d3.select('#scatter-plot').append('div')
+    var clickPopup = d3.select('#scatter-plot').append('div')
         .attr('id', 'plot-click')
         .attr('class', 'popup');
 
@@ -144,7 +129,7 @@ function updateScatterplot() {
         .style('stroke', 'black')
         .style('stroke-width', function (d) {
             if (selectedCountyId === d) {
-                divClick.style('display', 'inline')
+                clickPopup.style('display', 'inline')
                     .style('left', (this.getBBox().x + margin.left) + 'px')
                     .style('top', (this.getBBox().y + margin.top - 25) + 'px')
                     .html(countyNames[this.id]);
@@ -153,24 +138,24 @@ function updateScatterplot() {
             }
             return d3.select(this).style('stroke-width', 1);
         })
-        .on('mousemove', function (d) {
-            div.style('display', 'inline');
+        .on('mousemove', function () {
+            hoverPopup.style('display', 'inline');
         })
         .on('mouseover', function (d) {
-            div.moveToFront();
-            div.style('left', (d.layerX) + 'px')
+            hoverPopup.moveToFront();
+            hoverPopup.style('left', (d.layerX) + 'px')
                 .style('top', (d.layerY - 40) + 'px')
                 .html(countyNames[this.id]);
 
             d3.select(this).style('stroke-width', 3);
         })
         .on('mouseout', function () {
-            div.style('display', 'none');
+            hoverPopup.style('display', 'none');
             if (selectedCountyId !== this.id) {
                 d3.select(this).style('stroke-width', 1);
             }
         })
-        .on('click', function (d) {
+        .on('click', function () {
             d3.select('#i' + this.id).dispatch('click');
         });
 }

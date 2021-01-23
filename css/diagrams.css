@@ -60,6 +60,7 @@
     padding: 1%;
     width: 30px;
     height: 30px;
+    cursor: pointer;
 }
 
 .legend img {
@@ -78,4 +79,14 @@
     display: none;
     min-height: 1.5vh;
     box-shadow: var(--shadow-controls);
+}
+
+text {
+    font-family: var(--font-family);
+    font-size: var(--font-size-timeline);
+    color: var(--font-color);
+}
+
+#area-chart text {
+    font-size: var(--font-size-axis-label);
 }
