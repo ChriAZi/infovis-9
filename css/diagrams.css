@@ -91,6 +91,6 @@ text {
     color: var(--font-color);
 }
 
-#area-chart text {
+#area-chart g text {
     font-size: var(--font-size-axis-label);
 }
