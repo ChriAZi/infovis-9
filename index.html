@@ -187,9 +187,9 @@
                 initScatterPlot();
                 initSlider();
                 initAreaChart().then(() => {
-                    initLegends(Legend.MAP);
-                    initLegends(Legend.SCATTER);
-                    initLegends(Legend.AREA);
+                    updateLegends(Legend.MAP);
+                    updateLegends(Legend.SCATTER);
+                    updateLegends(Legend.AREA);
                 });
             });
         </script>
