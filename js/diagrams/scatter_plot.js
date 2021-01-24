@@ -157,7 +157,7 @@ function updateScatterplot() {
             }
         })
         .on('click', function () {
-            d3.select('#i' + this.id).dispatch('click');
+            document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
 }
 

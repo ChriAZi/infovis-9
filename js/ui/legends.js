@@ -19,15 +19,24 @@ const Legend = {
 Object.freeze(Legend);
 
 function initLegends(legend, rerender) {
-    let svg, labels, offsetX, offsetY, distanceBetweenCircles, radiusCircle;
+    let svg, previousSvg, labels, offsetX, offsetY, distanceBetweenCircles, radiusCircle;
     switch (legend) {
         case Legend.MAP:
+            previousSvg = $('#mapLegend');
+            if (previousSvg) {
+                previousSvg.remove();
+            }
             svg = d3.select('#map')
                 .append('svg')
-                .attr('id', 'mapLegend');
+                .attr('id', 'mapLegend')
+                .append('g');
             [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
             break;
         case Legend.SCATTER:
+            previousSvg = $('#scatterLegend');
+            if (previousSvg) {
+                previousSvg.remove();
+            }
             svg = d3.select('#scatter-plot-svg')
                 .append('svg')
                 .attr('id', 'scatterLegend');
@@ -35,7 +44,11 @@ function initLegends(legend, rerender) {
             offsetX = $('#scatter-plot').width() - offsetX;
             break;
         case Legend.AREA:
-            svg = d3.select('#area-chart')
+            previousSvg = $('#areaLegend');
+            if (previousSvg) {
+                previousSvg.remove();
+            }
+            svg = d3.select('#area-chart-svg')
                 .append('svg')
                 .attr('id', 'areaLegend');
             labels = ['Belegte Betten', 'Freie Betten', 'Notfallreserve'];
@@ -105,7 +118,7 @@ function toggleLegends(legend) {
 function updateLegends(legend) {
     switch (legend) {
         case Legend.MAP:
-            updateMapLegend();
+            initLegends(Legend.MAP, true);
             break;
         case Legend.SCATTER:
             initLegends(Legend.SCATTER, true);
@@ -115,24 +128,6 @@ function updateLegends(legend) {
             break;
     }
 }
-
-function updateMapLegend() {
-    let svg = d3.select('#mapLegend');
-    svg.selectAll('circle')
-        .data(getValueSteps())
-        .style('fill', (d) => getColor(d));
-
-    svg.selectAll('text')
-        .data(getValueSteps())
-        .text((d) => {
-            if (selectedMetric === Metric.LETHALITY_RATE) {
-                return d.toString().replace(/\./g, ',') + '%';
-            } else {
-                return getNumberWithDots(d);
-            }
-        });
-}
-
 
 function getValueSteps(isAreaLegend = false) {
     if (!isAreaLegend) {
@@ -172,8 +167,8 @@ function getRelativeSizing(legend) {
             radiusCircle = (document.documentElement.clientHeight / 100);
             break;
         case Legend.AREA:
-            offsetX = 1.5 * (document.documentElement.clientHeight / 100);
-            offsetY = 1.5 * (document.documentElement.clientHeight / 100);
+            offsetX = 2 * (document.documentElement.clientHeight / 100);
+            offsetY = 2 * (document.documentElement.clientHeight / 100);
             distanceBetweenCircles = 2.5 * (document.documentElement.clientHeight / 100);
             radiusCircle = (document.documentElement.clientHeight / 100);
             break;
