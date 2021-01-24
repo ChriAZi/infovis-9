@@ -67,6 +67,10 @@
     height: 15px;
 }
 
+#map path:hover, #scatter-plot circle {
+    cursor: pointer;
+}
+
 .popup {
     position: absolute;
     opacity: 0.95;

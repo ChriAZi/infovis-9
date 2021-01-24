@@ -83,14 +83,17 @@ function initMap() {
         )
         .style('stroke', 'var(--background-dark-grey)')
         .style('stroke-width', '0.5px')
+        .on('mousemove', function () {
+            hoverPopup.style('display', 'inline');
+        })
         .on('mouseover', function (d) {
-            showDiv(d, hoverPopup);
+            fillPopupWithContent(d, hoverPopup);
             strokeColor = getStrokeColor(d);
             d3.select(this).style('stroke', strokeColor);
             d3.select(this).style('stroke-width', 2);
         })
         .on('mouseout', function () {
-            hideDiv(hoverPopup);
+            hoverPopup.style('display', 'none');
             if (!this.classList.contains('selected-county')) {
                 d3.select(this).style('stroke', 'var(--background-dark-grey)');
                 d3.select(this).style('stroke-width', 0.5);
@@ -98,17 +101,18 @@ function initMap() {
         })
         .on('click', function (d) {
                 if (this.classList.contains('selected-county')) {
-                    hideDiv(clickPopup);
+                    clickPopup.style('display', 'none');
                     removeCountySelectionOnMap();
                     updateMetricsForGermany();
                 } else {
-                    hideDiv(clickPopup);
+                    clickPopup.style('display', 'none');
                     removeCountySelectionOnMap();
                     updateMetricsForSelectedCounty(d.target.__data__.properties);
                     strokeColor = getStrokeColor(d);
                     d3.select(this).style('stroke', strokeColor);
                     this.classList.add('selected-county');
-                    showDiv(d, clickPopup);
+                    clickPopup.style('display', 'inline');
+                    fillPopupWithContent(d, clickPopup);
                 }
             }
         );
@@ -124,15 +128,14 @@ function initMap() {
         }
     }
 
-    function showDiv(d, element) {
+    function fillPopupWithContent(d, element) {
+        let svgWidth = $('#map').width();
+        let topOffset = 10 * (document.documentElement.clientHeight / 100);
+        let x = d.target.getBoundingClientRect().right - svgWidth + (d.target.getBoundingClientRect().width / 2);
+        let y = Math.round(d.target.getBoundingClientRect().top - topOffset)
         element.moveToFront();
-        element.style('left', (d.layerX) + 'px')
-            .style('display', 'inline')
-            .style('top', (d.layerY - 40) + 'px')
+        element.style('left', x + 'px')
+            .style('top', y + 'px')
             .html(d.target.__data__.properties['GEN']);
-    }
-
-    function hideDiv(element) {
-        element.style('display', 'none');
     }
 }

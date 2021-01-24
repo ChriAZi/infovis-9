@@ -34,6 +34,7 @@ async function initAreaChart() {
     let svg = d3
         .select('#area-chart')
         .append('svg')
+        .attr('id', 'area-chart-svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom);
 
