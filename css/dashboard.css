@@ -48,13 +48,13 @@
     color: var(--total-cases);
 }
 
-.metric.totalDeaths .selection.isSelected,
-.metric.totalDeaths .metric-number {
+.metric.newDeaths .selection.isSelected,
+.metric.newDeaths .metric-number {
     color: var(--new-deaths);
 }
 
-.metric.newDeaths .selection.isSelected,
-.metric.newDeaths .metric-number {
+.metric.totalDeaths .selection.isSelected,
+.metric.totalDeaths .metric-number {
     color: var(--total-deaths);
 }
 
