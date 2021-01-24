@@ -17,7 +17,7 @@ const Legend = {
 Object.freeze(Legend);
 
 function initLegends(legend, rerender) {
-    let svg, previousSvg, labels;
+    let svg, previousSvg;
     switch (legend) {
         case Legend.MAP:
             previousSvg = $('#mapLegend');
@@ -47,8 +47,7 @@ function initLegends(legend, rerender) {
             svg = d3.select('#area-chart-svg')
                 .append('svg')
                 .attr('id', 'areaLegend');
-            labels = ['Belegte Betten', 'Freie Betten', 'Notfallreserve'];
-            [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
+            constructLegend(svg, legend);
             break;
     }
     if (!rerender) {
@@ -65,51 +64,98 @@ function initLegends(legend, rerender) {
 function constructLegend(svg, legend) {
     let valueSteps = getValueSteps(legend);
     let [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
-    if (legend === Legend.SCATTER) {
-        offsetX = $('#scatter-plot').width() - offsetX;
-    }
-    svg.selectAll('circle')
-        .data(valueSteps)
-        .enter()
-        .append('circle')
-        .attr('cx', offsetX)
-        .attr('cy', function (d, i) {
-            return offsetY + i * distanceBetweenCircles
-        })
-        .attr('r', radiusCircle)
-        .attr('fill', function (d) {
-            return getColor(d)
-        });
-
-    svg.selectAll('text')
-        .data(valueSteps)
-        .enter()
-        .append('text')
-        .attr('dominant-baseline', 'central')
-        .attr('x', (offsetX + radiusCircle + 7.5))
-        .attr('y', function (d, i) {
-            return (offsetY + i * distanceBetweenCircles)
-        })
-        .text((d) => {
-            if (selectedMetric === Metric.LETHALITY_RATE) {
-                return d.toString().replace(/\./g, ',') + '%';
-            } else if (selectedMetric === Metric.CASE_INCIDENCE) {
-                return d.toString().replace(/\./g, ',');
-            } else {
-                return getNumberWithDots(d)
+    switch (legend) {
+        case Legend.MAP:
+        case Legend.SCATTER:
+            if (legend === Legend.SCATTER) {
+                offsetX = $('#scatter-plot').width() - offsetX;
             }
-        })
+            svg.selectAll('circle')
+                .data(valueSteps)
+                .enter()
+                .append('circle')
+                .attr('cx', offsetX)
+                .attr('cy', function (d, i) {
+                    return offsetY + i * distanceBetweenCircles
+                })
+                .attr('r', radiusCircle)
+                .attr('fill', function (d) {
+                    if (d === 0) {
+                        return 'white';
+                    } else {
+                        return getColor(d)
+                    }
+                });
+
+            svg.selectAll('text')
+                .data(valueSteps)
+                .enter()
+                .append('text')
+                .attr('dominant-baseline', 'central')
+                .attr('x', (offsetX + radiusCircle + 7.5))
+                .attr('y', function (d, i) {
+                    return (offsetY + i * distanceBetweenCircles)
+                })
+                .text((d) => {
+                    if (d === 0) {
+                        return '0'
+                    } else {
+                        if (selectedMetric === Metric.LETHALITY_RATE) {
+                            return '< ' + d.toString().replace(/\./g, ',') + '%';
+                        } else if (selectedMetric === Metric.CASE_INCIDENCE) {
+                            return '< ' + d.toString().replace(/\./g, ',');
+                        } else {
+                            return '< ' + getNumberWithDots(d)
+                        }
+                    }
+                })
+            break;
+        case Legend.AREA:
+            svg.selectAll('circle')
+                .data(valueSteps)
+                .enter()
+                .append('circle')
+                .attr('cx', offsetX)
+                .attr('cy', function (d, i) {
+                    return offsetY + i * distanceBetweenCircles
+                })
+                .attr('r', radiusCircle)
+                .attr('fill', function (d) {
+                    if (!d.hasOwnProperty('color')) {
+                        return Metric.properties[selectedMetric].baseColor;
+                    } else {
+                        return d.color
+                    }
+                });
+
+            svg.selectAll('text')
+                .data(valueSteps)
+                .enter()
+                .append('text')
+                .attr('dominant-baseline', 'central')
+                .attr('x', (offsetX + radiusCircle + 7.5))
+                .attr('y', function (d, i) {
+                    return (offsetY + i * distanceBetweenCircles)
+                })
+                .text((d) => {
+                    if (!d.hasOwnProperty('name')) {
+                        return getMetricsText(selectedMetric);
+                    } else {
+                        return d.name
+                    }
+                })
+            break;
+    }
+
 }
 
 function toggleLegends(legend) {
     if (Legend.properties[legend].isShown === true) {
         $(('#' + legend).toString()).css('opacity', 0);
         Legend.properties[legend].isShown = false;
-        console.log('hidden');
     } else {
         $(('#' + legend).toString()).css('opacity', 1);
         Legend.properties[legend].isShown = true;
-        console.log('shown');
     }
 }
 
@@ -128,26 +174,33 @@ function updateLegends(legend) {
 }
 
 function getValueSteps(legend) {
-    if (legend === Legend.MAP || legend === Legend.SCATTER) {
-        let numberOfLegendItems = 5;
-        let min = Metric.properties[selectedMetric].valueRange[0];
-        let max = Metric.properties[selectedMetric].valueRange[1];
-        if (selectedMetric === Metric.LETHALITY_RATE) {
-            min = Metric.properties[selectedMetric].valueRange[0] * 100;
-            max = Metric.properties[selectedMetric].valueRange[1] * 100;
-        }
-        let difMinMax = max - min;
-        let stepsForLegend = [];
-        let numberSteps = numberOfLegendItems - 1;
-        let step = difMinMax / (numberSteps);
-        for (let i = 0; i < numberSteps; i++) {
-            stepsForLegend.push(Math.round((min + i * step) / 10) * 10);
-        }
-        stepsForLegend.push(Math.round(max));
-        return stepsForLegend;
-    } else {
-        // todo area Chart logic
+    let stepsForLegend = [];
+    switch (legend) {
+        case Legend.MAP:
+        case Legend.SCATTER:
+            let numberOfLegendItems = 5;
+            let min = Metric.properties[selectedMetric].valueRange[0];
+            let max = Metric.properties[selectedMetric].valueRange[1];
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                min = Metric.properties[selectedMetric].valueRange[0] * 100;
+                max = Metric.properties[selectedMetric].valueRange[1] * 100;
+            }
+            let difMinMax = max - min;
+            let numberSteps = numberOfLegendItems - 1;
+            let step = difMinMax / (numberSteps);
+            for (let i = 0; i < numberSteps; i++) {
+                stepsForLegend.push(Math.round((min + i * step) / 10) * 10);
+            }
+            stepsForLegend.push(Math.round(max));
+            break;
+        case Legend.AREA:
+            for (let kindOfBed in Metric.properties.icuBeds) {
+                stepsForLegend.push(Metric.properties.icuBeds[kindOfBed]);
+            }
+            stepsForLegend.push(selectedMetric);
+            break;
     }
+    return stepsForLegend;
 }
 
 function getRelativeSizing(legend) {

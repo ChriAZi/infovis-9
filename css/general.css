@@ -3,8 +3,8 @@
     /** Metrics **/
     --new-cases: #ffaa00;
     --total-cases: #FDE725;
-    --new-deaths: #333333;
-    --total-deaths: #5A5EC8;
+    --new-deaths: #5A5EC8;
+    --total-deaths: #333333;
     --case-incidence: #78121e;
     --lethality-rate: #3f007d;
 

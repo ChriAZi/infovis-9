@@ -10,7 +10,11 @@ let yAxis;
 let grp;
 let margin = {top: 0, right: 0, bottom: 0, left: 0};
 
-const color = ['#FFA687', '#F5F5F5', '#e2efd4'];
+const color = [
+    Metric.properties.icuBeds.occupied.color,
+    Metric.properties.icuBeds.free.color,
+    Metric.properties.icuBeds.reserve.color
+];
 
 let lineText;
 let lineDate = new Date();

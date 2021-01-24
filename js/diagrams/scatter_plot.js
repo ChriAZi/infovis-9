@@ -160,28 +160,3 @@ function updateScatterplot() {
             document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
 }
-
-function getMetricsText() {
-    var text = '';
-    switch (selectedMetric) {
-        case Metric.NEW_CASES:
-            text = 'Neuinfektionen';
-            break;
-        case Metric.NEW_DEATHS:
-            text = 'neue Todesfälle';
-            break;
-        case Metric.TOTAL_CASES:
-            text = 'Infektionen';
-            break;
-        case Metric.TOTAL_DEATHS:
-            text = 'Gesamtzahl Todesfälle';
-            break;
-        case Metric.CASE_INCIDENCE:
-            text = '7-Tage-Inzidenz Neuinfektionen';
-            break;
-        case Metric.LETHALITY_RATE:
-            text = 'Letalitätsrate';
-            break;
-    }
-    return text;
-}

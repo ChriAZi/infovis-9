@@ -8,33 +8,53 @@ const Metric = {
     properties: {
         'newCases': {
             valueRange: [],
+            baseColor: '#ffaa00',
             scaleStartColor: '#fee3ab',
             scaleEndColor: '#ffaa00'
         },
         'totalCases': {
             valueRange: [],
+            baseColor: '#FDE725',
             scaleStartColor: '#ffea4c',
             scaleEndColor: '#3D0154'
         },
         'newDeaths': {
             valueRange: [],
+            baseColor: '#5A5EC8',
             scaleStartColor: '#BDE1EA',
             scaleEndColor: '#5A5EC8'
         },
         'totalDeaths': {
             valueRange: [],
+            baseColor: '#333333',
             scaleStartColor: '#eaeaeb',
             scaleEndColor: '#333333'
         },
         'caseIncidence': {
             valueRange: [],
+            baseColor: '#78121e',
             scaleStartColor: '#ffb753',
             scaleEndColor: '#78121e'
         },
         'lethalityRate': {
             valueRange: [],
+            baseColor: '#3f007d',
             scaleStartColor: '#8ab670',
             scaleEndColor: '#de0000'
+        },
+        'icuBeds': {
+            'occupied': {
+                name: 'Belegte Intensivbetten',
+                color: '#FFA687'
+            },
+            'free': {
+                name: 'Freie Intensivbetten',
+                color: '#F5F5F5'
+            },
+            'reserve': {
+                name: 'Notfallreserve',
+                color: '#e2efd4'
+            }
         }
     }
 };
@@ -88,8 +108,10 @@ function updateAll() {
 
 function setMinMaxValuesForMetricObject() {
     for (let metric in Metric.properties) {
-        if (metric !== 'all') {
-            Metric.properties[metric].valueRange = getMinMaxInCounties(metric);
+        if (metric !== 'icuBeds') {
+            if (metric !== 'all') {
+                Metric.properties[metric].valueRange = getMinMaxInCounties(metric);
+            }
         }
     }
 }
