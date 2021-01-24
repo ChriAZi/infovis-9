@@ -1,5 +1,3 @@
-const numberOfLegendItems = 5;
-
 const Legend = {
     MAP: 'mapLegend',
     SCATTER: 'scatterLegend',
@@ -19,7 +17,7 @@ const Legend = {
 Object.freeze(Legend);
 
 function initLegends(legend, rerender) {
-    let svg, previousSvg, labels, offsetX, offsetY, distanceBetweenCircles, radiusCircle;
+    let svg, previousSvg, labels;
     switch (legend) {
         case Legend.MAP:
             previousSvg = $('#mapLegend');
@@ -28,9 +26,8 @@ function initLegends(legend, rerender) {
             }
             svg = d3.select('#map')
                 .append('svg')
-                .attr('id', 'mapLegend')
-                .append('g');
-            [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
+                .attr('id', 'mapLegend');
+            constructLegend(svg, legend);
             break;
         case Legend.SCATTER:
             previousSvg = $('#scatterLegend');
@@ -40,8 +37,7 @@ function initLegends(legend, rerender) {
             svg = d3.select('#scatter-plot-svg')
                 .append('svg')
                 .attr('id', 'scatterLegend');
-            [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
-            offsetX = $('#scatter-plot').width() - offsetX;
+            constructLegend(svg, legend);
             break;
         case Legend.AREA:
             previousSvg = $('#areaLegend');
@@ -55,9 +51,23 @@ function initLegends(legend, rerender) {
             [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
             break;
     }
-    let valueSteps = getValueSteps();
+    if (!rerender) {
+        svg.style('opacity', 1);
+    } else {
+        if (Legend.properties[legend].isShown) {
+            svg.style('opacity', 1);
+        } else {
+            svg.style('opacity', 0);
+        }
+    }
+}
 
-    // todo area Chart logic
+function constructLegend(svg, legend) {
+    let valueSteps = getValueSteps(legend);
+    let [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
+    if (legend === Legend.SCATTER) {
+        offsetX = $('#scatter-plot').width() - offsetX;
+    }
     svg.selectAll('circle')
         .data(valueSteps)
         .enter()
@@ -71,7 +81,6 @@ function initLegends(legend, rerender) {
             return getColor(d)
         });
 
-    // todo area Chart logic
     svg.selectAll('text')
         .data(valueSteps)
         .enter()
@@ -81,37 +90,26 @@ function initLegends(legend, rerender) {
         .attr('y', function (d, i) {
             return (offsetY + i * distanceBetweenCircles)
         })
-        .text((d, i) => {
-            if (legend === Legend.AREA) {
-                return labels[i];
+        .text((d) => {
+            if (selectedMetric === Metric.LETHALITY_RATE) {
+                return d.toString().replace(/\./g, ',') + '%';
+            } else if (selectedMetric === Metric.CASE_INCIDENCE) {
+                return d.toString().replace(/\./g, ',');
             } else {
-                if (selectedMetric === Metric.LETHALITY_RATE) {
-                    return d.toString().replace(/\./g, ',') + '%';
-                } else if (selectedMetric === Metric.CASE_INCIDENCE) {
-                    return d.toString().replace(/\./g, ',');
-                } else {
-                    return getNumberWithDots(d)
-                }
+                return getNumberWithDots(d)
             }
         })
-    if (!rerender) {
-        svg.style('opacity', 1);
-    } else {
-        if (Legend.properties[legend].isShown) {
-            svg.style('opacity', 1);
-        } else {
-            svg.style('opacity', 0);
-        }
-    }
 }
 
 function toggleLegends(legend) {
     if (Legend.properties[legend].isShown === true) {
         $(('#' + legend).toString()).css('opacity', 0);
         Legend.properties[legend].isShown = false;
+        console.log('hidden');
     } else {
         $(('#' + legend).toString()).css('opacity', 1);
         Legend.properties[legend].isShown = true;
+        console.log('shown');
     }
 }
 
@@ -129,8 +127,9 @@ function updateLegends(legend) {
     }
 }
 
-function getValueSteps(isAreaLegend = false) {
-    if (!isAreaLegend) {
+function getValueSteps(legend) {
+    if (legend === Legend.MAP || legend === Legend.SCATTER) {
+        let numberOfLegendItems = 5;
         let min = Metric.properties[selectedMetric].valueRange[0];
         let max = Metric.properties[selectedMetric].valueRange[1];
         if (selectedMetric === Metric.LETHALITY_RATE) {
