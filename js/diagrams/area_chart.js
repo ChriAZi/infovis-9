@@ -70,18 +70,17 @@ async function initAreaChart() {
 
     grp = chart.append('g');
 
-// Create stack
+    // Create stack
     stack = d3.stack().keys(['Belegte', 'Freie', 'Notfallreserve']);
-    stackedData = stack(data); // Create scales
+    stackedData = stack(data);// Create scales
     xValue = d => d.date;
 
-//x-Axis
+    //x-Axis
     xScale = d3.scaleTime()
         .domain(d3.extent(data, xValue))
         .range([0, width]);
-    xAxisGerman = d3.axisBottom(xScale).tickFormat(customTimeFormat);
-
-//y-Axis
+    xAxisGerman = d3.axisBottom(xAxis).tickFormat(customTimeFormat);
+    //y-Axis
     yScale = d3.scaleLinear()
         .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
             return d[1]
@@ -114,23 +113,22 @@ async function initAreaChart() {
         .attr('stroke-width', 0.5)
         .attr('d', d => area(d));
 
-// Add the X Axis
+    // Add the X Axis
     xAxis = chart
         .append('g')
         .attr('transform', `translate(0,${height})`)
         .attr('id', 'area-chart-x-axis')
-        .call(xAxisGerman);
+        .call(d3.axisBottom(xAxisGerman))
 
-// Add the Y Axis
+    // Add the Y Axis
     yAxis = chart
         .append('g')
         .attr('transform', `translate(${width}, 0)`)
         .attr('id', 'area-chart-y-axis')
-        .call(d3.axisRight(yScale));
+        .call(d3.axisRight(yScale))
 
     lineDate = new Date(selectedDate);
-
-// Add line
+    // Add line
     lineV = grp
         .append('line')
         .datum(data)
@@ -141,7 +139,7 @@ async function initAreaChart() {
         .attr('stroke', 'black')
         .style('stroke-width', 1);
 
-// text label for the x axis
+    // text label for the x axis
     chart.append('text')
         .attr('transform',
             'translate(' + (width / 2) + ' ,' +
@@ -149,7 +147,7 @@ async function initAreaChart() {
         .style('text-anchor', 'middle')
         .text('Zeit');
 
-// text label for the y axis
+    // text label for the y axis
     chart.append('text')
         .attr('transform', 'rotate(-90)')
         .attr('y', width + margin.right)
