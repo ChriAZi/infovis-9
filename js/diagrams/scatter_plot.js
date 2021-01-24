@@ -160,10 +160,6 @@ function updateScatterplot() {
             document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
 }
-        .on('click', function () {
-            d3.select('#i' + this.id).dispatch('click');
-        });
-}
 
 function scaleByPopulation(value, county) {
     switch (selectedMetric) {
