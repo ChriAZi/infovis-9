@@ -119,7 +119,7 @@ async function initAreaChart() {
         .append('g')
         .attr('transform', `translate(0,${height})`)
         .attr('id', 'area-chart-x-axis')
-        .call(d3.axisBottom(xAxisGerman))
+        .call(xAxisGerman);
 
     // Add the Y Axis
     yAxis = chart
