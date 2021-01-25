@@ -126,7 +126,7 @@ async function initAreaChart() {
         .append('g')
         .attr('transform', `translate(${width}, 0)`)
         .attr('id', 'area-chart-y-axis')
-                .call(d3.axisRight(yScale));
+        .call(d3.axisRight(yScale));
 
     lineDate = new Date(selectedDate);
 
@@ -217,59 +217,60 @@ function updateAreaChart() {
 
 async function updateAreaCountyBased() {
 
-    let countyData = await d3.csv('data/Landkreise_Auslastung.csv');
-
-    countyBasedData = countyData.filter(function (d) {
-        d.daten_stand = new Date(d.daten_stand)
-        d.gemeindeschluessel = d.gemeindeschluessel
-        d.betten_frei = +d.betten_frei
-        d.betten_belegt = +d.betten_belegt
-        return d['gemeindeschluessel'] === selectedCountyId;
-    })
-
-    stack = d3.stack().keys(['betten_belegt', 'betten_frei', 'notfallreserve_betten']);
-    stackedData = stack(countyBasedData);
-    yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
-        return d[1]
-    })])
-    yAxis.transition().duration(1500).ease(d3.easeLinear)
-        .call(d3.axisRight(yScale));
-
-    area = d3.area().x(function (d) {
-        return xScale(d.data.daten_stand);
-    })
-        .y0(function (d) {
-            return yScale(d[0]);
-        })
-        .y1(function (d) {
-            return yScale(d[1]);
+    d3.csv('data/Landkreise_Auslastung.csv').then(countyData => {
+        countyBasedData = countyData.filter(function (d) {
+            d.daten_stand = new Date(d.daten_stand)
+            d.gemeindeschluessel = d.gemeindeschluessel
+            d.betten_frei = +d.betten_frei
+            d.betten_belegt = +d.betten_belegt
+            return d['gemeindeschluessel'] === selectedCountyId;
         })
 
-    chart.selectAll('path')
-        .data(stackedData)
-        .transition().duration(1000)
-        .style('opacity', 1)
-        .attr('d', d => area(d));
-    dynamicLine = chart.append('path')
-        .attr('class', 'line')
-        // .attr("d", lineChart(dataDates))
-        .attr('fill', 'none')
-        //.attr("stroke", metricColor)
-        .attr('stroke-width', 2);
+        stack = d3.stack().keys(['betten_belegt', 'betten_frei', 'notfallreserve_betten']);
+        stackedData = stack(countyBasedData);
+        yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
+            return d[1]
+        })])
+        yAxis.transition().duration(1500).ease(d3.easeLinear)
+            .call(d3.axisRight(yScale));
 
-    chart.select('.line').datum(dataDates)
-        .transition()
-        .duration(1000)
-        .attr('stroke', 'orange')
-        .attr('d', d3.line()
-            .x(function (d) {
-                d = new Date(d);
-                return xScale(d)
+        area = d3.area().x(function (d) {
+            return xScale(d.data.daten_stand);
+        })
+            .y0(function (d) {
+                return yScale(d[0]);
             })
-            .y(function (d) {
-                return yScale(data[d][selectedCountyId][selectedMetric]);
+            .y1(function (d) {
+                return yScale(d[1]);
             })
-        )
+
+        chart.selectAll('path')
+            .data(stackedData)
+            .transition().duration(1000)
+            .style('opacity', 1)
+            .attr('d', d => area(d));
+        dynamicLine = chart.append('path')
+            .attr('class', 'line')
+            // .attr("d", lineChart(dataDates))
+            .attr('fill', 'none')
+            //.attr("stroke", metricColor)
+            .attr('stroke-width', 2);
+
+        chart.select('.line').datum(dataDates)
+            .transition()
+            .duration(1000)
+            .attr('stroke', 'orange')
+            .attr('d', d3.line()
+                .x(function (d) {
+                    d = new Date(d);
+                    return xScale(d)
+                })
+                .y(function (d) {
+                    return yScale(data[d][selectedCountyId][selectedMetric]);
+                })
+            )
+    });
+
 }
 
 function setMargin() {
