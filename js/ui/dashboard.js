@@ -110,16 +110,16 @@ function getMetricsText() {
     let text = '';
     switch (selectedMetric) {
         case Metric.NEW_CASES:
-            text = 'Neuinfektionen';
+            text = 'Neuinfektionen pro 100.000 EW';
             break;
         case Metric.NEW_DEATHS:
-            text = 'neue Todesfälle';
+            text = 'Neue Todesfälle pro 100.000 EW';
             break;
         case Metric.TOTAL_CASES:
-            text = 'Infektionen';
+            text = 'Infektionen pro 100.000 EW';
             break;
         case Metric.TOTAL_DEATHS:
-            text = 'Gesamtzahl Todesfälle';
+            text = 'Todesfälle pro 100.000 EW';
             break;
         case Metric.CASE_INCIDENCE:
             text = '7-Tage-Inzidenz Neuinfektionen';
