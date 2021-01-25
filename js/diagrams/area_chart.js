@@ -79,7 +79,7 @@ async function initAreaChart() {
     xScale = d3.scaleTime()
         .domain(d3.extent(data, xValue))
         .range([0, width]);
-    xAxisGerman = d3.axisBottom(xScale).tickFormat(customTimeFormat);
+    xAxisGerman = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%B"));
 
     //y-Axis
     yScale = d3.scaleLinear()

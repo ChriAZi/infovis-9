@@ -58,7 +58,7 @@ function drawSliderAxis(id = '#axis-slider') {
     let x = d3.scaleTime()
         .domain(domain)
         .range([0, width]);
-    let xAxis = d3.axisBottom(x).tickFormat(customTimeFormat);
+    let xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%B"));
     svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis);
