@@ -8,36 +8,42 @@ const Metric = {
     properties: {
         'newCases': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#ffaa00',
             scaleStartColor: '#fee3ab',
             scaleEndColor: '#ffaa00'
         },
         'totalCases': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#FDE725',
             scaleStartColor: '#ffea4c',
             scaleEndColor: '#3D0154'
         },
         'newDeaths': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#5A5EC8',
             scaleStartColor: '#BDE1EA',
             scaleEndColor: '#5A5EC8'
         },
         'totalDeaths': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#333333',
             scaleStartColor: '#eaeaeb',
             scaleEndColor: '#333333'
         },
         'caseIncidence': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#78121e',
             scaleStartColor: '#ffb753',
             scaleEndColor: '#78121e'
         },
         'lethalityRate': {
             valueRange: [],
+            scaledMax: 0,
             baseColor: '#3f007d',
             scaleStartColor: '#8ab670',
             scaleEndColor: '#de0000'
@@ -117,9 +123,8 @@ function setMinMaxValuesForMetricObject() {
 }
 
 function getMinMaxInCounties(metric) {
-    let tmpMin, tmpMax;
+    let tmpMin, tmpMax, scaledMax;
     tmpMin = tmpMax = 0;
-    let test;
     for (let date in data) {
         for (let county in data[date]) {
             if (county !== 'all') {
@@ -132,13 +137,12 @@ function getMinMaxInCounties(metric) {
                 if (val < tmpMin) tmpMin = val;
                 if (val > tmpMax) {
                     tmpMax = val;
-                    if (metric === Metric.TOTAL_CASES) {
-                        test = county;
-                    }
+                    scaledMax = scaleByPopulation(val, county);
                 }
             }
         }
     }
+    Metric.properties[metric].scaledMax = scaledMax;
     return [tmpMin, tmpMax];
 }
 

@@ -1,5 +1,7 @@
 const countyNames = [];
 
+var rect, scatter, xAxisS, yAxisS, lastMetric, tempTransform, zoom, x, y, divClick;
+
 function initScatterPlot() {
     for (i in geoData.features) {
         countyNames[geoData.features[i].properties.AGS] = geoData.features[i].properties.GEN;
@@ -14,7 +16,6 @@ function updateScatterplot() {
     let height = parent.height() - margin.top - margin.bottom;
 
     let formatPercent = d3.format('.0%');
-    let offsetYAxis = 1;
 
     d3.select('#scatter-plot').selectAll('*').remove();
     var filteredIds = Object.keys(counties).filter(item => item !== 'all' && Object.keys(countyNames).includes(item));
@@ -28,13 +29,13 @@ function updateScatterplot() {
         .attr('transform', 'translate(' + (margin.left + 14) + ',' + margin.top + ')');
 
     // Add X axis
-    var x = d3.scaleLinear()
+    x = d3.scaleLinear()
         .domain([0, d3.max(filteredIds, function (d) {
             return counties[d].density != null ? counties[d].density : 0
         }) + 1])
         .range([0, width]);
 
-    svg.append('g')
+    xAxisS = svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x).ticks(5, 'f'));
 
@@ -45,25 +46,24 @@ function updateScatterplot() {
         .text('Bevölkerungsdichte (Einwohner pro km²)');
 
     // Add Y axis
-    var y = d3.scaleLinear()
-        .domain([0, d3.max(filteredIds, function (d) {
-            if (selectedMetric === Metric.LETHALITY_RATE) {
-                offsetYAxis = 0;
-                return getLethalityRate(d);
-            } else {
-                return data[selectedDate][d][selectedMetric] !== null ? scaleByPopulation(data[selectedDate][d][selectedMetric], d) : 0;
-            }
-        }) + offsetYAxis])
-        .range([height, 0]);
-
     if (selectedMetric === Metric.LETHALITY_RATE) {
-        svg.append('g')
-            .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent));
+        y = d3.scaleLinear()
+            .domain([0, d3.max(filteredIds, function (d) {
+                return getLethalityRate(d);
+            })])
+            .range([height, 0]);
+        yAxisS = svg.append('g')
+            .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent))
     } else {
-        svg.append('g')
-            .call(d3.axisLeft(y).ticks(5, 'f'));
+        y = d3.scaleLinear()
+            // .domain([0, Metric.properties[selectedMetric].scaledMax + 1])
+            .domain([0, d3.max(filteredIds, d => {
+                return scaleByPopulation(data[selectedDate][d][selectedMetric], d);
+            }) + 1])
+            .range([height, 0]);
+        yAxisS = svg.append('g')
+            .call(d3.axisLeft(y).ticks(5, 'f'))
     }
-
 
     // text label for the y axis
     svg.append('text')
@@ -89,7 +89,33 @@ function updateScatterplot() {
             this.parentNode.appendChild(this);
         })
     }
-    svg.append('g')
+
+    var clip = svg.append("defs").append("svg:clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("width", width+5)
+        .attr("height", height+5)
+        .attr("x", 0)
+        .attr("y", 0);
+
+    zoom = d3.zoom()
+        .scaleExtent([1, 20])
+        .translateExtent([[0,0], [width, height]])
+        .extent([[0, 0], [width, height]])
+        .on("zoom", updateChart);
+
+    rect = svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr('transform', 'translate(0,0)')
+        .call(zoom);
+
+    scatter = svg.append('g')
+        .attr("clip-path", "url(#clip)")
+    
+    scatter.append('g')
         .selectAll('dot')
         .data(filteredIds)
         .enter()
@@ -159,6 +185,43 @@ function updateScatterplot() {
         .on('click', function () {
             document.getElementById('i' + this.id).dispatchEvent(new Event('click', {bubbles: true}));
         });
+        setLastZoom();
+        lastMetric = selectedMetric;
+}
+
+function updateChart({transform}) {
+        //divClick.style('display', 'none');
+
+        // recover the new scale
+        var newX = transform.rescaleX(x);
+        var newY = transform.rescaleY(y);
+    
+        // update axes with these new boundaries
+        xAxisS.call(d3.axisBottom(newX).ticks(5, 'f'))
+        yAxisS.call(d3.axisLeft(newY).ticks(5, 'f'))
+    
+        // update circle position
+        scatter
+            .selectAll("circle")
+            .attr('cx', function(d) {
+                return newX(counties[d].density);
+            })
+            .attr('cy', function(d) {
+                if (selectedMetric === Metric.LETHALITY_RATE) {
+                    return newY(getLethalityRate(d));
+                } else {
+                    return newY(data[selectedDate][d][selectedMetric]);
+                }
+            });
+        
+    tempTransform = transform;
+}
+
+function setLastZoom(){
+    if(typeof(tempTransform)!="undefined" && lastMetric == selectedMetric){
+        var t = d3.zoomIdentity.translate(tempTransform.x, tempTransform.y).scale(tempTransform.k);
+        rect.call(zoom.transform, t);
+    }
 }
 
 function scaleByPopulation(value, county) {  
