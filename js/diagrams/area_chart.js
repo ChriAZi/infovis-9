@@ -134,10 +134,10 @@ async function initAreaChart() {
     lineV = grp
         .append('line')
         .datum(data)
-        .attr('x1', xScale(lineDate) - margin.right)
-        .attr('x2', xScale(lineDate) - margin.right)
-        .attr('y1', margin.top + 10)
-        .attr('y2', yScale(margin.bottom))
+        .attr('x1', xScale(lineDate))
+        .attr('x2', xScale(lineDate))
+        .attr('y1', 0)
+        .attr('y2', yScale(0))
         .attr('stroke', 'black')
         .style('stroke-width', 1);
 
@@ -206,10 +206,10 @@ function updateAreaChart() {
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate) - margin.right)
-        .attr('x2', xScale(lineDate) - margin.right)
-        .attr('y1', margin.top + 10)
-        .attr('y2', yAxis(margin.bottom))
+        .attr('x1', xScale(lineDate))
+        .attr('x2', xScale(lineDate))
+        .attr('y1', 0)
+        .attr('y2', yScale(0))
         .attr('stroke', 'black')
         .style('stroke-width', 1);
 
