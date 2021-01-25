@@ -81,7 +81,7 @@ async function initAreaChart() {
         .range([0, width]);
     xAxisGerman = d3.axisBottom(xScale).tickFormat(customTimeFormat);
 
-//y-Axis
+    //y-Axis
     yScale = d3.scaleLinear()
         .domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
             return d[1]
