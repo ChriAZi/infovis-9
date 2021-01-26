@@ -11,42 +11,48 @@ const Metric = {
             scaledMax: 0,
             baseColor: '#ffaa00',
             scaleStartColor: '#fee3ab',
-            scaleEndColor: '#ffaa00'
+            scaleEndColor: '#ffaa00',
+            valueSteps: []
         },
         'totalCases': {
             valueRange: [],
             scaledMax: 0,
             baseColor: '#FDE725',
             scaleStartColor: '#ffea4c',
-            scaleEndColor: '#3D0154'
+            scaleEndColor: '#3D0154',
+            valueSteps: []
         },
         'newDeaths': {
             valueRange: [],
             scaledMax: 0,
             baseColor: '#5A5EC8',
             scaleStartColor: '#BDE1EA',
-            scaleEndColor: '#5A5EC8'
+            scaleEndColor: '#5A5EC8',
+            valueSteps: []
         },
         'totalDeaths': {
             valueRange: [],
             scaledMax: 0,
             baseColor: '#333333',
             scaleStartColor: '#eaeaeb',
-            scaleEndColor: '#333333'
+            scaleEndColor: '#333333',
+            valueSteps: []
         },
         'caseIncidence': {
             valueRange: [],
             scaledMax: 0,
             baseColor: '#78121e',
             scaleStartColor: '#ffb753',
-            scaleEndColor: '#78121e'
+            scaleEndColor: '#78121e',
+            valueSteps: []
         },
         'lethalityRate': {
             valueRange: [],
             scaledMax: 0,
             baseColor: '#3f007d',
             scaleStartColor: '#8ab670',
-            scaleEndColor: '#de0000'
+            scaleEndColor: '#de0000',
+            valueSteps: []
         },
         'icuBeds': {
             'occupied': {
@@ -117,6 +123,7 @@ function setMinMaxValuesForMetricObject() {
         if (metric !== 'icuBeds') {
             if (metric !== 'all') {
                 Metric.properties[metric].valueRange = getMinMaxInCounties(metric);
+                Metric.properties[metric].valueSteps = getValueStepsInCounties(metric);
             }
         }
     }
@@ -130,7 +137,7 @@ function getMinMaxInCounties(metric) {
             if (county !== 'all') {
                 let val;
                 if (metric === Metric.LETHALITY_RATE) {
-                    val = getLethalityRate(county, date)
+                    val = getLethalityRate(county, date);
                 } else {
                     val = data[date][county][metric];
                 }
@@ -146,6 +153,63 @@ function getMinMaxInCounties(metric) {
     return [tmpMin, tmpMax];
 }
 
+function getValueStepsInCounties(metric, steps = 5) {
+    let unsortedList = [];
+    for (let date in data) {
+        for (let county in data[date]) {
+            if (county !== 'all'){
+                if(metric === "lethalityRate" && data[date][county]['totalDeaths'] > 1){
+                    unsortedList.push(getLethalityRate(county,date));
+                }else if(data[date][county][metric] > 1){
+                    unsortedList.push(data[date][county][metric]);
+                }
+            }
+        }
+    }
+    let sortedList = unsortedList.sort((a,b) => a-b);
+    let valueSteps = [], cuttingEdge, slicingRate = 2, roundTo = 1;
+    switch(metric){
+        case "newCases":
+            slicingRate = 1.4;
+            roundTo = 10;
+            break;
+        case 'totalCases':
+            slicingRate = 2.8
+            roundTo = 100;
+            break;
+        case 'newDeaths':
+            slicingRate = 1.5;
+            break;
+        case 'totalDeaths':
+            slicingRate = 1.7;
+            roundTo = 10;
+            break;
+        case 'caseIncidence':
+            slicingRate = 1.5;
+            roundTo = 10;
+            break;
+        case 'lethalityRate':
+            slicingRate = 1.05;
+            roundTo = 1;
+            valueSteps.unshift(sortedList[sortedList.length-1]);
+            for(let i = 0; i < steps-1; i++) {
+                cuttingEdge = Math.floor(sortedList.length/slicingRate);
+                valueSteps.unshift(sortedList[cuttingEdge]);
+                sortedList = sortedList.slice(0, cuttingEdge);
+                slicingRate += 0.2;
+            }
+            valueSteps.unshift(0);
+            return valueSteps;
+        }
+    valueSteps.push(0);
+    for(let i = 0; i < steps-1; i++) {
+        cuttingEdge = Math.floor(sortedList.length/slicingRate);
+        valueSteps.push(Math.round(sortedList[cuttingEdge]/roundTo)*roundTo);
+        sortedList = sortedList.slice(cuttingEdge+1,sortedList.length-1);
+    }
+    valueSteps.push(Math.round(sortedList[sortedList.length-1]/roundTo)*roundTo);
+    return valueSteps;
+}
 
 function getLethalityRate(totalOrCounty, date = selectedDate) {
     if (!+data[date][totalOrCounty][Metric.TOTAL_CASES]) {

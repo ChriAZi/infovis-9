@@ -101,7 +101,7 @@ function constructLegend(svg, legend) {
                         return '0'
                     } else {
                         if (selectedMetric === Metric.LETHALITY_RATE) {
-                            return '< ' + d.toString().replace(/\./g, ',') + '%';
+                            return '< ' + (Math.round(d*1000)/10).toString().replace(/\./g, ',') + '%';
                         } else if (selectedMetric === Metric.CASE_INCIDENCE) {
                             return '< ' + d.toString().replace(/\./g, ',');
                         } else {
@@ -178,20 +178,7 @@ function getValueSteps(legend) {
     switch (legend) {
         case Legend.MAP:
         case Legend.SCATTER:
-            let numberOfLegendItems = 5;
-            let min = Metric.properties[selectedMetric].valueRange[0];
-            let max = Metric.properties[selectedMetric].valueRange[1];
-            if (selectedMetric === Metric.LETHALITY_RATE) {
-                min = Metric.properties[selectedMetric].valueRange[0] * 100;
-                max = Metric.properties[selectedMetric].valueRange[1] * 100;
-            }
-            let difMinMax = max - min;
-            let numberSteps = numberOfLegendItems - 1;
-            let step = difMinMax / (numberSteps);
-            for (let i = 0; i < numberSteps; i++) {
-                stepsForLegend.push(Math.round((min + i * step) / 10) * 10);
-            }
-            stepsForLegend.push(Math.round(max));
+            stepsForLegend = Metric.properties[selectedMetric].valueSteps;
             break;
         case Legend.AREA:
             for (let kindOfBed in Metric.properties.icuBeds) {
