@@ -330,3 +330,9 @@ function getMaxValue(metric) {
     }
     return maxMetricValue;
 }
+
+function getFormattedDate(date) {
+    date = date.toISOString().split('T')[0]
+    date = date.replaceAll('-', '/')
+    return date;
+}
