@@ -61,7 +61,7 @@ async function initAreaChart() {
     //setMargin();
 
     let parent = $('.area-container');
-    let margin = {top: 100, right: 80, bottom: 50, left: 50};
+    let margin = {top: 50, right: 80, bottom: 50, left: 50};
     let width = parent.width() - margin.left - margin.right;
     let height = parent.height() - margin.top - margin.bottom;
 
