@@ -277,6 +277,7 @@ async function updateAreaCountyBased() {
             .attr('stroke-width', 2);
 
         chart.select('.line').datum(dataDates)
+        chart.select('.line').datum(dataDates)
             .transition()
             .duration(1000)
             .attr('stroke', setMetricColor())
@@ -287,14 +288,15 @@ async function updateAreaCountyBased() {
                 })
                 .y(function (d) {
                     if (selectedMetric === 'lethalityRate') {
-                        return 0;
-                    }
-                    else {
+                        let rate = data[d][selectedCountyId][Metric.TOTAL_DEATHS] / data[d][selectedCountyId][Metric.TOTAL_CASES];
+                        let value = Math.round(((rate * 100) + Number.EPSILON) * 100) / 100;
+                        return yScaleLine(value);
+                    } else {
                         return yScaleLine(data[d][selectedCountyId][selectedMetric]);
-                    }})
+                    }
+                })
             )
     });
-
 }
 
 function setMargin() {
@@ -319,10 +321,18 @@ function getLineDate() {
 function getMaxValue(metric) {
     let maxMetricValue;
     maxMetricValue = 0;
-    if ((selectedCountyId === null) || (selectedMetric === 'lethalityRate')) {
+    dataDates = Object.keys(data).filter(item => item === getFormattedDate(minDate) || new Date(item) > new Date(minDate));
+    if (selectedCountyId === null) {
         maxMetricValue = 0
+    } else if (selectedMetric === 'lethalityRate') {
+        dataDates.forEach(obj => {
+            let lethalityRate = data[obj][selectedCountyId][Metric.TOTAL_DEATHS] / data[obj][selectedCountyId][Metric.TOTAL_CASES];
+            let metricValue = Math.round(((lethalityRate * 100) + Number.EPSILON) * 100) / 100;
+            if (metricValue > maxMetricValue) {
+                maxMetricValue = metricValue;
+            }
+        })
     } else {
-        dataDates = Object.keys(data).filter(item => item === getFormattedDate(minDate) || new Date(item) > new Date(minDate));
         dataDates.forEach(obj => {
             let metricValue = data[obj][selectedCountyId][metric];
             if (metricValue > maxMetricValue) {
@@ -359,7 +369,7 @@ function setMetricColor() {
         case 'lethalityRate':
             metricColor = '#3F007D';
         default:
-            metricColor = '';
+            metricColor = '#3F007D';
     }
     return metricColor;
 }
