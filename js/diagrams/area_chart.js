@@ -286,8 +286,12 @@ async function updateAreaCountyBased() {
                     return xScale(d)
                 })
                 .y(function (d) {
-                    return yScaleLine(data[d][selectedCountyId][selectedMetric]);
-                })
+                    if (selectedMetric === 'lethalityRate') {
+                        return 0;
+                    }
+                    else {
+                        return yScaleLine(data[d][selectedCountyId][selectedMetric]);
+                    }})
             )
     });
 
@@ -315,7 +319,7 @@ function getLineDate() {
 function getMaxValue(metric) {
     let maxMetricValue;
     maxMetricValue = 0;
-    if (selectedCountyId === null) {
+    if ((selectedCountyId === null) || (selectedMetric === 'lethalityRate')) {
         maxMetricValue = 0
     } else {
         dataDates = Object.keys(data).filter(item => item === getFormattedDate(minDate) || new Date(item) > new Date(minDate));
@@ -355,7 +359,7 @@ function setMetricColor() {
         case 'lethalityRate':
             metricColor = '#3F007D';
         default:
-            metricColor = '#ffaa00';
+            metricColor = '';
     }
     return metricColor;
 }
