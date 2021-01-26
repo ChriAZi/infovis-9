@@ -41,6 +41,10 @@ let dynamicLine;
 let bedOccData;
 let countyBasedData;
 
+let yScaleLine;
+let yAxisLine;
+let yAxisLineText;
+
 async function initAreaChart() {
 
     let data = await d3.csv('data/data_Auslastung.csv');
@@ -127,7 +131,11 @@ async function initAreaChart() {
         .attr('transform', `translate(${width}, 0)`)
         .attr('id', 'area-chart-y-axis')
         .call(d3.axisRight(yScale));
-
+    yAxisLine = chart
+        .append('g')
+        .attr('display', 'none')
+        .call(d3.axisLeft(yScaleLine));
+    
     lineDate = new Date(selectedDate);
 
 // Add line
@@ -157,15 +165,18 @@ async function initAreaChart() {
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Anzahl Betten');
-
-    dataDates = Object.keys(data);
-    lineChart = d3.line()
-        .x(function (d) {
-            d = new Date(d);
-            return xScale(d)
-        })
-        .y(function (d) {
-            return yScale(data[d][selectedCountyId][selectedMetric]);
+    
+    yAxisLineText = chart.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0 - margin.left - 14)
+        .attr('x', 0 - (height / 2))
+        .attr('dy', '1em')
+        .text(getMetricsText())
+        .attr('display', 'none')
+        .style('text-anchor', 'middle');
+    
+    //dataDates = Object.keys(data);
+    lineChart = d3.line();
         })
 }
 
@@ -178,7 +189,7 @@ function updateAreaChart() {
         stackedData = stack(bedOccData);
         xValue = d => d.date;
         yScale.domain([0, d3.max(stackedData[stackedData.length - 1], function (d) {
-            return d[1] + 1000
+            return d[1]
         })])
         yAxis.transition().duration(1500).ease(d3.easeLinear)
             .call(d3.axisRight(yScale));
@@ -198,7 +209,9 @@ function updateAreaChart() {
             .transition().duration(60)
             .style('opacity', 1)
             .attr('d', d => area(d));
-
+        
+        yAxisLine.attr('display', 'none');
+        yAxisLineText.attr('display', 'none');
         d3.select('path.line').remove();
     }
 
@@ -233,7 +246,12 @@ async function updateAreaCountyBased() {
         })])
         yAxis.transition().duration(1500).ease(d3.easeLinear)
             .call(d3.axisRight(yScale));
-
+        
+        yScaleLine.domain([0, getMaxValue(selectedMetric)]);
+        yAxisLine.transition().duration(1000).ease(d3.easeLinear).attr('display', 'block')
+            .call(d3.axisLeft(yScaleLine));
+        yAxisLineText.attr('display', 'block');
+        
         area = d3.area().x(function (d) {
             return xScale(d.data.daten_stand);
         })
@@ -280,4 +298,21 @@ function setMargin() {
         bottom: 2.5 * (document.documentElement.clientWidth / 100),
         left: 3 * (document.documentElement.clientHeight / 100)
     }
+}
+function getMaxValue(metric) {
+    let maxMetricValue;
+    maxMetricValue = 0;
+    if (selectedCountyId === null) {
+        maxMetricValue = 0
+    } else {
+        dataDates = Object.keys(data).filter(item => item === getFormattedDate(minDate) || new Date(item) > new Date(minDate));
+        console.log('Data dates are ' + dataDates);
+        dataDates.forEach(obj => {
+            let metricValue = data[obj][selectedCountyId][metric];
+            if (metricValue > maxMetricValue) {
+                maxMetricValue = metricValue;
+            }
+        })
+    }
+    return maxMetricValue;
 }
