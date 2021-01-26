@@ -46,7 +46,8 @@ function initLegends(legend, rerender) {
             }
             svg = d3.select('#area-chart-svg')
                 .append('svg')
-                .attr('id', 'areaLegend');
+                .attr('id', 'areaLegend')
+
             constructLegend(svg, legend);
             break;
     }
@@ -64,12 +65,18 @@ function initLegends(legend, rerender) {
 function constructLegend(svg, legend) {
     let valueSteps = getValueSteps(legend);
     let [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
+    let background = svg.append('rect');
     switch (legend) {
         case Legend.MAP:
         case Legend.SCATTER:
             if (legend === Legend.SCATTER) {
                 offsetX = $('#scatter-plot').width() - offsetX;
             }
+            background.attr('x', offsetX-radiusCircle*2)
+                .attr('y', offsetY-radiusCircle*2)
+                .attr('width', radiusCircle*14)
+                .attr('height', distanceBetweenCircles*6.5)
+
             svg.selectAll('circle')
                 .data(valueSteps)
                 .enter()
@@ -111,6 +118,10 @@ function constructLegend(svg, legend) {
                 })
             break;
         case Legend.AREA:
+            background.attr('x', offsetX-radiusCircle*2)
+                .attr('y', offsetY-radiusCircle*2)
+                .attr('width', radiusCircle*27)
+                .attr('height', distanceBetweenCircles*4.5)
             svg.selectAll('circle')
                 .data(valueSteps)
                 .enter()
@@ -146,15 +157,22 @@ function constructLegend(svg, legend) {
                 })
             break;
     }
+    d3.selectAll("rect")
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('opacity',0.6)
+        .attr('fill', 'lightgray');
 
 }
 
 function toggleLegends(legend) {
     if (Legend.properties[legend].isShown === true) {
         $(('#' + legend).toString()).css('opacity', 0);
+        d3.select(('#' + legend).toString()).lower();
         Legend.properties[legend].isShown = false;
     } else {
         $(('#' + legend).toString()).css('opacity', 1);
+        d3.select(('#' + legend).toString()).raise();
         Legend.properties[legend].isShown = true;
     }
 }
