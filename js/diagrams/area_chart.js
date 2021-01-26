@@ -44,6 +44,7 @@ let countyBasedData;
 let yScaleLine;
 let yAxisLine;
 let yAxisLineText;
+let minDate;
 
 async function initAreaChart() {
 
@@ -55,6 +56,7 @@ async function initAreaChart() {
         d.Notfallreserve = +d.Notfallreserve
     })
     bedOccData = data;
+    minDate = bedOccData[0].date;
     setMargin();
 
     let parent = $('.area-container');
@@ -91,7 +93,11 @@ async function initAreaChart() {
             return d[1]
         })])
         .range([height, 0]);
-
+    
+    yScaleLine = d3.scaleLinear()
+        .domain([0, getMaxValue(selectedMetric)])
+        .range([height, 0]);
+    
     area = d3.area().x(function (d) {
         return xScale(d.data.date);
     })
@@ -136,14 +142,12 @@ async function initAreaChart() {
         .attr('display', 'none')
         .call(d3.axisLeft(yScaleLine));
     
-    lineDate = new Date(selectedDate);
-
 // Add line
     lineV = grp
         .append('line')
         .datum(data)
-        .attr('x1', xScale(lineDate))
-        .attr('x2', xScale(lineDate))
+        .attr('x1', xScale(getLineDate()))
+        .attr('x2', xScale(getLineDate()))
         .attr('y1', 0)
         .attr('y2', yScale(0))
         .attr('stroke', 'black')
@@ -175,7 +179,6 @@ async function initAreaChart() {
         .attr('display', 'none')
         .style('text-anchor', 'middle');
     
-    //dataDates = Object.keys(data);
     lineChart = d3.line();
         })
 }
@@ -219,8 +222,8 @@ function updateAreaChart() {
         .transition()
         .duration(0)
         .ease(d3.easeLinear)
-        .attr('x1', xScale(lineDate))
-        .attr('x2', xScale(lineDate))
+        .attr('x1', xScale(getLineDate()))
+        .attr('x2', xScale(getLineDate()))
         .attr('y1', 0)
         .attr('y2', yScale(0))
         .attr('stroke', 'black')
@@ -299,6 +302,17 @@ function setMargin() {
         left: 3 * (document.documentElement.clientHeight / 100)
     }
 }
+
+function getLineDate() {
+
+    lineDate = new Date(selectedDate);
+    if (lineDate < minDate) {
+        lineDate = minDate;
+    } else {
+    }
+    return lineDate;
+}
+
 function getMaxValue(metric) {
     let maxMetricValue;
     maxMetricValue = 0;
