@@ -319,7 +319,6 @@ function getMaxValue(metric) {
         maxMetricValue = 0
     } else {
         dataDates = Object.keys(data).filter(item => item === getFormattedDate(minDate) || new Date(item) > new Date(minDate));
-        console.log('Data dates are ' + dataDates);
         dataDates.forEach(obj => {
             let metricValue = data[obj][selectedCountyId][metric];
             if (metricValue > maxMetricValue) {
