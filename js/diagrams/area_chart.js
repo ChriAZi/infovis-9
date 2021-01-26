@@ -45,6 +45,7 @@ let yScaleLine;
 let yAxisLine;
 let yAxisLineText;
 let minDate;
+let metricColor;
 
 async function initAreaChart() {
 
@@ -180,7 +181,6 @@ async function initAreaChart() {
         .style('text-anchor', 'middle');
     
     lineChart = d3.line();
-        })
 }
 
 function updateAreaChart() {
