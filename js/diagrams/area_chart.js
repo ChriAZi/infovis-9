@@ -272,15 +272,13 @@ async function updateAreaCountyBased() {
             .attr('d', d => area(d));
         dynamicLine = chart.append('path')
             .attr('class', 'line')
-            // .attr("d", lineChart(dataDates))
             .attr('fill', 'none')
-            //.attr("stroke", metricColor)
             .attr('stroke-width', 2);
 
         chart.select('.line').datum(dataDates)
             .transition()
             .duration(1000)
-            .attr('stroke', 'orange')
+            .attr('stroke', setMetricColor())
             .attr('d', d3.line()
                 .x(function (d) {
                     d = new Date(d);
@@ -335,4 +333,29 @@ function getFormattedDate(date) {
     date = date.toISOString().split('T')[0]
     date = date.replaceAll('-', '/')
     return date;
+}
+
+function setMetricColor() {
+    switch (selectedMetric) {
+        case 'newCases':
+            metricColor = '#ffaa00';
+            break;
+        case 'totalCases':
+            metricColor = '#ffea4c';
+            break;
+        case 'newDeaths':
+            metricColor = '#333333';
+            break;
+        case 'totalDeaths':
+            metricColor = '#002ea3';
+            break;
+        case 'caseIncidence':
+            metricColor = '#78121e';
+            break;
+        case 'deathIncidence':
+            metricColor = '#de0000';
+        default:
+            metricColor = '#ffaa00';
+    }
+    return metricColor;
 }
