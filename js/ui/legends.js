@@ -120,7 +120,7 @@ function constructLegend(svg, legend) {
         case Legend.AREA:
             background.attr('x', offsetX-radiusCircle*2)
                 .attr('y', offsetY-radiusCircle*2)
-                .attr('width', radiusCircle*27)
+                .attr('width', radiusCircle*30)
                 .attr('height', distanceBetweenCircles*4.5)
             svg.selectAll('circle')
                 .data(valueSteps)
