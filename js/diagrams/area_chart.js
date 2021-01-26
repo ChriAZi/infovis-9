@@ -18,12 +18,6 @@ const color = [
     Metric.properties.icuBeds.free.color,
     Metric.properties.icuBeds.reserve.color
 ];
-let margin = {
-    top: 2.5 * (document.documentElement.clientHeight / 100),
-    right: 3 * (document.documentElement.clientWidth / 100),
-    bottom: 2.5 * (document.documentElement.clientWidth / 100),
-    left: 3 * (document.documentElement.clientHeight / 100)
-}
 
 let lineV;
 let lineDate;
