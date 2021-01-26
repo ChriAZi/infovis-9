@@ -58,9 +58,10 @@ async function initAreaChart() {
     })
     bedOccData = data;
     minDate = bedOccData[0].date;
-    setMargin();
+    //setMargin();
 
     let parent = $('.area-container');
+    let margin = {top: 100, right: 80, bottom: 50, left: 50};
     let width = parent.width() - margin.left - margin.right;
     let height = parent.height() - margin.top - margin.bottom;
 
@@ -71,7 +72,9 @@ async function initAreaChart() {
         .append('svg')
         .attr('id', 'area-chart-svg')
         .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom);
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + (margin.left + 14) + ',' + (margin.top + 10) + ')');
 
     chart = svg.append('g');
 
@@ -158,14 +161,14 @@ async function initAreaChart() {
     chart.append('text')
         .attr('transform',
             'translate(' + (width / 2) + ' ,' +
-            (height + margin.bottom) + ')')
+            (height + (margin.bottom / 2) + 10 ) + ')')
         .style('text-anchor', 'middle')
         .text('Zeit');
 
 // text label for the y axis
     chart.append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', width + margin.right)
+        .attr('y', width + margin.left)
         .attr('x', 0 - (height / 2))
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -176,15 +179,12 @@ async function initAreaChart() {
         .attr('y', 0 - margin.left - 14)
         .attr('x', 0 - (height / 2))
         .attr('dy', '1em')
-        .text(getMetricsText())
-        .attr('display', 'none')
         .style('text-anchor', 'middle');
     
     lineChart = d3.line();
 }
 
 function updateAreaChart() {
-    lineDate = new Date(selectedDate);
     if (selectedCountyId !== null) {
         updateAreaCountyBased();
     } else {
@@ -253,7 +253,8 @@ async function updateAreaCountyBased() {
         yScaleLine.domain([0, getMaxValue(selectedMetric)]);
         yAxisLine.transition().duration(1000).ease(d3.easeLinear).attr('display', 'block')
             .call(d3.axisLeft(yScaleLine));
-        yAxisLineText.attr('display', 'block');
+        
+        yAxisLineText.text(getMetricsText()).attr('display', 'block');
         
         area = d3.area().x(function (d) {
             return xScale(d.data.daten_stand);
@@ -285,7 +286,7 @@ async function updateAreaCountyBased() {
                     return xScale(d)
                 })
                 .y(function (d) {
-                    return yScale(data[d][selectedCountyId][selectedMetric]);
+                    return yScaleLine(data[d][selectedCountyId][selectedMetric]);
                 })
             )
     });
@@ -344,16 +345,16 @@ function setMetricColor() {
             metricColor = '#ffea4c';
             break;
         case 'newDeaths':
-            metricColor = '#333333';
+            metricColor = '#002ea3';
             break;
         case 'totalDeaths':
-            metricColor = '#002ea3';
+            metricColor = '#333333';
             break;
         case 'caseIncidence':
             metricColor = '#78121e';
             break;
-        case 'deathIncidence':
-            metricColor = '#de0000';
+        case 'lethalityRate':
+            metricColor = '#3F007D';
         default:
             metricColor = '#ffaa00';
     }
