@@ -104,11 +104,11 @@ function constructLegend(svg, legend) {
                         return '0'
                     } else {
                         if (selectedMetric === Metric.LETHALITY_RATE) {
-                            return '< ' + (Math.round(d*1000)/10).toString().replace(/\./g, ',') + '%';
+                            return (Math.round(d*1000)/10).toString().replace(/\./g, ',') + '%';
                         } else if (selectedMetric === Metric.CASE_INCIDENCE) {
-                            return '< ' + d.toString().replace(/\./g, ',');
+                            return d.toString().replace(/\./g, ',');
                         } else {
-                            return '< ' + getNumberWithDots(d)
+                            return getNumberWithDots(d)
                         }
                     }
                 })
