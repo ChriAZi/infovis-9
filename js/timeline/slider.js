@@ -1,4 +1,4 @@
-const sliderPlayingSpeeds = [500, 300, 100, 80, 50, 30, 10, 5];
+const sliderPlayingSpeeds = [512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
 let normalSpeed = 3;
 let sliderSpeed = normalSpeed;
 let isPlaying = false;
@@ -118,7 +118,7 @@ function stopPlaying() {
 }
 
 function playFaster() {
-    if (sliderSpeed < sliderPlayingSpeeds.length) {
+    if (sliderSpeed < sliderPlayingSpeeds.length - 1) {
         sliderSpeed++;
     }
     if (isPlaying) {
