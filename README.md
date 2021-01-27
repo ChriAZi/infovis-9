@@ -7,7 +7,7 @@ Die Koordination des Projektes findet sich unter: [Notion](https://www.notion.so
 Das Projekt hat zum Ziel das zeitliche Entwicklungsgeschehen des Corona-Virus in Deutschland und seinen Landkreisen an mehreren Kennzahlen zu veranschaulichen. Dies umfasst die neuen Infektionen und Todesfälle sowie die gesamten Infektionen und Todesfälle und die 7-Tage-Inzidenz.
 Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herstellen und den Einfluss der Bevölkerungsdichte auf das Infektionsgeschehen veranschaulichen. 
 
-## Feature List des Minimum Viable Products(MVP):
+## Final Feature List:
 
 ### Datensatz: 
 
@@ -22,20 +22,24 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
   *	die Landkreise sind mit einem click-event markierbar
   *	die Visualisierung kann die Daten tagesgenau darstellen
   *	unterschiedliche Farben für Kennzahlen und Farbverlauf?
-
-### Schichtdiagramm:
+  * Daten des Landkreises über dem sich die Maus befindet, sollen über dem Mauszeiger erscheinen
+  
+### Schichtdiagramm und Liniendiagramm:
 
   * das Schichtdiagramm zeigt die Anzahl der freien und belegten Betten, sowie die Bereitstellung von Reservebetten in Deutschland an
-     * die blaue Fläche entspricht der Menge der belegten Betten, 
-     *	die grüne Fläche der Anzahl der freien Betten
-     *	die violette Fläche den zur Verfügung stehenden Reservebetten
+     * die orange Fläche entspricht der Menge der belegten Betten, 
+     *	die weiße Fläche der Anzahl der freien Betten
+     *	die hellgrüne Fläche den zur Verfügung stehenden Reservebetten
   *	die ausgewählte Zeit wird als Senkrechte mit Datum dargestellt
-
+  * Auswahl zwischen Landkreisen und ganz Deutschland
+  * Liniendiagramms, welches den Verlauf der gewählten Kennzahl für den ausgewählten Landkreis anzeigt
+  
 ### Scatterplot:
 
   *	Der Scatterplot zeigt die Anzahl der Neuinfektionen in Abhängigkeit der Bevölkerungsdichte der einzelnen Landkreise an
   * Die Landkreise werden entsprechend der Kennzahl eingefärbt (siehe Kartendiagramm)
-
+  * Zoomfunktion
+  
 ### Interaktionen: 
 
   *	Zeitliche Interaktion: 
@@ -56,24 +60,8 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
       * Auswahl der Landkreise über die Karte
       * Anzeige des Namens und der Daten des ausgewählten Landkreises links von dem Kartendiagramm
 
-### Layout: 
+### Layout:
 
  * Layout für die Parameterauswahl, die drei Visualisierungen und die Timeline steht
  * Layout ist responsive für Bildschirme zwischen 1440px | 900px und 1280px | 800px
-
-
-## Features für den Final Release
-
-### Layout und Interaktion:
-  * Legende mit Farben/Kennzahl Erklärung
-  * Anpassung des Schichtdiagrammes an Landkreisauswahl
-
-### Kartenansicht:
-  * Daten des Landkreises über dem sich die Maus befindet, sollen über dem Mauszeiger erscheinen
-
-### Schichtdiagramm und Liniendiagramm:
-  * evtl. Auswahl zwischen Landkreisen und ganz Deutschland
-  * Liniendiagramms, welches den Verlauf der gewählten Kennzahl anzeigt
-
-### Scatterplot:
-  * evtl. Zoomfunktion
+ * Legende mit Farben/Kennzahl Erklärung
