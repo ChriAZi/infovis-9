@@ -50,7 +50,7 @@ function updateScatterplot() {
         y = d3.scaleLinear()
             .domain([0, d3.max(filteredIds, function (d) {
                 return getLethalityRate(d);
-            } * 1.1)])
+            }) * 1.1])
             .range([height, 0]);
         yAxisS = svg.append('g')
             .call(d3.axisLeft(y).ticks(5, 'f').tickFormat(formatPercent))
