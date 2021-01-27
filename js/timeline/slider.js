@@ -36,7 +36,7 @@ function initSlider() {
     dateSlider.addEventListener('input', showSliderValue, false);
 }
 
-function drawSliderAxis(id = '#axis-slider') {
+function drawSliderAxis() {
     let margin = {top: 20, right: 2, bottom: 20, left: 2},
         width = sliderWidth - margin.right - margin.left,
         height = $('#slider').height();
@@ -48,7 +48,7 @@ function drawSliderAxis(id = '#axis-slider') {
     }
     d3.select('#axis-slider').selectAll('*').remove();
     // append the svg object to the body of the page
-    let svg = d3.select(id)
+    let svg = d3.select('#axis-slider')
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom);
@@ -57,7 +57,7 @@ function drawSliderAxis(id = '#axis-slider') {
     // Add X axis
     let x = d3.scaleTime()
         .domain(domain)
-        .range([0, width]);
+        .range([5, width]);
     let xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%B"));
     svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
