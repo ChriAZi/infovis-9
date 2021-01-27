@@ -1,9 +1,3 @@
-function filterData(data) {
-    const maxTempYear = data.filter(
-        item => item.countriesAndTerritories === 'Germany' && item.year === 2020 && item.month === 11
-    );
-}
-
 let chart;
 
 let xScale;
@@ -274,7 +268,7 @@ async function updateAreaCountyBased() {
         chart.select('.line').datum(dataDates)
             .transition()
             .duration(1000)
-            .attr('stroke', setMetricColor())
+            .attr('stroke', Metric.properties[selectedMetric].baseColor)
             .attr('d', d3.line()
                 .x(function (d) {
                     d = new Date(d);
@@ -341,29 +335,4 @@ function getFormattedDate(date) {
     date = date.toISOString().split('T')[0]
     date = date.replaceAll('-', '/')
     return date;
-}
-
-function setMetricColor() {
-    switch (selectedMetric) {
-        case 'newCases':
-            metricColor = '#ffaa00';
-            break;
-        case 'totalCases':
-            metricColor = '#ffea4c';
-            break;
-        case 'newDeaths':
-            metricColor = '#002ea3';
-            break;
-        case 'totalDeaths':
-            metricColor = '#333333';
-            break;
-        case 'caseIncidence':
-            metricColor = '#78121e';
-            break;
-        case 'lethalityRate':
-            metricColor = '#3F007D';
-        default:
-            metricColor = '#3F007D';
-    }
-    return metricColor;
 }
