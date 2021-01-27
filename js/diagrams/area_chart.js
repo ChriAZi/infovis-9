@@ -268,7 +268,7 @@ async function updateAreaCountyBased() {
         dynamicLine = chart.append('path')
             .attr('class', 'line')
             .attr('fill', 'none')
-            .attr('stroke-width', 2);
+            .attr('stroke-width', 3);
 
         chart.select('.line').datum(dataDates)
         chart.select('.line').datum(dataDates)
