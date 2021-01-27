@@ -1,4 +1,4 @@
-const sliderPlayingSpeeds = [500, 300, 100, 80, 50, 30, 10];
+const sliderPlayingSpeeds = [500, 300, 100, 80, 50, 30, 10, 5];
 let normalSpeed = 3;
 let sliderSpeed = normalSpeed;
 let isPlaying = false;
