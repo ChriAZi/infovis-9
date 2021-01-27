@@ -65,18 +65,14 @@ function initLegends(legend, rerender) {
 function constructLegend(svg, legend) {
     let valueSteps = getValueSteps(legend);
     let [offsetX, offsetY, distanceBetweenCircles, radiusCircle] = getRelativeSizing(legend);
-    let background = svg.append('rect');
+    svg.append('rect');
+    let maxTextWidth = 0;
     switch (legend) {
         case Legend.MAP:
         case Legend.SCATTER:
             if (legend === Legend.SCATTER) {
                 offsetX = $('#scatter-plot').width() - offsetX;
             }
-            background.attr('x', offsetX-radiusCircle*2)
-                .attr('y', offsetY-radiusCircle*2)
-                .attr('width', radiusCircle*14)
-                .attr('height', distanceBetweenCircles*6.5)
-
             svg.selectAll('circle')
                 .data(valueSteps)
                 .enter()
@@ -116,12 +112,14 @@ function constructLegend(svg, legend) {
                         }
                     }
                 })
+                .each(function() {
+                    let thisWidth = this.getComputedTextLength()
+                    if(thisWidth > maxTextWidth){
+                        maxTextWidth = thisWidth;
+                    }
+                });
             break;
         case Legend.AREA:
-            background.attr('x', offsetX-radiusCircle*2)
-                .attr('y', offsetY-radiusCircle*2)
-                .attr('width', radiusCircle*30)
-                .attr('height', distanceBetweenCircles*4.5)
             svg.selectAll('circle')
                 .data(valueSteps)
                 .enter()
@@ -155,9 +153,19 @@ function constructLegend(svg, legend) {
                         return d.name
                     }
                 })
+                .each(function() {
+                    let thisWidth = this.getComputedTextLength()
+                    if(thisWidth > maxTextWidth){
+                        maxTextWidth = thisWidth;
+                    }
+                });
             break;
     }
-    d3.selectAll("rect")
+    svg.selectAll("rect")
+        .attr('x', offsetX-radiusCircle*2)
+        .attr('y', offsetY-radiusCircle*2)
+        .attr('width', radiusCircle*6 + maxTextWidth)
+        .attr('height', distanceBetweenCircles*(valueSteps.length+0.5))
         .attr('rx', 10)
         .attr('ry', 10)
         .attr('opacity',0.6)
@@ -202,7 +210,7 @@ function getValueSteps(legend) {
             for (let kindOfBed in Metric.properties.icuBeds) {
                 stepsForLegend.push(Metric.properties.icuBeds[kindOfBed]);
             }
-            stepsForLegend.push(selectedMetric);
+            //stepsForLegend.push(selectedMetric);
             break;
     }
     return stepsForLegend;
@@ -212,8 +220,8 @@ function getRelativeSizing(legend) {
     let offsetX, offsetY, distanceBetweenCircles, radiusCircle;
     switch (legend) {
         case Legend.MAP:
-            offsetX = 1.5 * (document.documentElement.clientHeight / 100);
-            offsetY = 1.5 * (document.documentElement.clientHeight / 100);
+            offsetX = 2 * (document.documentElement.clientHeight / 100);
+            offsetY = 2 * (document.documentElement.clientHeight / 100);
             distanceBetweenCircles = 2.5 * (document.documentElement.clientHeight / 100);
             radiusCircle = (document.documentElement.clientHeight / 100);
             break;
