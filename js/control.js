@@ -7,6 +7,7 @@ const Metric = {
     LETHALITY_RATE: 'lethalityRate',
     properties: {
         'newCases': {
+            name: "Neue Infektionen",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#ffaa00',
@@ -15,6 +16,7 @@ const Metric = {
             valueSteps: []
         },
         'totalCases': {
+            name: "Infektionen",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#FDE725',
@@ -23,6 +25,7 @@ const Metric = {
             valueSteps: []
         },
         'newDeaths': {
+            name: "Neue Todesfälle",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#5A5EC8',
@@ -31,6 +34,7 @@ const Metric = {
             valueSteps: []
         },
         'totalDeaths': {
+            name: "Todesfälle",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#333333',
@@ -39,6 +43,7 @@ const Metric = {
             valueSteps: []
         },
         'caseIncidence': {
+            name: "7-Tage-Inzidenz",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#78121e',
@@ -47,6 +52,7 @@ const Metric = {
             valueSteps: []
         },
         'lethalityRate': {
+            name: "Letalitätsrate",
             valueRange: [],
             scaledMax: 0,
             baseColor: '#3f007d',

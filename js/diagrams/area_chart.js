@@ -83,7 +83,7 @@ async function initAreaChart() {
     xScale = d3.scaleTime()
         .domain(d3.extent(data, xValue))
         .range([0, width]);
-    xAxisGerman = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%B"));
+    xAxisGerman = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b"));
 
     //y-Axis
     yScale = d3.scaleLinear()
@@ -248,7 +248,7 @@ async function updateAreaCountyBased() {
         yAxisLine.transition().duration(1000).ease(d3.easeLinear).attr('display', 'block')
             .call(d3.axisLeft(yScaleLine));
         
-        yAxisLineText.text(getMetricsText()).attr('display', 'block');
+        yAxisLineText.text(Metric.properties[selectedMetric].name).attr('display', 'block');
         
         area = d3.area().x(function (d) {
             return xScale(d.data.daten_stand);

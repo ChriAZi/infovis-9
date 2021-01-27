@@ -148,7 +148,7 @@ function constructLegend(svg, legend) {
                 })
                 .text((d) => {
                     if (!d.hasOwnProperty('name')) {
-                        return getMetricsText(selectedMetric);
+                        return Metric.properties[selectedMetric].name;
                     } else {
                         return d.name
                     }
@@ -168,7 +168,7 @@ function constructLegend(svg, legend) {
         .attr('height', distanceBetweenCircles*(valueSteps.length+0.5))
         .attr('rx', 10)
         .attr('ry', 10)
-        .attr('opacity',0.6)
+        .attr('opacity',1)
         .attr('fill', 'lightgray');
 
 }
@@ -210,7 +210,7 @@ function getValueSteps(legend) {
             for (let kindOfBed in Metric.properties.icuBeds) {
                 stepsForLegend.push(Metric.properties.icuBeds[kindOfBed]);
             }
-            //stepsForLegend.push(selectedMetric);
+            stepsForLegend.push(selectedMetric);
             break;
     }
     return stepsForLegend;
