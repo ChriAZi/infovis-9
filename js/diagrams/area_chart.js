@@ -132,6 +132,7 @@ async function initAreaChart() {
         .attr('id', 'area-chart-y-axis')
         .call(d3.axisRight(yScale));
     yAxisLine = chart
+        .attr('id', 'area-chart-left-axis')
         .append('g')
         .attr('display', 'none')
         .call(d3.axisLeft(yScaleLine));
