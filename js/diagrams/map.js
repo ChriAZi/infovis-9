@@ -130,9 +130,10 @@ function initMap() {
 
     function fillPopupWithContent(d, element) {
         let svgWidth = $('#map').width();
-        let topOffset = 7.5 * (document.documentElement.clientHeight / 100);
+        //let topOffset = 7.5 * (document.documentElement.clientHeight / 100);
         let x = d.target.getBoundingClientRect().right - svgWidth + (d.target.getBoundingClientRect().width / 2);
-        let y = Math.round(d.target.getBoundingClientRect().top - topOffset)
+        let y = d.target.getBoundingClientRect().top;
+        //let y = Math.round(d.target.getBoundingClientRect().top - topOffset)
         element.moveToFront();
         element.style('left', x + 'px')
             .style('top', y + 'px')
