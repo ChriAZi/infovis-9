@@ -3,7 +3,7 @@ let normalSpeed = 3;
 let sliderSpeed = normalSpeed;
 let isPlaying = false;
 let player = null;
-
+let domain;
 const longpress = 1000;
 
 const dateSlider = document.getElementById('slider');
@@ -52,7 +52,7 @@ function drawSliderAxis() {
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom);
-    const domain = d3.extent(dates);
+    domain = d3.extent(dates);
 
     // Add X axis
     let x = d3.scaleTime()
