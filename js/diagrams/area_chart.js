@@ -231,7 +231,7 @@ function updateAreaChart() {
                     if (selectedMetric === 'lethalityRate') {
                         let rate = getLethalityRate('all', d);
                         let lethValue = Math.round(((rate * 100) + Number.EPSILON) * 100) / 100;
-                        return yScaleLine(lethValue)
+                        return yScaleLine(lethValue);
                     } else {
                         return yScaleLine(data[d]['all'][selectedMetric]);
                     }
@@ -308,7 +308,7 @@ async function updateAreaCountyBased() {
                 if (selectedMetric === 'lethalityRate') {
                     let rate = getLethalityRate(selectedCountyId, d);
                     let lethValue = Math.round(((rate * 100) + Number.EPSILON) * 100) / 100;
-                    return yScaleLine(lethValue)
+                    return yScaleLine(lethValue);
                 } else {
                     return yScaleLine(data[d][selectedCountyId][selectedMetric]);
                 }
