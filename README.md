@@ -2,6 +2,7 @@
 
 ## Live auf https://chriazi.github.io/infoVis9/
 
+
 WS20/21 - Ludwig-Maximilians-Universität München.
 Gruppenmitglieder: Amina Dacikj, Maike Friedrich, David Spormann, Christopher Voit, Elena Wallwitz
 
