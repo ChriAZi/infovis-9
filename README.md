@@ -11,7 +11,6 @@ Zusätzlich soll die Visualisierung einen Bezug zur Intensivbettauslastung herst
 ### Datensatz: 
 
   *	ein statischer Datensatz wird mit build_data.py als Nested Maps in data.json und counties.json angelegt. Dieser sollte vor Verwendung täglich lokal aktualisiert werden. 
-  *	Der Aufbau des Datensatzes findet sich in [Notion](https://www.notion.so/Datensatz-Spec-f26643879ff14ed98793cc5ac79c40f7)
 
 ### Kartenansicht:
 
